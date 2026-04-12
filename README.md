@@ -46,7 +46,7 @@ You provide the story scripts, assets and metadata. The engine handles rendering
 
 ### For Game Authors
 
-Create a game package inside your app bundle:
+Create a game folder inside your app bundle:
 
 ```
 qml/game/
