@@ -105,7 +105,7 @@ qml/game/
 ```
 
 ### Complete command reference
-See the AI generated [Design Document](vn-engine-design-v3.docx) for complete command reference and script format specification. A human generated command reference can be found below:
+See the AI generated [Design Document](vn-engine-design-v3.docx) (TODO: upload document) for complete command reference and script format specification. A human generated command reference can be found below:
 
 | Command | Purpose |
 |---------|---------|
