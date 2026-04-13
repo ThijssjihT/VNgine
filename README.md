@@ -4,6 +4,7 @@ A visual novel game engine for SailfishOS
 ## Status
 
 ⚠️ **Under active development.** The engine is not yet ready for production use. Documented functionality may be missing or functionaly discrepant.
+
 ⚠️ **Parts of the code is co-written by AI.** AI is used to give code examples, and to help with bugs. Purely AI generated code is now being rewritten by a human. Engine.js is still largely made by AI, but comments, improvements and approving is done by a human.
 
 ## Overview
