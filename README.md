@@ -20,6 +20,7 @@ You provide the story scripts, assets and metadata. The engine handles rendering
 
 ## Features
 
+⚠️ Features flagged as implemented might not yet be on github, as I am rewriting AI generated pages.
 ### Implemented
 - Title screen with pull-down menu (New Game, Load Game, Settings)
 - Settings screen: text speed, auto-advance, audio volume per channel, language selection, 18+ content toggle. Settings are still non-functional and volatile for now.
