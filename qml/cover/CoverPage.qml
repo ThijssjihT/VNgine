@@ -3,9 +3,11 @@ import Sailfish.Silica 1.0
 
 CoverBackground {
     Label {
-        id: label
-        anchors.centerIn: parent
-        text: qsTr("The lazy-ass developer didn't even design a good cover page!!!")
+        id:                 label
+        anchors.fill:       parent
+        anchors.margins:    Theme.horizontalPageMargin
+        wrapMode:           Text.WordWrap
+        text:               qsTr("The lazy-ass developer didn't even design a good cover page!!!")
     }
 
     CoverActionList {
