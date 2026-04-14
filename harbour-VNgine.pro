@@ -17,7 +17,11 @@ CONFIG += sailfishapp
 SOURCES += src/harbour-VNgine.cpp
 
 DISTFILES += qml/harbour-VNgine.qml \
+    VNgineIcon.svg \
+    qml/components/Settings.qml \
     qml/cover/CoverPage.qml \
+    qml/pages/GameScreen.qml \
+    qml/pages/SettingsPage.qml \
     qml/pages/TitlePage.qml \
     rpm/harbour-VNgine.changes.in \
     rpm/harbour-VNgine.changes.run.in \
