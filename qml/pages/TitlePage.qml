@@ -11,8 +11,8 @@ Contents of the title page are set by changing:
 
 
 If any further alterations must be made
-please contact me on github or on the SFOS forum
-and uncomment the lines in the footer credits
+please uncomment the lines in the footer credits
+and contact me on github or on the SFOS forum
 
 */
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +27,6 @@ Page {
         anchors.left:   parent.left
         anchors.right:  parent.right
         anchors.bottom: footer.top
-        //contentHeight:  column.height + Theme.paddingLarge
 
         PullDownMenu {
             MenuItem {
@@ -53,7 +52,8 @@ Page {
             spacing:    Theme.paddingLarge
 
             PageHeader {
-                title:  qsTr("Title")
+                id:     title
+                title:  "Title"
             }
 
             Image {
@@ -74,28 +74,40 @@ Page {
 
             Separator {
                 width:                  parent.width
-                color:                  Theme.secondaryColor
+                color:                  Theme.primaryColor
                 horizontalAlignment:    Qt.AlignHCenter
             }
 
             Label {
-                id:             introlabel
-                x:              Theme.horizontalPageMargin
-                width:          parent.width - 2 * Theme.horizontalPageMargin
-                text:           qsTr("A short tagline or introduction loaded from game.json will appear here.")
-                color:          Theme.highlightColor
-                font.pixelSize: Theme.fontSizeMedium
-                wrapMode:       Text.WordWrap
+                id:                 introlabel
+                anchors.left:       parent.left
+                anchors.right:      parent.right
+                anchors.margins:    Theme.horizontalPageMargin
+                text:               "A short tagline or introduction loaded from game.json will appear here."
+                color:              Theme.highlightColor
+                font.pixelSize:     Theme.fontSizeMedium
+                wrapMode:           Text.WordWrap
             }
 
             Label {
-                id:             creditslabel
-                x: Theme.horizontalPageMargin
-                width: parent.width - 2 * Theme.horizontalPageMargin
-                text: qsTr("Content warnings, version info, or credits go here.")
-                color: Theme.secondaryColor
-                font.pixelSize: Theme.fontSizeSmall
-                wrapMode: Text.WordWrap
+                anchors.left:       parent.left
+                anchors.right:      parent.right
+                anchors.margins:    Theme.horizontalPageMargin
+                text:               "Credits:"
+                color:              Theme.primaryColor
+                font.pixelSize:     Theme.fontSizeSmall
+                wrapMode:           Text.WordWrap
+            }
+
+            Label {
+                id:                 creditslabel
+                anchors.left:       parent.left
+                anchors.right:      parent.right
+                anchors.margins:    Theme.horizontalPageMargin
+                text:               "Content warnings, version info, or credits go here."
+                color:              Theme.secondaryColor
+                font.pixelSize:     Theme.fontSizeSmall
+                wrapMode:           Text.WordWrap
             }
         }
     }
@@ -120,7 +132,7 @@ Page {
 
             Image {
                 id:                     logo
-                source:                 Qt.resolvedUrl("../components/icon.png")
+                source:                 Qt.resolvedUrl("../icon.png")
                 width:                  Theme.itemSizeMedium
                 height:                 Theme.itemSizeMedium
                 anchors.verticalCenter: parent.verticalCenter
@@ -133,8 +145,8 @@ Page {
                 Row {
                     spacing:                Theme.paddingSmall
 
-                    Label {
-                        text:               "VNgine"
+                    LinkedLabel {
+                        text:               '<a href="https://github.com/ThijssjihT/VNgine">VNgine</a>'
                         font.pixelSize:     Theme.fontSizeSmall
                         color:              Theme.highlightColor
                         anchors.baseline:   versionLabel.baseline
@@ -174,7 +186,22 @@ Page {
 
     Component.onCompleted: {
         Engine.loadManifest(Qt.resolvedUrl("../game"))
-        introlabel.text = Engine.manifest.Tagline
-        // creditslabel reads a list, and must loop over the list
+        title.title = Engine.manifest.title
+        introlabel.text = Engine.manifest.tagline
+
+        //read all credits from the manifest file
+        //append them and display them
+        //first declare variable to store what we read from json
+        var credits = Engine.manifest.credits
+        var sections = []
+        for (var key in credits) {
+            var entry = credits[key]
+            var lines = []
+            for (var j = 0; j < entry.length; j++) {
+                lines.push(entry[j])
+            }
+            sections.push(lines.join("\n")) //join all lines from a single credits key
+        }
+        creditslabel.text = sections.join("\n\n") //join all text from every credits keys
     }
 }
