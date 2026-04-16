@@ -27,6 +27,8 @@ Page {
         anchors.left:   parent.left
         anchors.right:  parent.right
         anchors.bottom: footer.top
+        clip:           true
+        contentHeight:  contentColumn.height
 
         PullDownMenu {
             MenuItem {
@@ -48,6 +50,7 @@ Page {
         }
 
         Column {
+            id:         contentColumn
             width:      parent.width
             spacing:    Theme.paddingLarge
 
