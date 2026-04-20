@@ -66,7 +66,8 @@ QtObject {
         if (manifest.languages) {
             var languages = Object.keys(manifest.languages)
             _settings["numLanguageSelectors"] = languages.length
-            languages.forEach(function(languageSelector) {
+            languages.forEach(function(languageSelector, index) {
+                _settings["language_selector_" + index + "_key"]         = languageSelector
                 _settings["language_" + languageSelector + "_label"]    = manifest.languages[languageSelector].label
                 _settings["language_" + languageSelector + "_options"]  = manifest.languages[languageSelector].options
                 _settings["language_" + languageSelector + "_value"]    = manifest.languages[languageSelector].default
@@ -78,7 +79,8 @@ QtObject {
         if (manifest.dropdowns) {
             var dropdowns = Object.keys(manifest.dropdowns)
             _settings["numDropdowns"] = dropdowns.length
-            dropdowns.forEach(function(dropDown) {
+            dropdowns.forEach(function(dropDown, index) {
+                _settings["dropdown_key_" + index + "_key"]     = dropDown
                 _settings["dropdown_" + dropDown + "_label"]    = manifest.dropdowns[dropDown].label
                 _settings["dropdown_" + dropDown + "_options"]  = manifest.dropdowns[dropDown].options
                 _settings["dropdown_" + dropDown + "_value"]    = manifest.dropdowns[dropDown].default
@@ -90,9 +92,10 @@ QtObject {
         if (manifest.toggles) {
             var toggles = Object.keys(manifest.toggles)
             _settings["numToggles"] = toggles.length
-            toggles.forEach(function(toggle) {
-                _settings["toggle_" + toggle + "_label"] = manifest.toggles[toggle].label
-                _settings["toggle_" + toggle + "_value"] = manifest.toggles[toggle].default
+            toggles.forEach(function(toggle, index) {
+                _settings["toggle_key_" + index + "_key"]   = toggle
+                _settings["toggle_" + toggle + "_label"]    = manifest.toggles[toggle].label
+                _settings["toggle_" + toggle + "_value"]    = manifest.toggles[toggle].default
             })
         }
 
@@ -101,7 +104,8 @@ QtObject {
         if (manifest.sliders) {
             var sliders = Object.keys(manifest.sliders)
             _settings["numSliders"] = sliders.length
-            sliders.forEach(function(slider) {
+            sliders.forEach(function(slider, index) {
+                _settings["slider_key_" + index + "_key"]   = slider
                 _settings["slider_" + slider + "_label"]    = manifest.sliders[slider].label
                 _settings["slider_" + slider + "_min"]      = manifest.sliders[slider].min
                 _settings["slider_" + slider + "_max"]      = manifest.sliders[slider].max
@@ -115,7 +119,8 @@ QtObject {
         if (manifest.textfields) {
             var textfields = Object.keys(manifest.textfields)
             _settings["numTextfields"] = textfields.length
-            textfields.forEach(function(textfield) {
+            textfields.forEach(function(textfield, index) {
+                _settings["textfield_key_" + index + "_key"]  = textfield
                 _settings["textfield_" + textfield + "_label"] = manifest.textfields[textfield].label
                 _settings["textfield_" + textfield + "_value"] = manifest.textfields[textfield].default
             })
