@@ -23,12 +23,15 @@ import "../GameEngine.js" as Engine
 
 Page {
     SilicaFlickable {
+        id:             body
         anchors.top:    parent.top
         anchors.left:   parent.left
         anchors.right:  parent.right
         anchors.bottom: footer.top
         clip:           true
         contentHeight:  contentColumn.height
+
+        VerticalScrollDecorator {}
 
         PullDownMenu {
             MenuItem {
@@ -112,6 +115,21 @@ Page {
                 font.pixelSize:     Theme.fontSizeSmall
                 wrapMode:           Text.WordWrap
             }
+        }
+    }
+
+    Rectangle {     //AI generated
+        id:             scrollFadeHint
+        anchors.bottom: body.bottom
+        anchors.left:   body.left
+        anchors.right:  body.right
+        height:         Theme.itemSizeSmall
+        z:              1
+        visible:        (body.contentHeight > body.height) && !body.atYEnd
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "transparent" }
+            GradientStop { position: 1.0; color: Theme.colorScheme === Theme.LightOnDark
+                                                  ? "black" : "white" }
         }
     }
 
