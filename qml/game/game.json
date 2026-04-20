@@ -5,10 +5,71 @@
     "entry_scene": "scene_0001",
 
     "audio_channels": {
-        "music": 80,
-        "text_fx": 40,
-        "game_fx": 80,
-        "voice": 100
+        "music": {
+            "label": "Music",
+            "default": 80
+        },
+        "text_fx": {
+            "label": "TextFX",
+            "default": 40
+        },
+        "game_fx": {
+            "label": "GameFX",
+            "default": 80
+        },
+        "voice": {
+            "label": "Voice",
+            "default": 100
+        }
+    },
+
+    "languages": {
+        "text": {
+            "label": "Language",
+            "options": ["English", "Nederlands"],
+            "default": "English"
+        },
+        "voice": {
+            "label": "Voice",
+            "options": ["English", "Japanese"],
+            "default": "English"
+        }
+    },
+
+    "toggles": {
+        "adult_content": {
+            "label": "Adult content",
+            "default": true
+        },
+        "arachnofobia": {
+            "label": "Arachnofobia mode",
+            "default": false
+        }
+    },
+
+    "dropdowns": {
+        "difficulty": {
+            "label": "Difficulty",
+            "options": ["easy", "normal", "hard"],
+            "default": "normal"
+        }
+    },
+
+    "textfields": {
+        "password": {
+            "label": "Unlock content",
+            "default": "enter unlock code"
+        }
+    },
+
+    "sliders": {
+        "starting_wealth": {
+            "label": "Starting wealth",
+            "min": 10,
+            "max": 100,
+            "stepsize": 1,
+            "default": 20
+        }
     },
 
     "tagline": "A sample game to show developers how to use json file to script their game in VNgine",
