@@ -114,6 +114,14 @@ QtObject {
     }
 
     function _loadFromDatabase() {
-        //TODO: overwrite all settings from database
+        _db.transaction(function(tx) {
+            var result = tx.executeSql("SELECT key, value, type FROM settings")
+            for (var i = 0; i < result.rows.length; i++) {
+                var row = result.rows.item(i)
+                if (_settings.hasOwnProperty(row.key)) {
+                    _settings[row.key] = JSON.parse(row.value)
+                }
+            }
+        })
     }
 }
