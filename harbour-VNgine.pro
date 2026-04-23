@@ -20,6 +20,7 @@ DISTFILES += qml/harbour-VNgine.qml \
     VNgineIcon.svg \
     qml/components/Settings.qml \
     qml/cover/CoverPage.qml \
+    qml/game/script/scene_0001.json \
     qml/pages/GameScreen.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/TitlePage.qml \

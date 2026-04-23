@@ -13,7 +13,7 @@ Name=harbour-VNgine
 
 [X-Sailjail]
 # Replace with your organization as a reverse domain name
-OrganizationName=org.myorg
+# OrganizationName=org.myorg
 # ApplicationName does not have to be identical to Name
 ApplicationName=VNgine
 # Add the required permissions here
