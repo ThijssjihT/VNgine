@@ -1,6 +1,7 @@
 pragma Singleton
 import QtQuick 2.6
 import QtQuick.LocalStorage 2.0
+import "../GameEngine.js" as Engine
 
 QtObject {
     id: settings
@@ -12,7 +13,8 @@ QtObject {
     function initialize() {
         _db = LocalStorage.openDatabaseSync(Qt.application.name, "1.0", "Game settings", 10000)
         _db.transaction(function(tx) {tx.executeSql("CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT, type TEXT)")})
-        _loadManifest()
+        _applyManifest(Engine.manifest)
+        _loadFromDatabase()
     }
 
     function get(key) {
@@ -22,22 +24,6 @@ QtObject {
     function set(key, value) {
         _settings[key] = value
         _db.transaction(function(tx) { tx.executeSql("INSERT OR REPLACE INTO settings (key, value, type) VALUES (?, ?, ?)", [key, JSON.stringify(value), typeof value])})
-    }
-
-    function _loadManifest() {
-        var xhr = new XMLHttpRequest()                          //we will do a XMLHttpRequest.open later, but it is asynchonous
-        xhr.onreadystatechange = function() {                   //so we will listen to state change and until then wait until it is done.
-            if (xhr.readyState === XMLHttpRequest.DONE) {       //when it is done
-                if (xhr.status === 200 || xhr.status === 0) {   //and it returns a succes state
-                    var manifest = JSON.parse(xhr.responseText) //we will parse the text returned
-                    _applyManifest(manifest)                    //we load the default values from the manifest
-                    _loadFromDatabase()
-                    ready = true
-                }
-            }
-        }
-        xhr.open("GET", Qt.resolvedUrl("../game/game.json"))
-        xhr.send()
     }
 
     function _applyManifest(manifest) {
