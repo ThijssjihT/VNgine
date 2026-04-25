@@ -141,9 +141,7 @@ See the AI generated [Design Document](vn-engine-design-v3.docx) (TODO: upload d
 | `set` | Change a variable value (add, subtract, set) |
 | `jump` | Unconditional scene transition |
 | `jump_if` | Conditional scene transition based on variable state |
-| `audio_bg` | Start/stop background music |
-| `audio_sfx` | Play a sound effect |
-| `audio_voice` | Play a voiced line |
+| `audio` | Play audio |
 | `show_hud` | Display a variable value in the HUD |
 | `wait` | Pause for N milliseconds |
 | `end` | End of game |
