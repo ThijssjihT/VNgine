@@ -20,11 +20,10 @@ You provide the story scripts, assets and metadata. The engine handles rendering
 
 ## Features
 
-⚠️ Features flagged as implemented might not yet be on github, as I am rewriting AI generated pages.
 ### Implemented
-- Title screen with pull-down menu (New Game, Load Game, Settings)
-- Settings screen: text speed, auto-advance, audio volume per channel, language selection, 18+ content toggle. Settings are still non-functional and volatile for now.
-- Landscape game screen with background
+- Title screen page
+- Settings screen with customizable settings
+- Game screen page
 - Dialogue with typewriter effect and tap-to-advance
 - Basic script playback and command execution
 
@@ -34,7 +33,6 @@ You provide the story scripts, assets and metadata. The engine handles rendering
 - Choice system with conditional visibility
 - Variable system for storing game variables
 - Audio playback: background music
-- Non-volatile settings
 
 ### Planned
 - HUD for displaying game variables
@@ -43,7 +41,8 @@ You provide the story scripts, assets and metadata. The engine handles rendering
 - Save/Load system
 - Multi-language support
 - Audio: sound effects, character voice
-- Customizable settings
+- Text effects
+- Adjustable speaker colors
 
 ## Quick Start
 
