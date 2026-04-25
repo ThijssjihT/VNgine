@@ -73,21 +73,43 @@ qml/game/
 
 ```json
 {
-  "title": "My Story",
-  "version": "1.0.0",
-  "default_language": "en",
-  "entry_scene": "scene_0000",
-  "has_adult_content": false,
-  "audio_channels": {
-    "music": true,
-    "text_fx": true,
-    "game_fx": true,
-    "voice": false
-  },
-  "variables": {
-    "chapter_title": { "type": "string", "default": "Prologue" },
-    "affection_alice": { "type": "int", "default": 0 }
-  }
+    "title": "My Story",
+    "version": "1.0.0",
+    "default_language": "en",
+    "entry_scene": "scene_0000",
+    "has_adult_content": false,
+    "audio_channels": {
+        "music": {
+            "label": "Music",
+            "default": 80
+        },
+        "text_fx": {
+            "label": "TextFX",
+            "default": 40
+        },
+        "game_fx": {
+            "label": "GameFX",
+            "default": 80
+        },
+        "voice": {
+            "label": "Voice",
+            "default": 100
+        }
+    },
+    "languages": {}
+    "toggles": {}
+    "dropdowns": {
+        "difficulty": {
+            "label": "Difficulty",
+            "options": ["easy", "normal", "hard"],
+            "default": "normal"
+        }
+    },
+
+    "variables": {
+        "wealth": { "type": "int", "default": 50 }
+        "affection_alice": { "type": "int", "default": 5 }
+    }
 }
 ```
 
@@ -95,14 +117,14 @@ qml/game/
 
 ```json
 {
-  "id": "scene_0000",
-  "commands": [
-    { "cmd": "bg", "image": "bg/forest_day.jpg" },
-    { "cmd": "sprite", "id": "alice", "image": "sprites/alice_happy.png", "position": "center" },
-    { "cmd": "say", "speaker": "Alice", "text_key": "s0000_01" },
-    { "cmd": "say", "speaker": null, "text": "The leaves whisper." },
-    { "cmd": "jump", "scene": "scene_0001" }
-  ]
+    "id": "scene_0000",
+    "commands": [
+        { "cmd": "bg", "image": "bg/forest_day.jpg" },
+        { "cmd": "sprite", "id": "alice", "image": "sprites/alice_happy.png", "position": "center" },
+        { "cmd": "say", "speaker": "Alice", "text_key": "s0000_01" },
+        { "cmd": "say", "speaker": null, "text": "The leaves whisper." },
+        { "cmd": "jump", "scene": "scene_0001" }
+    ]
 }
 ```
 
