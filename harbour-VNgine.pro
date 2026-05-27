@@ -10,13 +10,16 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = harbour-VNgine
+TARGET = VNgine
 
 CONFIG += sailfishapp
 
 SOURCES += src/harbour-VNgine.cpp
 
 DISTFILES += qml/harbour-VNgine.qml \
+    ../../OLD harbour-VNgine/qml/game/assets/bg/centre_exterior_evening.png \
+    ../../OLD harbour-VNgine/qml/game/assets/bg/centre_interior_evening.png \
+    ../../OLD harbour-VNgine/qml/game/assets/bg/noticeboard_closeup.png \
     VNgineIcon.svg \
     qml/components/Settings.qml \
     qml/cover/CoverPage.qml \
