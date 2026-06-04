@@ -19,6 +19,9 @@
             "speaker": null,
             "text": "Every time you've been here, you passed it, paying it no mind. But this time, your eyes are drawn to a peculiar piece of paper."
         },
+
+        { "cmd": "bg",    "image": "bg/noticeboard_closeup.png", "transition": "fade" },
+
         {
             "cmd": "say",
             "speaker": "Paper on the notice board",
@@ -52,6 +55,9 @@
             "speaker": "Player",
             "text": "NO WAY! IT CAN'T BE!"
         },
+
+        { "cmd": "bg",    "image": "bg/centre_exterior_evening.png", "transition": "fade" },
+
         {
             "cmd": "say",
             "speaker": "Player",
@@ -65,7 +71,7 @@
         {
             "cmd": "say",
             "speaker": null,
-            "text": "You look at the notice board again. You look at your surroundings. You notice some assets are made with a lot of love. Others are AI generated."
+            "text": "You look at the notice board again. You look at your surroundings. You notice some assets are made with a lot of love. Others are clearly AI generated."
         },
         {
             "cmd": "say",
@@ -76,6 +82,49 @@
             "cmd": "say",
             "speaker": "Player",
             "text": "All right. Just keep calm. I can fix this. Yes. I'll just have to have faith in myself. I can escape this. I'll pay good notice of everything around me. I'll learn about this gameworld. And when I understand everything, I'll be able to escape."
+        },
+        
+        {
+            "cmd": "sprite",
+            "id": "liisa",
+            "image": "sprites/liisa_1.png",
+            "position": "center"
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "%player_title%? Are you okay?"
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "You look like you've seen a ghost."
+        },
+
+        {
+            "cmd": "sprite_remove",
+            "id": "liisa"
+        },
+
+        {
+            "cmd": "sprite",
+            "id": "liisa",
+            "image": "sprites/liisa_1.png",
+            "position": "right"
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Player",
+            "text": "%player_title%?"
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "You know I'm calling you that, because that's what you put into the textfields in the settings, right?"
         },
 
         { "cmd": "jump", "scene": "scene_0002" }

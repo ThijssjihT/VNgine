@@ -56,6 +56,10 @@
     },
 
     "textfields": {
+        "player_title": {
+            "label": "What do others call you by?",
+            "default": "Mister"
+        },
         "password": {
             "label": "Unlock content",
             "default": "enter unlock code"
@@ -91,15 +95,11 @@
             "miki asset pack",
             "By Noraneko Games"
         ],
-        "test": [
-            "I really",
-            "really",
-            "really",
-            "really",
-            "need to test",
-            "if everything",
-            "will render fine",
-            "if I make a really long text that will go behind the footer, or when I have really, really, really, long lines like this that will extend across the side of the page."
+        "asset3": [
+            "other sprites made with Character Creator VN - Sutemo",
+            "https://sutemo.itch.io/",
+            "asset packs by yuripourre",
+            "https://yuripourre.itch.io"
         ]
     }
 }
