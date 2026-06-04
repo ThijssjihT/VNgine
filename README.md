@@ -20,11 +20,10 @@ You provide the story scripts, assets and metadata. The engine handles rendering
 
 ## Features
 
-⚠️ Features flagged as implemented might not yet be on github, as I am rewriting AI generated pages.
 ### Implemented
-- Title screen with pull-down menu (New Game, Load Game, Settings)
-- Settings screen: text speed, auto-advance, audio volume per channel, language selection, 18+ content toggle. Settings are still non-functional and volatile for now.
-- Landscape game screen with background
+- Title screen page
+- Settings screen with customizable settings
+- Game screen page
 - Dialogue with typewriter effect and tap-to-advance
 - Basic script playback and command execution
 
@@ -34,7 +33,6 @@ You provide the story scripts, assets and metadata. The engine handles rendering
 - Choice system with conditional visibility
 - Variable system for storing game variables
 - Audio playback: background music
-- Non-volatile settings
 
 ### Planned
 - HUD for displaying game variables
@@ -43,7 +41,8 @@ You provide the story scripts, assets and metadata. The engine handles rendering
 - Save/Load system
 - Multi-language support
 - Audio: sound effects, character voice
-- Customizable settings
+- Text effects
+- Adjustable speaker colors
 
 ## Quick Start
 
@@ -74,21 +73,43 @@ qml/game/
 
 ```json
 {
-  "title": "My Story",
-  "version": "1.0.0",
-  "default_language": "en",
-  "entry_scene": "scene_0000",
-  "has_adult_content": false,
-  "audio_channels": {
-    "music": true,
-    "text_fx": true,
-    "game_fx": true,
-    "voice": false
-  },
-  "variables": {
-    "chapter_title": { "type": "string", "default": "Prologue" },
-    "affection_alice": { "type": "int", "default": 0 }
-  }
+    "title": "My Story",
+    "version": "1.0.0",
+    "default_language": "en",
+    "entry_scene": "scene_0000",
+    "has_adult_content": false,
+    "audio_channels": {
+        "music": {
+            "label": "Music",
+            "default": 80
+        },
+        "text_fx": {
+            "label": "TextFX",
+            "default": 40
+        },
+        "game_fx": {
+            "label": "GameFX",
+            "default": 80
+        },
+        "voice": {
+            "label": "Voice",
+            "default": 100
+        }
+    },
+    "languages": {}
+    "toggles": {}
+    "dropdowns": {
+        "difficulty": {
+            "label": "Difficulty",
+            "options": ["easy", "normal", "hard"],
+            "default": "normal"
+        }
+    },
+
+    "variables": {
+        "wealth": { "type": "int", "default": 50 }
+        "affection_alice": { "type": "int", "default": 5 }
+    }
 }
 ```
 
@@ -96,14 +117,14 @@ qml/game/
 
 ```json
 {
-  "id": "scene_0000",
-  "commands": [
-    { "cmd": "bg", "image": "bg/forest_day.jpg" },
-    { "cmd": "sprite", "id": "alice", "image": "sprites/alice_happy.png", "position": "center" },
-    { "cmd": "say", "speaker": "Alice", "text_key": "s0000_01" },
-    { "cmd": "say", "speaker": null, "text": "The leaves whisper." },
-    { "cmd": "jump", "scene": "scene_0001" }
-  ]
+    "id": "scene_0000",
+    "commands": [
+        { "cmd": "bg", "image": "bg/forest_day.jpg" },
+        { "cmd": "sprite", "id": "alice", "image": "sprites/alice_happy.png", "position": "center" },
+        { "cmd": "say", "speaker": "Alice", "text_key": "s0000_01" },
+        { "cmd": "say", "speaker": null, "text": "The leaves whisper." },
+        { "cmd": "jump", "scene": "scene_0001" }
+    ]
 }
 ```
 
@@ -120,9 +141,7 @@ See the AI generated [Design Document](vn-engine-design-v3.docx) (TODO: upload d
 | `set` | Change a variable value (add, subtract, set) |
 | `jump` | Unconditional scene transition |
 | `jump_if` | Conditional scene transition based on variable state |
-| `audio_bg` | Start/stop background music |
-| `audio_sfx` | Play a sound effect |
-| `audio_voice` | Play a voiced line |
+| `audio` | Play audio |
 | `show_hud` | Display a variable value in the HUD |
 | `wait` | Pause for N milliseconds |
 | `end` | End of game |
