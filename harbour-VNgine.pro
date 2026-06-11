@@ -17,6 +17,8 @@ CONFIG += sailfishapp
 SOURCES += src/harbour-VNgine.cpp
 
 DISTFILES += qml/harbour-VNgine.qml \
+    qml/components/Constants.js \
+    qml/components/SaveManager.qml \
     qml/game/assets/bg/centre_exterior_evening.png \
     qml/game/assets/bg/centre_interior_evening.png \
     qml/game/assets/bg/noticeboard_closeup.png \
@@ -26,6 +28,8 @@ DISTFILES += qml/harbour-VNgine.qml \
     qml/cover/CoverPage.qml \
     qml/game/script/scene_0001.json \
     qml/pages/GameScreen.qml \
+    qml/pages/Load.qml \
+    qml/pages/Save.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/TitlePage.qml \
     rpm/harbour-VNgine.changes.in \
