@@ -2,6 +2,7 @@ pragma Singleton
 import QtQuick 2.6
 import QtQuick.LocalStorage 2.0
 import "../GameEngine.js" as Engine
+import "Constants.js" as Constants
 
 QtObject {
     id: settings
@@ -11,7 +12,9 @@ QtObject {
     property bool ready: false
 
     function initialize() {
-        _db = LocalStorage.openDatabaseSync(Qt.application.name, "1.0", "Game settings", 10000)
+        _db = LocalStorage.openDatabaseSync(
+                    Constants.dbName, Constants.dbVersion,
+                    Constants.dbDescription, Constants.dbSize)
         _db.transaction(function(tx) {tx.executeSql("CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT, type TEXT)")})
         _applyManifest(Engine.manifest)
         _loadFromDatabase()
