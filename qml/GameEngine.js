@@ -1,14 +1,15 @@
 .pragma library
 
-var manifest    = null;         //variable to store game manifest that contains loading instructions
-var variables   = {};           //object that holds all variables declared in the manifest, for the engine to reference
-var commands    = [];           //list that holds the commands loaded from a scene in sequence,
-                                //the engine will step through this array to play the loaded scene
-var cmdIndex    = 0;            //the index, or step, we are on in the list of commands
-var labelIndex  = {};           //oject that holds all index numbers of the labels.
-                                //On a jump command, this is referenced to look up the label
-                                //and set the cmdIndex to the corresponding number.
-var gamePath    = "";
+var manifest        = null;         //variable to store game manifest that contains loading instructions
+var variables       = {};           //object that holds all variables declared in the manifest, for the engine to reference
+var commands        = [];           //list that holds the commands loaded from a scene in sequence,
+                                    //the engine will step through this array to play the loaded scene
+var cmdIndex        = 0;            //the index, or step, we are on in the list of commands
+var labelIndex      = {};           //oject that holds all index numbers of the labels.
+                                    //On a jump command, this is referenced to look up the label
+                                    //and set the cmdIndex to the corresponding number.
+var gamePath        = "";
+var currentScene    = "";           //store what scene we are curently on, needed for saving / loading
 
 function loadJson(url) {
     var xhr = new XMLHttpRequest(); //not commenting on this, look up this and its methods in the mozilla mdn
@@ -30,9 +31,11 @@ function initVariables() {
     var defs = manifest.variables || {};        //a game with no variables will return an empty object, or else this would error.
     for (var key in defs)
         variables[key] = defs[key]["default"]
+    // DO I LOAD CHAPTER TITLE HERE?
 }
 
 function loadScene(sceneId) {
+    currentScene = sceneId
     var data = loadJson(gamePath + "/script/" + sceneId + ".json");
     commands = data.commands;
     cmdIndex = 0;       //start at the beginning of the new scene
