@@ -2,10 +2,14 @@ import QtQuick 2.6
 import Sailfish.Silica 1.0
 import "../components" as Components
 import "../GameEngine.js" as Engine
+import "../components/Constants.js" as Constants
 
 Page {
     id:                     gameScreen
     allowedOrientations:    Orientation.Landscape
+
+    property int    thumbWidth:     0
+    property int    thumbHeight:    0
 
     property string currentBg:          ""
     property string speakerName:        ""
@@ -14,7 +18,14 @@ Page {
     property bool   textAnimating:      false
     property real   spriteClearance:    0
 
+    property bool   _saving:            false
+    property bool   _loading:           false
+
     RemorsePopup { id: remorsePopup }
+
+    function assetPath(rel) {  // AI proposed and generated helper function, but I think this won't do harm
+        return rel === "" ? "" : Engine.gamePath + "/assets/" + rel
+    }
 
 /////////////////////////
 // --- Spritemodel ---
@@ -94,6 +105,91 @@ Page {
 // --- End Typewriter ---
 /////////////////////////
 
+
+/////////////////////////
+// --- Save game logic
+
+    function stageSaveGame() {
+        Components.SaveManager.stagePendingSave(
+                    Engine.currentScene,
+                    Engine.cmdIndex,
+                    Engine.variables,
+                    buildScreenBlob(),
+                    "placeholder") //TODO: return chapter label, to be implemented
+    }
+
+    function commitSave(slot) {
+        if ((slot === null )) return false
+        if ((slot < 0 )) return false
+        gameRoot.grabToImage(function(result) {
+            var filename    = "save_" + slot + ".jpg"
+            var dir         = StandardPaths.data
+            result.saveToFile(dir + "/" + filename)
+            Components.SaveManager.commitSave(filename)
+            _saving = false
+        }, Qt.size(thumbWidth, thumbHeight))
+    }
+
+    // Quick save menu item:
+    function doQuickSave() {
+        stageSaveGame()
+        Components.SaveManager.finalizePending(0, "Quicksave")
+        commitSave(0)
+    }
+
+    // Save menu item:
+    function doManualSave() {
+        stageSaveGame()
+        pageStack.push(Qt.resolvedUrl("Save.qml"))
+    }
+
+    function computeThumbSize() {
+        // For thumbscreen in saving and loading
+        thumbWidth  = Math.round(Screen.width * Constants.thumbScreenFraction)
+        thumbHeight = Math.round(thumbWidth * gameRoot.height / gameRoot.width)
+    }
+
+    function buildScreenBlob() {
+        var sprites = []
+        for (var i = 0; i < spriteModel.count; i++) {
+            var s = spriteModel.get(i)
+            sprites.push({
+                spriteId:     s.spriteId,
+                spriteSource: s.spriteSource,
+                position:     s.position
+            })
+        }
+        // TODO: SOUND
+        return {
+            background: currentBg,
+            sprites:    sprites
+        }
+    }
+
+    function buildScreenFromScreenBlob(screenBlob) {
+        currentBg = screenBlob.background
+        for (var i = 0; i < screenBlob.sprites.length; i++) {
+            var s = screenBlob.sprites[i]
+            showSprite(s.spriteId, s.spriteSource, s.position)
+        }
+        //TODO: sound
+    }
+
+    onStatusChanged: {
+        if (status === PageStatus.Active && !_saving && Components.SaveManager.pendingSlot() >= 0) {
+            _saving = true
+            commitSave(Components.SaveManager.pendingSlot())
+        }
+        if (status === PageStatus.Active && Components.SaveManager.justLoaded()) { //what about _loading?
+            Components.SaveManager.loading()  //This should be cleaned up, for now it just sets _justLoaded to !_justLoaded
+            buildScreenFromScreenBlob()
+            processNext()
+        }
+    }
+
+// --- End save game logic
+/////////////////////////
+
 /////////////////////////
 // --- Game logic ---
 
@@ -122,9 +218,14 @@ Page {
               Check the design file for reference
               Oh, and change the default switch key while your at it.
             */
+        case "set":
+            //{ "cmd": "set", "var": "chapter_title", "op": "set", "value": "Prologue" },
+            //TODO: wanted to implement chapter title loading, but it is a regular variable command. Need to be decided how to handle this yet.
+            processNext()
+            break
 
         case "bg":
-            currentBg = Engine.gamePath + "/assets/" + command.image
+            currentBg = command.image
             processNext()  //immediately process next command
             break
 
@@ -150,7 +251,7 @@ Page {
             break
 
         case "sprite":
-            showSprite(command.id, Engine.gamePath + "/assets/" + command.image, command.position)
+            showSprite(command.id, command.image, command.position)
             processNext()
             break
 
@@ -193,8 +294,8 @@ Page {
             }
             MenuItem {
                 text: qsTr("Quick save")
-                enabled: false //saving is not yet possible
-                onClicked: console.log("[Game] Quick save pressed")
+                enabled: true
+                onClicked: doQuickSave()
             }
         }
 
@@ -220,14 +321,14 @@ Page {
             Image {
                 id:             background
                 anchors.fill:   parent
-                source:         currentBg
+                source:         assetPath(currentBg)
                 fillMode:       Image.PreserveAspectCrop  //Crop, or black borders? Maybe in the game.json?
             }
 
             Repeater {
                 model: spriteModel
                 delegate: Image {
-                    source:             model.spriteSource
+                    source:             assetPath(model.spriteSource)
                     sourceSize.height:  gameRoot.height * 0.9
                     x:                  spriteX(model.position, width)
                     y:                  spriteY(model.position, height)
@@ -273,6 +374,7 @@ Page {
     }
 
     Component.onCompleted: {
+        computeThumbSize()
         processNext()
     }
 }

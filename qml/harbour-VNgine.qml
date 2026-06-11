@@ -11,5 +11,6 @@ ApplicationWindow {
 
     Component.onCompleted: {
         Components.Settings.initialize()
+        Components.SaveManager.initialize()
     }
 }

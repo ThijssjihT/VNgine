@@ -22,6 +22,7 @@ import Sailfish.Silica 1.0
 import "../GameEngine.js" as Engine
 
 Page {
+
     SilicaFlickable {
         id:             body
         anchors.top:    parent.top
