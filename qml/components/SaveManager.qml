@@ -68,6 +68,80 @@ QtObject {
         return true
     }
 
+    function loadSavedGame(slot) {
+        if (!_db) return null
+
+        var result = null
+
+        _db.transaction(function(tx) {
+            var rawdata = tx.executeSql(
+                        "SELECT scene_id, cmd_index, variables, screen, label, screenshot, saved_at " +
+                        "FROM saves WHERE slot = ?",
+                        [slot])
+            if (rawdata.rows.length === 0) return
+
+            var row = rawdata.rows.item(0)
+
+            result = {
+                slot:           slot,
+                sceneId:        row.scene_id,
+                cmdIndex:       row.cmd_index,
+                variables:      JSON.parse(row.variables),
+                screen:         JSON.parse(row.screen),
+                label:          row.label,
+                screenshot:     row.screenshot,
+                savedAt:        row.saved_at
+            }
+        })
+
+        if (result) _justLoaded = true
+        return result
+    }
+
+    function slotHasSave(slot) {
+        if (!_db) return false
+
+        var exists = false
+
+        _db.transaction(function(tx) {
+            var rs = tx.executeSql(
+                "SELECT 1 FROM saves WHERE slot = ?",
+                [slot])
+            exists = rs.rows.length > 0
+        })
+
+        return exists
+    }
+
+    function loadMostRecentSave() {
+        if (!_db) return null
+
+        var result = null
+
+        _db.transaction(function(tx) {
+            var rawdata = tx.executeSql(
+                "SELECT scene_id, cmd_index, variables, screen, label, screenshot, saved_at, slot " +
+                "FROM saves ORDER BY saved_at DESC LIMIT 1")
+
+            if (rawdata.rows.length === 0) return
+
+            var row = rawdata.rows.item(0)
+
+            result = {
+                slot:       row.slot,
+                sceneId:    row.scene_id,
+                cmdIndex:   row.cmd_index,
+                variables:  JSON.parse(row.variables),
+                screen:     JSON.parse(row.screen),
+                label:      row.label,
+                screenshot: row.screenshot,
+                savedAt:    row.saved_at
+            }
+        })
+
+        return result
+    }
+
     function initialize() {
         if (ready) return
         _db = LocalStorage.openDatabaseSync(
