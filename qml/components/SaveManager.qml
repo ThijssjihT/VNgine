@@ -8,10 +8,10 @@ import "../GameEngine.js" as Engine
 QtObject {
     id: saveManager
 
-    property var    _db:            null     // database connection
-    property var    _pending:       null     // staged save data awaiting save slot choice
-    property bool   _justLoaded:    false    // to communicate if a save game has just been loaded
-    property bool   ready:          false
+    property var    _db:                null    // database connection
+    property var    _pending:           null    // staged save data awaiting save slot choice
+    property bool   _justLoaded:        false   // to communicate if a save game has just been loaded
+    property bool   ready:              false
 
     function pendingLabel() {
         return _pending ? _pending.presetLabel : ""
@@ -148,6 +148,7 @@ QtObject {
         Engine.cmdIndex = loadingResults.cmd_index
         Engine.loadScene(loadingResults.scene_id)
         Engine.variables = loadingResults.variables
+        Engine.screenBlob = loadingResults.screen
     }
 
     function initialize() {

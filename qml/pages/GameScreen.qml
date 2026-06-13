@@ -181,8 +181,9 @@ Page {
             commitSave(Components.SaveManager.pendingSlot())
         }
         if (status === PageStatus.Active && Components.SaveManager.justLoaded()) { //what about _loading?
-            Components.SaveManager.loading()  //This should be cleaned up, for now it just sets _justLoaded to !_justLoaded
-            buildScreenFromScreenBlob()
+            Components.SaveManager.finishLoading()
+            buildScreenFromScreenBlob(Engine.screenBlob)
+            Components.SaveManager.loading()
             processNext()
         }
     }

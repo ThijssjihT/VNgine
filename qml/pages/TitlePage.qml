@@ -232,6 +232,9 @@ Page {
         creditslabel.text = sections.join("\n\n") //join all text from every credits keys
 
         mostRecentSave = SaveManager.loadMostRecentSave()
-        if (mostRecentSave) continueButton.enabled = true
+        if (mostRecentSave) {
+            continueButton.enabled = true
+            SaveManager.finishLoading(mostRecentSave)
+        }
     }
 }
