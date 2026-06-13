@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick 2.6
 import QtQuick.LocalStorage 2.0
 import "Constants.js" as Constants
+import "../GameEngine.js" as Engine
 
 QtObject {
     id: saveManager
@@ -139,7 +140,14 @@ QtObject {
             }
         })
 
+        if (result) _justLoaded = true
         return result
+    }
+
+    function finishLoading(loadingResults) {
+        Engine.cmdIndex = loadingResults.cmd_index
+        Engine.loadScene(loadingResults.scene_id)
+        Engine.variables = loadingResults.variables
     }
 
     function initialize() {
