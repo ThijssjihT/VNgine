@@ -20,8 +20,11 @@ and contact me on github or on the SFOS forum
 import QtQuick 2.6
 import Sailfish.Silica 1.0
 import "../GameEngine.js" as Engine
+import "../components"
 
 Page {
+
+    property var mostRecentSave: null
 
     SilicaFlickable {
         id:             body
@@ -71,10 +74,12 @@ Page {
             }
 
             Button {
+                id:                         continueButton
                 anchors.horizontalCenter:   parent.horizontalCenter
                 text:                       qsTr("Continue")
                 enabled:                    false                   //should check for active game or otherwise most recent save
                 onClicked: {
+                    SaveManager.justLoaded()
                     pageStack.replace(Qt.resolvedUrl("GamePage.qml"))
                 }
             }
@@ -225,5 +230,8 @@ Page {
             sections.push(lines.join("\n")) //join all lines from a single credits key
         }
         creditslabel.text = sections.join("\n\n") //join all text from every credits keys
+
+        mostRecentSave = SaveManager.loadMostRecentSave()
+        if (mostRecentSave) continueButton.enabled = true
     }
 }
