@@ -106,6 +106,30 @@ QtObject {
         return result
     }
 
+    function listSavedGames(listModel) {
+        if (!_db) initialize()
+
+        listModel.clear()
+
+        _db.transaction(function(tx) {
+            var rawdata = tx.executeSql(
+                "SELECT slot, label, screenshot, saved_at " +
+                "FROM saves ORDER BY slot DESC")
+
+            if (rawdata.rows.length === 0) return
+
+            for(var i = 0; i < rawdata.rows.length; i++) {
+                var row = rawdata.rows.item(i)
+                listModel.append({
+                            slot:           slot,
+                            label:          row.label,
+                            screenshot:     row.screenshot,
+                            savedAt:        row.saved_at
+                })
+            }
+        })
+    }
+
     function slotHasSave(slot) {
         if (!_db) initialize()
 
