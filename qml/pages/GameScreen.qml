@@ -162,7 +162,8 @@ Page {
         // TODO: SOUND
         return {
             background: currentBg,
-            sprites:    sprites
+            sprites:    sprites,
+            dialogue:   { speaker: speakerName, text: fullText }
         }
     }
 
@@ -172,6 +173,12 @@ Page {
         for (var i = 0; i < screenBlob.sprites.length; i++) {
             var s = screenBlob.sprites[i]
             showSprite(s.spriteId, s.spriteSource, s.position)
+        }
+        if (screenBlob.dialogue) {
+            speakerName   = screenBlob.dialogue.speaker
+            fullText      = screenBlob.dialogue.text
+            visibleText   = screenBlob.dialogue.text   // full line, no typewriter replay
+            textAnimating = false
         }
         //TODO: sound
     }
@@ -371,12 +378,13 @@ Page {
 
     Component.onCompleted: {
         computeThumbSize()
+        Engine.gameInProgress = true
         if (Components.SaveManager.justLoaded()) {
             Components.SaveManager.finishLoading()
             buildScreenFromScreenBlob(Components.SaveManager.pendingScreen())
             Components.SaveManager.flipLoadingFlag()   // consume the flag so it can't re-trigger
+        } else {
+            processNext()
         }
-        Engine.gameInProgress = true
-        processNext()
     }
 }
