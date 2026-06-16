@@ -28,8 +28,8 @@ DISTFILES += qml/harbour-VNgine.qml \
     qml/cover/CoverPage.qml \
     qml/game/script/scene_0001.json \
     qml/pages/GameScreen.qml \
-    qml/pages/Load.qml \
-    qml/pages/Save.qml \
+    qml/pages/LoadGamePage.qml \
+    qml/pages/SaveGamePage.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/TitlePage.qml \
     rpm/harbour-VNgine.changes.in \
