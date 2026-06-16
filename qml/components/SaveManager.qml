@@ -10,6 +10,7 @@ QtObject {
 
     property var    _db:                null    // database connection
     property var    _pending:           null    // staged save data awaiting save slot choice
+    property var    _pendingLoad:       null    // fetched save data held until loading is finalized
     property bool   _justLoaded:        false   // to communicate if a save game has just been loaded
     property bool   ready:              false
 
@@ -29,7 +30,7 @@ QtObject {
         return _justLoaded
     }
 
-    function loading() {
+    function flipLoadingFlag() {
         _justLoaded = !_justLoaded
     }
 
@@ -57,6 +58,7 @@ QtObject {
         if (!_pending) return false
         if (_pending.slot < 0) return false
         if (!_pending.presetLabel || (_pending.presetLabel === "")) _pending.presetLabel = "untitled"
+        if (!_db) initialize()
 
         _db.transaction(function(tx) {
             tx.executeSql(
@@ -70,7 +72,7 @@ QtObject {
     }
 
     function loadSavedGame(slot) {
-        if (!_db) return null
+        if (!_db) initialize()
 
         var result = null
 
@@ -95,12 +97,13 @@ QtObject {
             }
         })
 
-        if (result) _justLoaded = true
+        if (!result) return
+        _pendingLoad = result
         return result
     }
 
     function slotHasSave(slot) {
-        if (!_db) return false
+        if (!_db) initialize()
 
         var exists = false
 
@@ -115,7 +118,7 @@ QtObject {
     }
 
     function loadMostRecentSave() {
-        if (!_db) return null
+        if (!_db) initialize()
 
         var result = null
 
@@ -140,13 +143,14 @@ QtObject {
             }
         })
 
-        if (result) _justLoaded = true
+        if (!result) return
+        _pendingLoad = result
         return result
     }
 
     function finishLoading(loadingResults) {
-        Engine.cmdIndex = loadingResults.cmd_index
-        Engine.loadScene(loadingResults.scene_id)
+        Engine.loadScene(loadingResults.sceneId)
+        Engine.cmdIndex = loadingResults.cmdIndex
         Engine.variables = loadingResults.variables
         Engine.screenBlob = loadingResults.screen
     }
