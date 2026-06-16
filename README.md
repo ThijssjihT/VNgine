@@ -26,19 +26,18 @@ You provide the story scripts, assets and metadata. The engine handles rendering
 - Game screen page
 - Dialogue with typewriter effect and tap-to-advance
 - Basic script playback and command execution
+- Sprites with positioning
 
 ### In development
-- SFOS remorse timer confirmation
-- Sprites with positioning
 - Choice system with conditional visibility
 - Variable system for storing game variables
 - Audio playback: background music
+- Save/Load system
 
 ### Planned
 - HUD for displaying game variables
 - Sprite fade transitions
 - Background transitions
-- Save/Load system
 - Multi-language support
 - Audio: sound effects, character voice
 - Text effects
