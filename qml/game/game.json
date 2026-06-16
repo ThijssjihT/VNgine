@@ -1,0 +1,105 @@
+{
+    "title": "VNgine sample game",
+    "version": "0.1.0",
+    "default_language": "en",
+    "entry_scene": "scene_0001",
+
+    "audio_channels": {
+        "music": {
+            "label": "Music",
+            "default": 80
+        },
+        "text_fx": {
+            "label": "TextFX",
+            "default": 40
+        },
+        "game_fx": {
+            "label": "GameFX",
+            "default": 80
+        },
+        "voice": {
+            "label": "Voice",
+            "default": 100
+        }
+    },
+
+    "languages": {
+        "text": {
+            "label": "Language",
+            "options": ["English", "Nederlands"],
+            "default": "English"
+        },
+        "voice": {
+            "label": "Voice",
+            "options": ["English", "Japanese"],
+            "default": "English"
+        }
+    },
+
+    "toggles": {
+        "adult_content": {
+            "label": "Adult content",
+            "default": true
+        },
+        "arachnofobia": {
+            "label": "Arachnofobia mode",
+            "default": false
+        }
+    },
+
+    "dropdowns": {
+        "difficulty": {
+            "label": "Difficulty",
+            "options": ["easy", "normal", "hard"],
+            "default": "normal"
+        }
+    },
+
+    "textfields": {
+        "player_title": {
+            "label": "What do others call you by?",
+            "default": "Mister"
+        },
+        "password": {
+            "label": "Unlock content",
+            "default": "enter unlock code"
+        }
+    },
+
+    "sliders": {
+        "starting_wealth": {
+            "label": "Starting wealth",
+            "min": 10,
+            "max": 100,
+            "stepsize": 1,
+            "default": 20
+        }
+    },
+
+    "tagline": "A sample game to show developers how to use json file to script their game in VNgine",
+
+    "credits": {
+        "game_licence": [
+            "A sample game made in and for VNgine, by Thijs Janssen",
+            "Game, excluding engine and assets, are license free"
+        ],
+        "asset1": [
+            "Origami by Scott Buckley | www.scottbuckley.com.au",
+            "Music promoted by https://www.chosic.com/free-music/all/",
+            "Creative Commons CC BY 4.0",
+            "https://creativecommons.org/licenses/by/4.0/"
+        ],
+        "asset2": [
+            "liisa",
+            "originally: miki",
+            "miki asset pack",
+            "By Noraneko Games"
+        ],
+        "asset3": [
+            "other sprites made with Character Creator VN - Sutemo",
+            "https://sutemo.itch.io/",
+            "asset packs by yuripourre",
+            "https://yuripourre.itch.io"
+        ]
+    }
+}
