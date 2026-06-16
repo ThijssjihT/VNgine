@@ -22,6 +22,10 @@ QtObject {
         return _pending ? _pending.slot : -1
     }
 
+    function pendingScreen() {
+        return _pendingLoad ? _pendingLoad.screen : null
+    }
+
     function clearSaveData() {
         _pending = null
     }
@@ -148,11 +152,11 @@ QtObject {
         return result
     }
 
-    function finishLoading(loadingResults) {
-        Engine.loadScene(loadingResults.sceneId)
-        Engine.cmdIndex = loadingResults.cmdIndex
-        Engine.variables = loadingResults.variables
-        Engine.screenBlob = loadingResults.screen
+    function finishLoading() {
+        if (!_pendingLoad) return
+        Engine.loadScene(_pendingLoad.sceneId)
+        Engine.cmdIndex = _pendingLoad.cmdIndex
+        Engine.variables = _pendingLoad.variables
     }
 
     function initialize() {

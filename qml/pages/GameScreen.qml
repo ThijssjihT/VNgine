@@ -167,6 +167,7 @@ Page {
     }
 
     function buildScreenFromScreenBlob(screenBlob) {
+        if (!screenBlob) return
         currentBg = screenBlob.background
         for (var i = 0; i < screenBlob.sprites.length; i++) {
             var s = screenBlob.sprites[i]
@@ -179,12 +180,6 @@ Page {
         if (status === PageStatus.Active && !_saving && Components.SaveManager.pendingSlot() >= 0) {
             _saving = true
             commitSave(Components.SaveManager.pendingSlot())
-        }
-        if (status === PageStatus.Active && Components.SaveManager.justLoaded()) { //what about _loading?
-            Components.SaveManager.finishLoading()
-            buildScreenFromScreenBlob(Engine.screenBlob)
-            Components.SaveManager.loading()
-            processNext()
         }
     }
 
@@ -281,7 +276,7 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("Title screen")
-                onClicked: remorsePopup.execute(qsTr("Returning to home"), function() { pageStack.pop(null) })
+                onClicked: remorsePopup.execute(qsTr("Returning to home"), function() { pageStack.push(Qt.resolvedUrl("TitlePage.qml")) })
             }
             MenuItem {
                 text: qsTr("Save")
@@ -376,6 +371,12 @@ Page {
 
     Component.onCompleted: {
         computeThumbSize()
+        if (Components.SaveManager.justLoaded()) {
+            Components.SaveManager.finishLoading()
+            buildScreenFromScreenBlob(Components.SaveManager.pendingScreen())
+            Components.SaveManager.flipLoadingFlag()   // consume the flag so it can't re-trigger
+        }
+        Engine.gameInProgress = true
         processNext()
     }
 }

@@ -79,8 +79,12 @@ Page {
                 text:                       qsTr("Continue")
                 enabled:                    false                   //should check for active game or otherwise most recent save
                 onClicked: {
-                    SaveManager.justLoaded()
-                    pageStack.replace(Qt.resolvedUrl("GamePage.qml"))
+                    if (Engine.gameInProgress) {    // if a game is in progress, then resume
+                        pageStack.pop(null)         // otherwise load most recent save
+                    } else {
+                        SaveManager.flipLoadingFlag()
+                        pageStack.replace(Qt.resolvedUrl("GameScreen.qml"))
+                    }
                 }
             }
 
@@ -212,6 +216,7 @@ Page {
     }
 
     Component.onCompleted: {
+        console.warn("I am TitlePage.qml, and I am completed")
         Engine.loadManifest(Qt.resolvedUrl("../game"))
         title.title = Engine.manifest.title
         introlabel.text = Engine.manifest.tagline
@@ -231,10 +236,7 @@ Page {
         }
         creditslabel.text = sections.join("\n\n") //join all text from every credits keys
 
-        mostRecentSave = SaveManager.loadMostRecentSave()
-        if (mostRecentSave) {
-            continueButton.enabled = true
-            SaveManager.finishLoading(mostRecentSave)
-        }
+        mostRecentSave = SaveManager.loadMostRecentSave() || Engine.gameInProgress
+        if (mostRecentSave) continueButton.enabled = true
     }
 }

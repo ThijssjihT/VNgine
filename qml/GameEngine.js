@@ -10,7 +10,7 @@ var labelIndex      = {};           //oject that holds all index numbers of the 
                                     //and set the cmdIndex to the corresponding number.
 var gamePath        = "";
 var currentScene    = "";           //store what scene we are curently on, needed for saving / loading
-var screenBlob      = "";           //stores the screenBlob so it can be loaded from 1 page and referenced by another
+var gameInProgress  = false;        //we need to know if a game is in progress to toggle continue button functionality
 
 function loadJson(url) {
     var xhr = new XMLHttpRequest(); //not commenting on this, look up this and its methods in the mozilla mdn

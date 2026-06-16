@@ -10,6 +10,7 @@ ApplicationWindow {
     allowedOrientations:    defaultAllowedOrientations
 
     Component.onCompleted: {
+        console.warn("I am harbour-VNgine.qml, and I am completed")
         Components.Settings.initialize()
         Components.SaveManager.initialize()
     }
