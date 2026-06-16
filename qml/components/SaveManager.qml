@@ -121,7 +121,7 @@ QtObject {
             for(var i = 0; i < rawdata.rows.length; i++) {
                 var row = rawdata.rows.item(i)
                 listModel.append({
-                            slot:           slot,
+                            slot:           row.slot,
                             label:          row.label,
                             screenshot:     row.screenshot,
                             savedAt:        row.saved_at
