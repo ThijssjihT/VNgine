@@ -48,6 +48,7 @@ Page {
                     SaveManager.loadSavedGame(model.slot)
                     pageStack.replace("GameScreen.qml")
                 }
+                anchors.fill: parent
             }
 
             Image {
@@ -55,6 +56,7 @@ Page {
                 height:     parent.height
                 fillMode:   Image.PreserveAspectCrop
                 source:     StandardPaths.data + "/" + model.screenshot
+                opacity:    50
             }
 
             Column {
@@ -71,7 +73,18 @@ Page {
                     color:          Theme.primaryColor
                 }
                 Label {
-                    text:           model.savedAt
+                    text:           new Date(model.savedAt * 1000).toLocaleDateString(Qt.locale(), "yyyy/MM/dd")
+                    font.pixelSize: Theme.fontSizeMedium
+                    color:          Theme.primaryColor
+                }
+                Label {
+                    text:           {
+                                        var diff = Math.floor(Date.now() / 1000) - model.savedAt
+                                        if (diff < 60) return qsTr("less than a minute ago")
+                                        if (diff < 3600) return qsTr("%1 minutes ago").arg(Math.floor(diff / 60))
+                                        if (diff < 86400) return qsTr("%1 hours ago").arg(Math.floor(diff / 3600))
+                                        return new Date(model.savedAt * 1000).toLocaleDateString(Qt.locale(), "yyyy/MM/dd")
+                                    }
                     font.pixelSize: Theme.fontSizeMedium
                     color:          Theme.primaryColor
                 }
