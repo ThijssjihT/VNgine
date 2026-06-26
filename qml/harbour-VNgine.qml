@@ -24,6 +24,6 @@ ApplicationWindow {
             game.beginNew()
         }
 
-        pageStack.push(Qt.resolvedUrl("pages/TitlePage.qml"))
+        pageStack.push(Qt.resolvedUrl("pages/TitlePage.qml"), {gameScreen: game})
     }
 }

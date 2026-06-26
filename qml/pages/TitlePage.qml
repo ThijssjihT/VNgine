@@ -25,6 +25,7 @@ import "../components"
 Page {
 
     property var mostRecentSave: null
+    property var gameScreen
 
     SilicaFlickable {
         id:             body
@@ -49,9 +50,8 @@ Page {
             MenuItem {
                 text:       qsTr("New Game")
                 onClicked:  {
-                    Engine.initVariables()
-                    Engine.loadScene(Engine.manifest.entry_scene)
-                    pageStack.replace("GameScreen.qml")
+                    gameScreen.beginNew()
+                    pageStack.pop()
                 }
             }
         }
@@ -73,6 +73,9 @@ Page {
                 fillMode:   Image.PreserveAspectCrop
             }
 
+            /*
+2026/06/26
+I think the continue button is no longer needed. Comment out to keep code just in case.
             Button {
                 id:                         continueButton
                 anchors.horizontalCenter:   parent.horizontalCenter
@@ -87,6 +90,7 @@ Page {
                     }
                 }
             }
+            */
 
             Separator {
                 width:                  parent.width
@@ -216,7 +220,6 @@ Page {
     }
 
     Component.onCompleted: {
-        console.warn("I am TitlePage.qml, and I am completed")
         Engine.loadManifest(Qt.resolvedUrl("../game"))
         title.title = Engine.manifest.title
         introlabel.text = Engine.manifest.tagline
@@ -236,7 +239,10 @@ Page {
         }
         creditslabel.text = sections.join("\n\n") //join all text from every credits keys
 
+        /*
+Here is continue button logic
         mostRecentSave = SaveManager.loadMostRecentSave() || Engine.gameInProgress
         if (mostRecentSave) continueButton.enabled = true
+        */
     }
 }
