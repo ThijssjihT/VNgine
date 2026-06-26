@@ -5,13 +5,25 @@ import "components" as Components
 import "GameEngine.js" as Engine
 
 ApplicationWindow {
-    initialPage:            Component { TitlePage { } }
-    cover:                  Qt.resolvedUrl("cover/CoverPage.qml")
-    allowedOrientations:    defaultAllowedOrientations
-
+    initialPage:            Component { GameScreen { } }            // Put the GameScreen as the root of the PageStack
+    cover:                  Qt.resolvedUrl("cover/CoverPage.qml")   // GameScreen will not be our first page, but having
+    allowedOrientations:    defaultAllowedOrientations              // our first page at the root of the pageStack simplifies
+                                                                    // our PageStack design enourmously
     Component.onCompleted: {
-        console.warn("I am harbour-VNgine.qml, and I am completed")
-        Components.Settings.initialize()
+        Engine.loadManifest(Qt.resolvedUrl("game")) // Load the game manifest into the Engine
+        Components.Settings.initialize()            // We initialize settings
         Components.SaveManager.initialize()
+
+        var game = pageStack.currentPage    // GameScreen is already pushed to root
+
+        if (Components.SaveManager.loadMostRecentSave()) {
+            game.resumeLoaded()
+        } else {
+            Engine.initVariables()
+            Engine.loadScene(Engine.manifest.entry_scene)
+            game.beginNew()
+        }
+
+        pageStack.push(Qt.resolvedUrl("pages/TitlePage.qml"))
     }
 }

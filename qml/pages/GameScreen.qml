@@ -183,6 +183,32 @@ Page {
         //TODO: sound
     }
 
+    function beginNew() {
+        resetSession()
+        Engine.initVariables()
+        Engine.loadScene(Engine.manifest.entry_scene)
+        Engine.gameInProgress = true
+        processNext()
+    }
+
+    function resumeLoaded() {
+        resetSession()
+        Engine.gameInProgress = true
+        Components.SaveManager.finishLoading()
+        buildScreenFromScreenBlob(Components.SaveManager.pendingScreen())
+    }
+
+    function resetSession() {
+        clearSprites()
+        currentBg       = ""
+        speakerName     = ""
+        fullText        = ""
+        visibleText     = ""
+        textAnimating   = false
+        _saving         = false
+        _loading        = false
+    }
+
     onStatusChanged: {
         if (status === PageStatus.Active && !_saving && Components.SaveManager.pendingSlot() >= 0) {
             _saving = true
@@ -377,14 +403,6 @@ Page {
     }
 
     Component.onCompleted: {
-        computeThumbSize()
-        Engine.gameInProgress = true
-        if (Components.SaveManager.justLoaded()) {
-            Components.SaveManager.finishLoading()
-            buildScreenFromScreenBlob(Components.SaveManager.pendingScreen())
-            Components.SaveManager.flipLoadingFlag()   // consume the flag so it can't re-trigger
-        } else {
-            processNext()
-        }
+
     }
 }
