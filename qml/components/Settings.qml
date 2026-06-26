@@ -56,7 +56,7 @@ QtObject {
             var languages = Object.keys(manifest.languages)
             _settings["numLanguageSelectors"] = languages.length
             languages.forEach(function(languageSelector, index) {
-                _settings["language_selector_" + index + "_key"]         = languageSelector
+                _settings["language_selector_" + index + "_key"]        = languageSelector
                 _settings["language_" + languageSelector + "_label"]    = manifest.languages[languageSelector].label
                 _settings["language_" + languageSelector + "_options"]  = manifest.languages[languageSelector].options
                 _settings["language_" + languageSelector + "_value"]    = manifest.languages[languageSelector].default
@@ -109,9 +109,9 @@ QtObject {
             var textfields = Object.keys(manifest.textfields)
             _settings["numTextfields"] = textfields.length
             textfields.forEach(function(textfield, index) {
-                _settings["textfield_key_" + index + "_key"]  = textfield
-                _settings["textfield_" + textfield + "_label"] = manifest.textfields[textfield].label
-                _settings["textfield_" + textfield + "_value"] = manifest.textfields[textfield].default
+                _settings["textfield_key_" + index + "_key"]    = textfield
+                _settings["textfield_" + textfield + "_label"]  = manifest.textfields[textfield].label
+                _settings["textfield_" + textfield + "_value"]  = manifest.textfields[textfield].default
             })
         }
     }
