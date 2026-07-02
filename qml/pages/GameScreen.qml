@@ -309,12 +309,12 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("Title screen")
-                onClicked: remorsePopup.execute(qsTr("Returning to home"), function() { pageStack.push(Qt.resolvedUrl("TitlePage.qml")) })
+                onClicked: pageStack.push(Qt.resolvedUrl("TitlePage.qml"), { gameScreen: gameScreen })
             }
             MenuItem {
                 text: qsTr("Save")
-                enabled: false //saving is not yet possible
-                onClicked: console.log("[Game] Save pressed")
+                enabled: true
+                onClicked: pageStack.push(Qt.resolvedUrl("SaveGamePage.qml"))
             }
             MenuItem {
                 text: qsTr("Quick load")
