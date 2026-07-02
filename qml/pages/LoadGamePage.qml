@@ -3,7 +3,17 @@ import Sailfish.Silica 1.0
 import "../components"
 
 Page {
-    id: pageRoot
+    id: loadGamePage
+
+    ListModel {
+        id: listModel
+        property bool populated
+
+        Component.onCompleted: function() {
+            SaveManager.listSavedGames(listModel)
+            populated = true
+        }
+    }
 
     SilicaGridView {
         id:             loadGrid
@@ -11,16 +21,6 @@ Page {
         anchors.fill:   parent
         cellWidth:      parent.width / 2
         cellHeight:     cellWidth
-
-        ListModel {
-            id: listModel
-            property bool populated
-
-            Component.onCompleted: function() {
-                SaveManager.listSavedGames(listModel)
-                populated = true
-            }
-        }
 
         header: PageHeader { title: qsTr("Load game")}
 
