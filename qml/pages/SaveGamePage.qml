@@ -9,7 +9,7 @@ Page {
         id: saveSlotModel
         property bool populated
 
-        Component.onCompleted: function() {
+        Component.onCompleted: {
             SaveManager.listSavedGames(saveSlotModel)
             populated = true
         }
@@ -20,8 +20,35 @@ Page {
         anchors.fill: parent
         model: saveSlotModel
 
-        header: PageHeader {
-            title: qsTr("Save Game")
+        header: Column {
+            width: slotListView.width
+            PageHeader {
+                title: qsTr("Save Game")
+            }
+
+            BackgroundItem {
+                id:     newSaveItem
+                width:  parent.width
+                height: Theme.itemSizeExtraLarge
+
+                Row {
+                    anchors.verticalCenter: parent.verticalCenter
+                    x:                      Theme.horizontalPageMargin
+                    spacing:                Theme.paddingLarge
+
+                    Icon { source: "image://theme/icon-m-add" }
+
+                    Label {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text:                   qsTr("Create a new save")
+                        color:                  newSaveItem.highlighted ? Theme.highlightColor : Theme.primaryColor
+                    }
+                }
+
+                onClicked: {
+                    // TODO: save in next free slot
+                }
+            }
         }
 
         delegate: ListItem {
@@ -72,7 +99,7 @@ Page {
 
                 Label {
                     width: parent.width
-                    text: savedAt !== undefined ? new Date(model.savedAt * 1000).toLocaleDateString(Qt.locale(), "yyyy/MM/dd") : qsTr("Tap to save here")
+                    text:  new Date(model.savedAt * 1000).toLocaleDateString(Qt.locale(), "yyyy/MM/dd")
                     font.pixelSize: Theme.fontSizeExtraSmall
                     color: Theme.secondaryColor
                     wrapMode: Text.WordWrap
@@ -88,19 +115,15 @@ Page {
             menu: ContextMenu {
                 MenuItem {
                     text: qsTr("Delete")
-                    visible: label !== undefined
                     onClicked: {
                         // TODO: remorseAction delete, then SaveManager delete + model.remove(index)
                     }
                 }
-            }
-        }
-
-        PullDownMenu {
-            MenuItem {
-                text: qsTr("Refresh")
-                onClicked: {
-                    // TODO: reload saveSlotModel from SaveManager
+                MenuItem {
+                    text: qsTr("Rename")
+                    onClicked: {
+                        // TODO: rename file
+                    }
                 }
             }
         }
