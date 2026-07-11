@@ -3,7 +3,7 @@ import Sailfish.Silica 1.0
 import "../components"
 
 Page {
-    id: pageRoot
+    id: saveGamePage
 
     ListModel {
         id: saveSlotModel

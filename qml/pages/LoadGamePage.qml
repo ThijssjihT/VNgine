@@ -15,12 +15,10 @@ Page {
         }
     }
 
-    SilicaGridView {
+    SilicaListView {
         id:             loadGrid
         model:          listModel
         anchors.fill:   parent
-        cellWidth:      parent.width / 2
-        cellHeight:     cellWidth
 
         header: PageHeader { title: qsTr("Load game")}
 
@@ -42,7 +40,11 @@ Page {
             }
         }
 
-        delegate: GridItem {
+        delegate: ListItem {
+            id:             slotDelegate
+            width:          parent.width
+            contentHeight:  Theme.itemSizeHuge
+
             MouseArea {
                 onClicked: {
                     SaveManager.loadSavedGame(model.slot)
@@ -52,28 +54,35 @@ Page {
             }
 
             Image {
-                width:      parent.width
-                height:     parent.height
+                id:         slotThumbnail
+                anchors {
+                    left:           parent.left
+                    leftMargin:     Theme.paddingLarge
+                    verticalCenter: parent.verticalCenter
+                }
+                width:      Theme.itemSizeHuge / Screen.width * Screen.height
+                height:     Theme.itemSizeHuge
                 fillMode:   Image.PreserveAspectCrop
                 source:     StandardPaths.data + "/" + model.screenshot
-                opacity:    50
             }
 
             Column {
-                spacing:    Theme.paddingSmall
+                anchors {
+                    left:           slotThumbnail.right
+                    leftMargin:     Theme.paddingLarge
+                    right:          parent.right
+                    rightMargin:    Theme.paddingLarge
+                    verticalCenter: parent.verticalCenter
+                }
+                spacing: Theme.paddingSmall
 
                 Label {
                     text:           qsTr("Slot %1").arg(model.slot)
-                    font.pixelSize: Theme.fontSizeSmall
-                    color:          Theme.secondaryColor
-                }
-                Label {
-                    text:           model.label
                     font.pixelSize: Theme.fontSizeMedium
                     color:          Theme.primaryColor
                 }
                 Label {
-                    text:           new Date(model.savedAt * 1000).toLocaleDateString(Qt.locale(), "yyyy/MM/dd")
+                    text:           model.label
                     font.pixelSize: Theme.fontSizeMedium
                     color:          Theme.primaryColor
                 }
@@ -85,8 +94,8 @@ Page {
                                         if (diff < 86400) return qsTr("%1 hours ago").arg(Math.floor(diff / 3600))
                                         return new Date(model.savedAt * 1000).toLocaleDateString(Qt.locale(), "yyyy/MM/dd")
                                     }
-                    font.pixelSize: Theme.fontSizeMedium
-                    color:          Theme.primaryColor
+                    font.pixelSize: Theme.fontSizeSmall
+                    color:          Theme.secondaryColor
                 }
             }
         }
