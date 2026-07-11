@@ -38,6 +38,22 @@ QtObject {
         _justLoaded = !_justLoaded
     }
 
+    function getFlag(key) {
+        var result
+        _db.transaction(function(tx) {
+            var rs = tx.executeSql("SELECT value FROM flags WHERE key = ?", key)
+            if (rs.rows.length > 0)
+                result = (rs.rows.item(0).value == 1)
+        })
+        return result
+    }
+
+    function setFlag(key, value) {
+        _db.transaction(function(tx) {
+            tx.executeSql("INSERT OR REPLACE INTO flags (key, value) VALUES (?, ?)", [key, value ? 1 : 0])
+        })
+    }
+
     function stagePendingSave(sceneId, cmdIndex, variables, screen, presetLabel) {
         // This is called by GameScreen, to save game state into a variable
         // while GameScreen is still visible, before a pageStack.push() is called
@@ -199,6 +215,7 @@ QtObject {
                 "  label      TEXT, " +
                 "  screenshot TEXT, " +
                 "  saved_at   INTEGER NOT NULL)")
+            tx.executeSql("CREATE TABLE IF NOT EXISTS flags (key TEXT PRIMARY KEY, value TEXT)")
         })
         ready = true
     }

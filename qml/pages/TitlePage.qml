@@ -24,8 +24,8 @@ import "../components"
 
 Page {
 
-    property var mostRecentSave: null
-    property var gameScreen
+    property var    gameScreen
+    property bool   hasPreloadedSave: false
 
     SilicaFlickable {
         id:             body
@@ -72,25 +72,6 @@ Page {
                 source:     Qt.resolvedUrl("../game/banner.png")    //replace this for custom url from manifest???
                 fillMode:   Image.PreserveAspectCrop
             }
-
-            /*
-2026/06/26
-I think the continue button is no longer needed. Comment out to keep code just in case.
-            Button {
-                id:                         continueButton
-                anchors.horizontalCenter:   parent.horizontalCenter
-                text:                       qsTr("Continue")
-                enabled:                    false                   //should check for active game or otherwise most recent save
-                onClicked: {
-                    if (Engine.gameInProgress) {    // if a game is in progress, then resume
-                        pageStack.pop(null)         // otherwise load most recent save
-                    } else {
-                        SaveManager.flipLoadingFlag()
-                        pageStack.replace(Qt.resolvedUrl("GameScreen.qml"))
-                    }
-                }
-            }
-            */
 
             Separator {
                 width:                  parent.width
@@ -189,7 +170,7 @@ I think the continue button is no longer needed. Comment out to keep code just i
 
                     Label {
                         id:             versionLabel
-                        text:           "v0.1.0"
+                        text:           "v0.2.0"
                         font.pixelSize: Theme.fontSizeExtraSmall
                         color:          Theme.secondaryColor
                     }
@@ -219,6 +200,49 @@ I think the continue button is no longer needed. Comment out to keep code just i
         }
     }
 
+    InteractionHintLabel {
+        id:             hintLabel
+        anchors.top:    parent.top
+        opacity:        hint.running ? 1.0 : 0.0
+        Behavior on opacity { FadeAnimation {} }
+    }
+
+    TouchInteractionHint {
+        id:                     hint
+        anchors.verticalCenter: parent.verticalCenter
+    }
+
+    Timer {
+        id:             hintStopTimer
+        interval:       40000
+        onTriggered:    hint.running = false
+    }
+
+    function showHint() {
+        if (hint.running === true) return
+        if (!SaveManager.getFlag("hintPulldownShown")) {
+            runHint(qsTr("Pull down for settings"), TouchInteraction.Down, "hintPulldownShown")
+        } else if (hasPreloadedSave) {
+            if (!SaveManager.getFlag("hintContinueShown"))
+                runHint(qsTr("Swipe right to continue"), TouchInteraction.Right, "hintContinueShown")
+        } else {
+            if (!SaveManager.getFlag("hintNewGameShown"))
+                runHint(qsTr("Swipe right to start playing"), TouchInteraction.Right, "hintNewGameShown")
+        }
+    }
+
+    function runHint(labelText, dir, flagKey) {
+        hintLabel.text  = labelText
+        hint.direction  = dir
+        hint.running    = true
+        hintStopTimer.restart()
+        SaveManager.setFlag(flagKey, true)
+    }
+
+    onStatusChanged: {
+        if (status === PageStatus.Active) showHint()
+    }
+
     Component.onCompleted: {
         Engine.loadManifest(Qt.resolvedUrl("../game"))
         title.title = Engine.manifest.title
@@ -238,11 +262,5 @@ I think the continue button is no longer needed. Comment out to keep code just i
             sections.push(lines.join("\n")) //join all lines from a single credits key
         }
         creditslabel.text = sections.join("\n\n") //join all text from every credits keys
-
-        /*
-Here is continue button logic
-        mostRecentSave = SaveManager.loadMostRecentSave() || Engine.gameInProgress
-        if (mostRecentSave) continueButton.enabled = true
-        */
     }
 }

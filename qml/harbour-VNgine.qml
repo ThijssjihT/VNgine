@@ -15,8 +15,9 @@ ApplicationWindow {
         Components.SaveManager.initialize()
 
         var game = pageStack.currentPage    // GameScreen is already pushed to root
+        var preloaded = Components.SaveManager.loadMostRecentSave()
 
-        if (Components.SaveManager.loadMostRecentSave()) {
+        if (preloaded) {
             game.resumeLoaded()
         } else {
             Engine.initVariables()
@@ -24,6 +25,6 @@ ApplicationWindow {
             game.beginNew()
         }
 
-        pageStack.push(Qt.resolvedUrl("pages/TitlePage.qml"), {gameScreen: game})
+        pageStack.push(Qt.resolvedUrl("pages/TitlePage.qml"), {gameScreen: game, isLaunchInstance: true, hasPreloadedSave: !!preloaded })
     }
 }
