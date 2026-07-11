@@ -7,6 +7,7 @@ import "../components/Constants.js" as Constants
 Page {
     id:                     gameScreen
     allowedOrientations:    Orientation.Landscape
+    cutoutMode:             CutoutMode.FullScreen
 
     property int    thumbWidth:     0
     property int    thumbHeight:    0
