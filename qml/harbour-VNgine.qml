@@ -25,6 +25,6 @@ ApplicationWindow {
             game.beginNew()
         }
 
-        pageStack.push(Qt.resolvedUrl("pages/TitlePage.qml"), {gameScreen: game, isLaunchInstance: true, hasPreloadedSave: !!preloaded })
+        pageStack.push(Qt.resolvedUrl("pages/TitlePage.qml"), {gameScreen: game}, PageStackAction.Immediate)
     }
 }
