@@ -122,28 +122,31 @@ QtObject {
         return result
     }
 
-    function listSavedGames(listModel) {
+    function listSavedGames() {
         if (!_db) initialize()
 
-        listModel.clear()
+        var saves   = []
+        var maxSlot = 0
 
         _db.transaction(function(tx) {
             var rawdata = tx.executeSql(
                 "SELECT slot, label, screenshot, saved_at " +
-                "FROM saves ORDER BY slot DESC")
+                "FROM saves WHERE slot > 0 ORDER BY slot DESC")
 
-            if (rawdata.rows.length === 0) return
+            if (rawdata.rows.length > 0) maxSlot = rawdata.rows.item(0).slot
 
-            for(var i = 0; i < rawdata.rows.length; i++) {
+            for (var i = 0; i < rawdata.rows.length; i++) {
                 var row = rawdata.rows.item(i)
-                listModel.append({
-                            slot:           row.slot,
-                            label:          row.label,
-                            screenshot:     row.screenshot,
-                            savedAt:        row.saved_at
+                saves.push({
+                    slot:       row.slot,
+                    label:      row.label,
+                    screenshot: row.screenshot,
+                    savedAt:    row.saved_at
                 })
             }
         })
+
+        return { saves: saves, maxSlot: maxSlot }
     }
 
     function slotHasSave(slot) {
