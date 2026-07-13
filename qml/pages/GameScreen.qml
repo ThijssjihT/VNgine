@@ -314,17 +314,18 @@ Page {
             }
             MenuItem {
                 text: qsTr("Save")
-                enabled: true
-                onClicked: pageStack.push(Qt.resolvedUrl("SaveGamePage.qml"))
+                onClicked: {
+                    stageSaveGame()
+                    pageStack.push(Qt.resolvedUrl("SaveGamePage.qml"))
+                }
             }
             MenuItem {
                 text: qsTr("Quick load")
-                enabled: false  // stub: slot 0 empty
-                onClicked: console.log("[Game] Quick load pressed")
+                enabled: Components.SaveManager.slotHasSave(0)
+                onClicked: Components.SaveManager.loadSavedGame(0)
             }
             MenuItem {
                 text: qsTr("Quick save")
-                enabled: true
                 onClicked: doQuickSave()
             }
         }
