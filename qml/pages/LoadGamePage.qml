@@ -9,8 +9,18 @@ Page {
         id: listModel
         property bool populated
 
-        Component.onCompleted: function() {
-            SaveManager.listSavedGames(listModel)
+        Component.onCompleted: {
+            var result = SaveManager.listSavedGames()
+
+            for (var i = 0; i < result.saves.length; i++) {
+                var row = result.saves[i]
+                append({
+                           slot:        row.slot,
+                           label:       row.label,
+                           screenshot:  row.screenshot,
+                           savedAt:     row.savedAt
+                })
+            }
             populated = true
         }
     }

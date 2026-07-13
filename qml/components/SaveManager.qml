@@ -131,7 +131,7 @@ QtObject {
         _db.transaction(function(tx) {
             var rawdata = tx.executeSql(
                 "SELECT slot, label, screenshot, saved_at " +
-                "FROM saves WHERE slot > 0 ORDER BY slot DESC")
+                "FROM saves ORDER BY slot DESC")
 
             if (rawdata.rows.length > 0) maxSlot = rawdata.rows.item(0).slot
 
