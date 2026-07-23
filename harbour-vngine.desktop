@@ -1,20 +1,20 @@
 [Desktop Entry]
 Type=Application
 X-Nemo-Application-Type=silica-qt5
-Icon=harbour-VNgine
-Exec=harbour-VNgine
-Name=VNgine
+Icon=harbour-vngine
+Exec=harbour-vngine
+Name=VNgine Sample Game
 # translation example:
 # your app name in German locale (de)
 #
 # Remember to comment out the following line, if you do not want to use
 # a different app name in German locale (de).
-# Name[de]=harbour-VNgine
+# Name[de]=harbour-vngine
 
 [X-Sailjail]
 # Replace with your organization as a reverse domain name
 OrganizationName=nl.thijssjiht
 # ApplicationName does not have to be identical to Name
-ApplicationName=harbour-VNgine
+ApplicationName=harbour-vngine
 # Add the required permissions here
 Permissions=

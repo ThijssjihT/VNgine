@@ -1,6 +1,6 @@
-Name:       harbour-VNgine
+Name:       harbour-vngine
 
-Summary:    harbour-VNgine
+Summary:    harbour-vngine
 Version:    0.2
 Release:    1
 License:    LICENSE

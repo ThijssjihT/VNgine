@@ -10,33 +10,36 @@
 #   - translation filenames have to be changed
 
 # The name of your application
-TARGET = harbour-VNgine
+TARGET = harbour-vngine
 
 CONFIG += sailfishapp
 
-SOURCES += src/harbour-VNgine.cpp
+SOURCES += \
+    src/harbour-vngine.cpp
 
-DISTFILES += qml/harbour-VNgine.qml \
+DISTFILES += \
     qml/components/Constants.js \
     qml/components/SaveManager.qml \
     qml/game/assets/bg/centre_exterior_evening.png \
     qml/game/assets/bg/centre_interior_evening.png \
     qml/game/assets/bg/noticeboard_closeup.png \
     qml/game/assets/sprites/liisa_1.png \
-    VNgineIcon.svg \
     qml/components/Settings.qml \
     qml/cover/CoverPage.qml \
     qml/game/script/scene_0001.json \
+    qml/harbour-vngine.qml \
+    qml/icon.png \
     qml/pages/GameScreen.qml \
     qml/pages/LoadGamePage.qml \
     qml/pages/SaveGamePage.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/TitlePage.qml \
-    rpm/harbour-VNgine.changes.in \
-    rpm/harbour-VNgine.changes.run.in \
-    rpm/harbour-VNgine.spec \
+    rpm/harbour-vngine.changes.in \
+    rpm/harbour-vngine.changes.run.in \
+    rpm/harbour-vngine.spec \
     translations/*.ts \
-    harbour-VNgine.desktop
+    harbour-vngine.desktop \
+    vngineIcon.svg
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
@@ -48,4 +51,4 @@ SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 # planning to localize your app, remember to comment out the
 # following TRANSLATIONS line. And also do not forget to
 # modify the localized app name in the the .desktop file.
-# TRANSLATIONS += translations/harbour-VNgine-de.ts
+# TRANSLATIONS += translations/harbour-vngine-de.ts
