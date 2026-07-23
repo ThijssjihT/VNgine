@@ -52,16 +52,17 @@ Page {
     }
 
     SilicaListView {
-        id: slotListView
-        anchors.fill: parent
-        model: saveSlotModel
+        id:             slotListView
+        anchors.fill:   parent
+        model:          saveSlotModel
+        spacing:        Theme.paddingMedium
 
         header: PageHeader { title: qsTr("Save Game") }
 
         delegate: ListItem {
-            id: slotDelegate
-            width: parent.width
-            contentHeight: Theme.itemSizeExtraLarge
+            id:             slotDelegate
+            width:          parent.width
+            contentHeight:  Theme.itemSizeHuge
 
             ////////////////
             // Display this when slot is empty
@@ -93,8 +94,8 @@ Page {
                     leftMargin:     Theme.paddingLarge
                     verticalCenter: parent.verticalCenter
                 }
-                width:      Theme.itemSizeExtraLarge * 1.78   // ~320:180 aspect
-                height:     Theme.itemSizeExtraLarge
+                width:      Theme.itemSizeHuge / Screen.width * Screen.height
+                height:     Theme.itemSizeHuge
                 fillMode:   Image.PreserveAspectCrop
                 source:     StandardPaths.data + "/" + model.screenshot
             }
@@ -138,8 +139,10 @@ Page {
             }
 
             onClicked: {
+                // TODO: edit label
                 // TODO: if slot occupied, Remorse-style overwrite confirm
-                // TODO: SaveManager.stagePendingSave() -> finalizePending() -> commitToSlot(slot)
+                SaveManager.finalizePending(model.slot, SaveManager.pendingLabel())
+                pageStack.pop()
             }
 
             menu: model.emptySlot ? null : slotContextMenu
@@ -150,9 +153,17 @@ Page {
                     MenuItem {
                         text: qsTr("Delete")
                         onClicked: {
-                            // TODO: remorseAction delete, then SaveManager delete + rebuild model
+                            // All variables don't survive the remorseAction function for some reason, so we need local variables.
+                            var targetSlot = model.slot
+                            var manager = SaveManager
+                            var listModel = saveSlotModel
+                            slotDelegate.remorseAction(qsTr("Deleting save %1").arg(targetSlot), function() {
+                                manager.deleteSave(targetSlot)
+                                listModel.buildSavesList()
+                            })
                         }
                     }
+
                     MenuItem {
                         text: qsTr("Rename")
                         onClicked: {
@@ -162,7 +173,6 @@ Page {
                 }
             }
         }
-
         VerticalScrollDecorator {}
     }
 }

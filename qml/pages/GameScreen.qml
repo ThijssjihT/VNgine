@@ -120,13 +120,17 @@ Page {
     }
 
     function commitSave(slot) {
-        if ((slot === null )) return false
-        if ((slot < 0 )) return false
+        if ((slot === null ) || (slot < 0 )) {
+            _saving = false
+            return false
+        }
         gameRoot.grabToImage(function(result) {
-            var filename    = "save_" + slot + ".jpg"
-            var dir         = StandardPaths.data
-            result.saveToFile(dir + "/" + filename)
-            Components.SaveManager.commitSave(filename)
+            if (result) {
+                var filename    = "save_" + slot + ".jpg"
+                var dir         = StandardPaths.data
+                result.saveToFile(dir + "/" + filename)
+                Components.SaveManager.commitSave(filename)
+            }
             _saving = false
         }, Qt.size(thumbWidth, thumbHeight))
     }

@@ -29,6 +29,7 @@ Page {
         id:             loadGrid
         model:          listModel
         anchors.fill:   parent
+        spacing:        Theme.paddingMedium
 
         header: PageHeader { title: qsTr("Load game")}
 
@@ -106,6 +107,34 @@ Page {
                                     }
                     font.pixelSize: Theme.fontSizeSmall
                     color:          Theme.secondaryColor
+                }
+            }
+
+            menu: slotContextMenu
+
+            Component {
+                id: slotContextMenu
+                ContextMenu {
+                    MenuItem {
+                        text: qsTr("Delete")
+                        onClicked: {
+                            // All variables don't survive the remorseAction function for some reason, so we need local variables.
+                            var targetSlot = model.slot
+                            var manager = SaveManager
+                            var listModel = saveSlotModel
+                            slotDelegate.remorseAction(qsTr("Deleting save %1").arg(targetSlot), function() {
+                                manager.deleteSave(targetSlot)
+                                listModel.buildSavesList()
+                            })
+                        }
+                    }
+
+                    MenuItem {
+                        text: qsTr("Rename")
+                        onClicked: {
+                            // TODO: rename file
+                        }
+                    }
                 }
             }
         }

@@ -91,6 +91,23 @@ QtObject {
         return true
     }
 
+    function deleteSave(slot) {
+        if (!_db) initialize()
+
+        _db.transaction(function(tx) {
+            tx.executeSql("DELETE FROM saves WHERE slot = ?", [slot])
+        })
+
+        //var filename    = StandardPaths.data + "/save_" + slot + ".jpg"
+        //if (Qt.fileExists(filename)) Qt.removeFile(filename)
+
+        // Yeah, it seems to be impossible to delete files
+        // So we can create screenshots, but when we delete a save
+        // the images are orphaned.
+        // This sucks
+        return
+    }
+
     function loadSavedGame(slot) {
         if (!_db) initialize()
 
