@@ -19,9 +19,6 @@ Page {
     property bool   textAnimating:      false
     property real   spriteClearance:    0
 
-    property bool   _saving:            false
-    property bool   _loading:           false
-
     RemorsePopup { id: remorsePopup }
 
     function assetPath(rel) {  // AI proposed and generated helper function
@@ -42,7 +39,6 @@ Page {
 
     function commitSave(slot) {
         if ((slot === null ) || (slot < 0 )) {
-            _saving = false
             return false
         }
         gameRoot.grabToImage(function(result) {
@@ -52,7 +48,6 @@ Page {
                 result.saveToFile(dir + "/" + filename)
                 Components.SaveManager.commitSave(filename)
             }
-            _saving = false
         }, Qt.size(thumbWidth, thumbHeight))
     }
 
@@ -131,8 +126,6 @@ Page {
         fullText        = ""
         visibleText     = ""
         textAnimating   = false
-        _saving         = false
-        _loading        = false
     }
 
     onStatusChanged: {
