@@ -24,88 +24,9 @@ Page {
 
     RemorsePopup { id: remorsePopup }
 
-    function assetPath(rel) {  // AI proposed and generated helper function, but I think this won't do harm
+    function assetPath(rel) {  // AI proposed and generated helper function
         return rel === "" ? "" : Engine.gamePath + "/assets/" + rel
     }
-
-/////////////////////////
-// --- Spritemodel ---
-
-    ListModel { id: spriteModel }
-
-    function showSprite(sId, src, pos) {
-        for (var i = 0; i < spriteModel.count; i++) {
-            if (spriteModel.get(i).spriteId === sId) {
-                spriteModel.setProperty(i, "spriteSource", src)
-                spriteModel.setProperty(i, "position", pos)
-                /*
-                  We can't set a x and y position here, because it will need to reference
-                  object sizes, like the size of the sprite and such. At the point where
-                  this function runs, the spriteModel is being populated, so nothing has
-                  yet been drawn. So we give the Image object the raw data, and let it
-                  calculate its own position.
-                */
-                return
-            }
-        }
-        spriteModel.append({ "spriteId": sId, "spriteSource": src, "position": pos })
-    }
-
-    function removeSprite(sId) {
-        for (var i = 0; i < spriteModel.count; i++)
-            if (spriteModel.get(i).spriteId === sId) { spriteModel.remove(i); return }
-    }
-
-    function clearSprites() { spriteModel.clear() }
-
-    function spriteX(pos, sprWidth) {
-        if (pos === "left")     return 0
-        if (pos === "right")    return gameRoot.width - sprWidth
-        if (pos.indexOf("%") !== -1)                    //If exact x and y coordinates are given
-            return parseFloat(pos.split(",")[0] / 100 * gameRoot.width - sprWidth / 2)
-        return (gameRoot.width - sprWidth) / 2          //Default center position
-    }
-
-    function spriteY(pos, sprHight) {
-        if (pos.indexOf("%") !== -1)
-            return parseFloat(pos.split(",")[1]) / 100 * gameRoot.height - sprHight
-        return gameRoot.height - sprHight - spriteClearance   // presets: bottom
-    }
-
-// --- End Spritemodel
-/////////////////////////
-
-
-/////////////////////////
-// --- Typewriter ---
-    Timer {
-        id:         typewriterTimer
-        interval:   15
-        repeat:     true
-        onTriggered: {
-            if (visibleText.length < fullText.length) {
-                visibleText = fullText.substring(0, visibleText.length + 1)
-            } else {
-                typewriterTimer.stop()
-                textAnimating = false
-            }
-        }
-    }
-
-    function startTypewriter() {
-        visibleText     = ""
-        textAnimating   = true
-        typewriterTimer.start()
-    }
-
-    function skipTypewriter() {
-        typewriterTimer.stop()
-        visibleText     = fullText
-        textAnimating   = false
-    }
-// --- End Typewriter ---
-/////////////////////////
-
 
 /////////////////////////
 // --- Save game logic
@@ -215,13 +136,94 @@ Page {
     }
 
     onStatusChanged: {
-        if (status === PageStatus.Active && !_saving && Components.SaveManager.pendingSlot() >= 0) {
-            _saving = true
+        if (status === PageStatus.Active) return
+        if (Components.SaveManager.pendingSlot() >= 0) {
             commitSave(Components.SaveManager.pendingSlot())
+        } else if (Components.SaveManager.hasPendingLoad()) {
+            resumeLoaded()
         }
     }
 
 // --- End save game logic
+/////////////////////////
+
+
+/////////////////////////
+// --- Spritemodel ---
+
+    ListModel { id: spriteModel }
+
+    function showSprite(sId, src, pos) {
+        for (var i = 0; i < spriteModel.count; i++) {
+            if (spriteModel.get(i).spriteId === sId) {
+                spriteModel.setProperty(i, "spriteSource", src)
+                spriteModel.setProperty(i, "position", pos)
+                /*
+                  We can't set a x and y position here, because it will need to reference
+                  object sizes, like the size of the sprite and such. At the point where
+                  this function runs, the spriteModel is being populated, so nothing has
+                  yet been drawn. So we give the Image object the raw data, and let it
+                  calculate its own position.
+                */
+                return
+            }
+        }
+        spriteModel.append({ "spriteId": sId, "spriteSource": src, "position": pos })
+    }
+
+    function removeSprite(sId) {
+        for (var i = 0; i < spriteModel.count; i++)
+            if (spriteModel.get(i).spriteId === sId) { spriteModel.remove(i); return }
+    }
+
+    function clearSprites() { spriteModel.clear() }
+
+    function spriteX(pos, sprWidth) {
+        if (pos === "left")     return 0
+        if (pos === "right")    return gameRoot.width - sprWidth
+        if (pos.indexOf("%") !== -1)                    //If exact x and y coordinates are given
+            return parseFloat(pos.split(",")[0] / 100 * gameRoot.width - sprWidth / 2)
+        return (gameRoot.width - sprWidth) / 2          //Default center position
+    }
+
+    function spriteY(pos, sprHight) {
+        if (pos.indexOf("%") !== -1)
+            return parseFloat(pos.split(",")[1]) / 100 * gameRoot.height - sprHight
+        return gameRoot.height - sprHight - spriteClearance   // presets: bottom
+    }
+
+// --- End Spritemodel
+/////////////////////////
+
+
+/////////////////////////
+// --- Typewriter ---
+    Timer {
+        id:         typewriterTimer
+        interval:   15
+        repeat:     true
+        onTriggered: {
+            if (visibleText.length < fullText.length) {
+                visibleText = fullText.substring(0, visibleText.length + 1)
+            } else {
+                typewriterTimer.stop()
+                textAnimating = false
+            }
+        }
+    }
+
+    function startTypewriter() {
+        visibleText     = ""
+        textAnimating   = true
+        typewriterTimer.start()
+    }
+
+    function skipTypewriter() {
+        typewriterTimer.stop()
+        visibleText     = fullText
+        textAnimating   = false
+    }
+// --- End Typewriter ---
 /////////////////////////
 
 /////////////////////////
