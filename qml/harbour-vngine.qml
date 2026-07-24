@@ -20,8 +20,6 @@ ApplicationWindow {
         if (preloaded) {
             game.resumeLoaded()
         } else {
-            Engine.initVariables()
-            Engine.loadScene(Engine.manifest.entry_scene)
             game.beginNew()
         }
 
