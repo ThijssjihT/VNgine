@@ -45,7 +45,7 @@ Page {
             }
             MenuItem {
                 text:       qsTr("Load Game")
-                onClicked:  pageStack.push(Qt.resolvedUrl("LoadGamePage.qml"))
+                onClicked:  pageStack.push(Qt.resolvedUrl("LoadGamePage.qml"), { gameScreen: gameScreen})
             }
             MenuItem {
                 text:       qsTr("New Game")

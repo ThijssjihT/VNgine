@@ -3,13 +3,17 @@ import Sailfish.Silica 1.0
 import "../components"
 
 Page {
+    property var    gameScreen
+
     id: loadGamePage
 
     ListModel {
         id: listModel
         property bool populated
 
-        Component.onCompleted: {
+        function buildSavesList() {
+            clear()
+
             var result = SaveManager.listSavedGames()
 
             for (var i = 0; i < result.saves.length; i++) {
@@ -22,6 +26,10 @@ Page {
                 })
             }
             populated = true
+        }
+
+        Component.onCompleted: {
+            buildSavesList()
         }
     }
 
@@ -45,8 +53,8 @@ Page {
             MenuItem {
                 text:       qsTr("New game")
                 onClicked:  {
-                    pageStack.clear()
-                    pageStack.replace("GameScreen.qml")
+                    gameScreen.beginNew()
+                    pageStack.pop(gameScreen)
                 }
             }
         }
@@ -56,12 +64,10 @@ Page {
             width:          parent.width
             contentHeight:  Theme.itemSizeHuge
 
-            MouseArea {
-                onClicked: {
-                    SaveManager.loadSavedGame(model.slot)
-                    pageStack.replace("GameScreen.qml")
-                }
-                anchors.fill: parent
+            onClicked: {
+                SaveManager.loadSavedGame(model.slot)
+                gameScreen.resumeLoaded()
+                pageStack.pop(gameScreen)
             }
 
             Image {
@@ -121,10 +127,10 @@ Page {
                             // All variables don't survive the remorseAction function for some reason, so we need local variables.
                             var targetSlot = model.slot
                             var manager = SaveManager
-                            var listModel = saveSlotModel
+                            var persListModel = listModel
                             slotDelegate.remorseAction(qsTr("Deleting save %1").arg(targetSlot), function() {
                                 manager.deleteSave(targetSlot)
-                                listModel.buildSavesList()
+                                persListModel.buildSavesList()
                             })
                         }
                     }
