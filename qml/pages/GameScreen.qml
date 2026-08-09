@@ -129,11 +129,10 @@ Page {
     }
 
     onStatusChanged: {
-        if (status === PageStatus.Active) return
+        if (status !== PageStatus.Active) return
+        quickLoadMenuItem.enabled = Components.SaveManager.slotHasSave(0)
         if (Components.SaveManager.pendingSlot() >= 0) {
             commitSave(Components.SaveManager.pendingSlot())
-        } else if (Components.SaveManager.hasPendingLoad()) {
-            resumeLoaded()
         }
     }
 
@@ -319,13 +318,21 @@ Page {
                 }
             }
             MenuItem {
+                id: quickLoadMenuItem
                 text: qsTr("Quick load")
-                enabled: Components.SaveManager.slotHasSave(0)
-                onClicked: Components.SaveManager.loadSavedGame(0)
+                enabled: false
+                onClicked: {
+                    Components.SaveManager.loadSavedGame(0)
+                    resumeLoaded()
+                }
+
             }
             MenuItem {
                 text: qsTr("Quick save")
-                onClicked: doQuickSave()
+                onClicked: {
+                    doQuickSave()
+                    quickLoadMenuItem.enabled = true
+                }
             }
         }
 
