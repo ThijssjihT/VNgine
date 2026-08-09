@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "default_language": "en",
     "entry_scene": "scene_0001",
+    "save_display_variable": "chapter_title",
 
     "audio_channels": {
         "music": {
