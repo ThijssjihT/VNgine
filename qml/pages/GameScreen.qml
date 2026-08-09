@@ -81,6 +81,7 @@ Page {
             })
         }
         // TODO: SOUND
+        // TODO: VARIABLES
         return {
             background: currentBg,
             sprites:    sprites,
@@ -117,6 +118,7 @@ Page {
         Engine.gameInProgress = true
         Components.SaveManager.finishLoading()
         buildScreenFromScreenBlob(Components.SaveManager.pendingScreen())
+        Components.SaveManager.clearPendingLoad()
     }
 
     function resetSession() {

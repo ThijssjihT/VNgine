@@ -11,7 +11,6 @@ QtObject {
     property var    _db:                null    // database connection
     property var    _pending:           null    // staged save data awaiting save slot choice
     property var    _pendingLoad:       null    // fetched save data held until loading is finalized
-    property bool   _justLoaded:        false   // to communicate if a save game has just been loaded
     property bool   ready:              false
 
     function pendingLabel() {
@@ -26,19 +25,16 @@ QtObject {
         return _pendingLoad ? _pendingLoad.screen : null
     }
 
+    function clearPendingLoad() {
+        _pendingLoad = null
+    }
+
     function clearSaveData() {
         _pending = null
     }
 
-    function justLoaded() {
-        return _justLoaded
-    }
-
-    function flipLoadingFlag() {
-        _justLoaded = !_justLoaded
-    }
-
     function getFlag(key) {
+        if (!_db) initialize()
         var result
         _db.transaction(function(tx) {
             var rs = tx.executeSql("SELECT value FROM flags WHERE key = ?", key)
