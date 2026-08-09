@@ -80,7 +80,6 @@ Page {
             })
         }
         // TODO: SOUND
-        // TODO: VARIABLES
         return {
             background: currentBg,
             sprites:    sprites,
