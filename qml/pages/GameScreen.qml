@@ -257,7 +257,7 @@ Page {
             break
 
         case "say":
-            speakerName = command.speaker || ""
+            speakerName = Engine.interpolate(command.speaker || "")
             fullText    = Engine.resolveText(command)
             startTypewriter()
             // stop here. Next command is processed after player input.

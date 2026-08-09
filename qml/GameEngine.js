@@ -61,11 +61,21 @@ function jumpToLabel(name) {
 }
 
 function applySet(name, op, value) {
-    if (op === "set")      variables[name] = value
-    else if (op === "add") variables[name] = (variables[name] || 0) + value
-    else if (op === "sub") variables[name] = (variables[name] || 0) - value
-    else if (op === "mul") variables[name] = (variables[name] || 0) * value
-    else console.warn("Unknown set op: " + op)
+    if (op === "set")      variables[name] = value;
+    else if (op === "add") variables[name] = (variables[name] || 0) + value;
+    else if (op === "sub") variables[name] = (variables[name] || 0) - value;
+    else if (op === "mul") variables[name] = (variables[name] || 0) * value;
+    else console.warn("Unknown set op: " + op);
+}
+
+function interpolate(str) { //Every displayed string is routed through here, for string replacement
+    if (!str) return str
+    return str.replace(/%([A-Za-z_][A-Za-z0-9_]*)%/g, function(match, name) { //regex made by AI
+        if (variables.hasOwnProperty(name))
+            return variables[name];
+        console.warn("Unknow variable in text: " + name);
+        return match;
+    });
 }
 
 function resolveText(cmd) {
@@ -74,9 +84,13 @@ function resolveText(cmd) {
       will be replaced in development phase 2 with text_key lookup
       and i18n in development phase 6
     */
+    var raw;
     if (cmd.text_key) {
         console.log("TODO, text_key: " + cmd.text_key);
-        return "[" + cmd.text_key + "]";
+        raw = "[" + cmd.text_key + "]";
+    } else {
+        raw = cmd.text || "";
     }
-    return cmd.text || "";
+
+    return interpolate(raw);
 }
