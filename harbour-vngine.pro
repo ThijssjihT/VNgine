@@ -31,6 +31,7 @@ DISTFILES += \
     qml/icon.png \
     qml/pages/GameScreen.qml \
     qml/pages/LoadGamePage.qml \
+    qml/pages/RenameDialog.qml \
     qml/pages/SaveGamePage.qml \
     qml/pages/SettingsPage.qml \
     qml/pages/TitlePage.qml \

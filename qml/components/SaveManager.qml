@@ -104,6 +104,14 @@ QtObject {
         return
     }
 
+    function renameSave(slot, newLabel) {  //AI generated function. Whatever. This looks good.
+        if (!_db) initialize()
+        if (!newLabel || newLabel === "") newLabel = "untitled"
+        _db.transaction(function(tx) {
+            tx.executeSql("UPDATE saves SET label = ? WHERE slot = ?", [newLabel, slot])
+        })
+    }
+
     function loadSavedGame(slot) {
         if (!_db) initialize()
 

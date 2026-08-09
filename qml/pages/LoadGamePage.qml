@@ -138,7 +138,15 @@ Page {
                     MenuItem {
                         text: qsTr("Rename")
                         onClicked: {
-                            // TODO: rename file
+                            var targetSlot      = model.slot
+                            var currentLabel    = model.label
+                            var listModelRef    = listModel
+                            var dialog          = pageStack.push(Qt.resolvedUrl("RenameDialog.qml"),
+                                                    { slot: targetSlot, initialLabel: currentLabel })
+                            dialog.accepted.connect(function() {
+                                SaveManager.renameSave(targetSlot, dialog.newLabel)
+                                listModelRef.buildSavesList()
+                            })
                         }
                     }
                 }
