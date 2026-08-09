@@ -64,6 +64,18 @@ Page {
             width:          parent.width
             contentHeight:  Theme.itemSizeHuge
 
+            property bool editing: false
+
+            function commitRename() {
+                SaveManager.renameSave(model.slot, labelField.text)
+                saveSlotModel.setProperty(index, "label", labelField.text)
+                editing = false
+            }
+
+            function cancelRename() {
+                editing = false
+            }
+
             ////////////////
             // Display this when slot is empty
             Row {
@@ -126,6 +138,29 @@ Page {
                     font.pixelSize: Theme.fontSizeMedium
                     wrapMode:       Text.WordWrap
                     truncationMode: TruncationMode.Fade
+                    visible:        !slotDelegate.editing
+                }
+
+                TextField {
+                    id:                     labelField
+                    width:                  parent.width
+                    visible:                slotDelegate.editing
+                    font.pixelSize:         Theme.fontSizeMedium
+                    textLeftMargin:         0
+                    labelVisible:           false
+                    EnterKey.iconSource:    "image://theme/icon-m-enter-accept"
+                    EnterKey.onClicked:     slotDelegate.commitRename()
+
+                    onVisibleChanged: {
+                        if (visible) {
+                            text = model.label
+                            forceActiveFocus()
+                        }
+                    }
+                    onActiveFocusChanged: {
+                        if (!activeFocus && slotDelegate.editing)
+                            slotDelegate.cancelRename()   // tap away = discard
+                    }
                 }
 
                 Label {
@@ -139,6 +174,7 @@ Page {
             }
 
             onClicked: {
+                if (editing) return
                 // TODO: edit label
                 // TODO: if slot occupied, Remorse-style overwrite confirm
                 SaveManager.finalizePending(model.slot, SaveManager.pendingLabel())
@@ -166,18 +202,7 @@ Page {
 
                     MenuItem {
                         text: qsTr("Rename")
-                        onClicked: {
-                            var targetSlot      = model.slot
-                            var currentLabel    = model.label
-                            var listModelRef    = saveSlotModel
-                            var manager         = SaveManager
-                            var dialog          = pageStack.push(Qt.resolvedUrl("RenameDialog.qml"),
-                                                    { slot: targetSlot, initialLabel: currentLabel } )
-                            dialog.accepted.connect(function() {
-                                manager.renameSave(targetSlot, dialog.newLabel)
-                                listModelRef.buildSavesList()
-                            })
-                        }
+                        onClicked: slotDelegate.editing = true
                     }
                 }
             }

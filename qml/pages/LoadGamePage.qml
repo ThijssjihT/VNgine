@@ -64,7 +64,20 @@ Page {
             width:          parent.width
             contentHeight:  Theme.itemSizeHuge
 
+            property bool editing: false
+
+            function commitRename() {
+                SaveManager.renameSave(model.slot, labelField.text)
+                listModel.setProperty(index, "label", labelField.text)
+                editing = false
+            }
+
+            function cancelRename() {
+                editing = false
+            }
+
             onClicked: {
+                if (editing) return
                 SaveManager.loadSavedGame(model.slot)
                 gameScreen.resumeLoaded()
                 pageStack.pop(gameScreen)
@@ -102,6 +115,28 @@ Page {
                     text:           model.label
                     font.pixelSize: Theme.fontSizeMedium
                     color:          Theme.primaryColor
+                    visible:        !slotDelegate.editing
+                }
+                TextField {
+                    id:                     labelField
+                    width:                  parent.width
+                    visible:                slotDelegate.editing
+                    font.pixelSize:         Theme.fontSizeMedium
+                    textLeftMargin:         0
+                    labelVisible:           false
+                    EnterKey.iconSource:    "image://theme/icon-m-enter-accept"
+                    EnterKey.onClicked:     slotDelegate.commitRename()
+
+                    onVisibleChanged: {
+                        if (visible) {
+                            text = model.label
+                            forceActiveFocus()
+                        }
+                    }
+                    onActiveFocusChanged: {
+                        if (!activeFocus && slotDelegate.editing)
+                            slotDelegate.cancelRename()
+                    }
                 }
                 Label {
                     text:           {
@@ -137,19 +172,7 @@ Page {
 
                     MenuItem {
                         text: qsTr("Rename")
-                        onClicked: {
-                            // All variables don't survive the remorseAction function for some reason, so we need local variables.
-                            var targetSlot      = model.slot
-                            var currentLabel    = model.label
-                            var listModelRef    = listModel
-                            var manager         = SaveManager
-                            var dialog          = pageStack.push(Qt.resolvedUrl("RenameDialog.qml"),
-                                                    { slot: targetSlot, initialLabel: currentLabel })
-                            dialog.accepted.connect(function() {
-                                manager.renameSave(targetSlot, dialog.newLabel)
-                                listModelRef.buildSavesList()
-                            })
-                        }
+                        onClicked: { slotDelegate.editing = true }
                     }
                 }
             }
