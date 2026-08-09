@@ -34,7 +34,7 @@ Page {
                     Engine.cmdIndex,
                     Engine.variables,
                     buildScreenBlob(),
-                    Engine.variables[Engine.manifest.save_display_variable] || "empty")
+                    Engine.variables[Engine.manifest.save_display_variable] || "empty")}
 
     function commitSave(slot) {
         if ((slot === null ) || (slot < 0 )) {
