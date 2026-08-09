@@ -34,8 +34,7 @@ Page {
                     Engine.cmdIndex,
                     Engine.variables,
                     buildScreenBlob(),
-                    "placeholder") //TODO: return chapter label, to be implemented
-    }
+                    Engine.variables[Engine.manifest.save_display_variable] || "empty")
 
     function commitSave(slot) {
         if ((slot === null ) || (slot < 0 )) {
@@ -249,8 +248,7 @@ Page {
               Oh, and change the default switch key while your at it.
             */
         case "set":
-            //{ "cmd": "set", "var": "chapter_title", "op": "set", "value": "Prologue" },
-            //TODO: wanted to implement chapter title loading, but it is a regular variable command. Need to be decided how to handle this yet.
+            Engine.applySet(command.var, command.op, command.value)
             processNext()
             break
 

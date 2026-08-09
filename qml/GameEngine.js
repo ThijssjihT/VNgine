@@ -32,7 +32,9 @@ function initVariables() {
     var defs = manifest.variables || {};        //a game with no variables will return an empty object, or else this would error.
     for (var key in defs)
         variables[key] = defs[key]["default"]
-    // DO I LOAD CHAPTER TITLE HERE?
+    var saveLabelVariable = manifest.save_display_variable
+    if(saveLabelVariable && !(saveLabelVariable in variables))
+        variables[saveLabelVariable] = "empty"
 }
 
 function loadScene(sceneId) {
@@ -56,6 +58,14 @@ function jumpToLabel(name) {
     }
     console.warn("Unknown label: " + name);
     return false;
+}
+
+function applySet(name, op, value) {
+    if (op === "set")      variables[name] = value
+    else if (op === "add") variables[name] = (variables[name] || 0) + value
+    else if (op === "sub") variables[name] = (variables[name] || 0) - value
+    else if (op === "mul") variables[name] = (variables[name] || 0) * value
+    else console.warn("Unknown set op: " + op)
 }
 
 function resolveText(cmd) {
