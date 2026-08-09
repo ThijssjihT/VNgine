@@ -138,13 +138,15 @@ Page {
                     MenuItem {
                         text: qsTr("Rename")
                         onClicked: {
+                            // All variables don't survive the remorseAction function for some reason, so we need local variables.
                             var targetSlot      = model.slot
                             var currentLabel    = model.label
                             var listModelRef    = listModel
+                            var manager         = SaveManager
                             var dialog          = pageStack.push(Qt.resolvedUrl("RenameDialog.qml"),
                                                     { slot: targetSlot, initialLabel: currentLabel })
                             dialog.accepted.connect(function() {
-                                SaveManager.renameSave(targetSlot, dialog.newLabel)
+                                manager.renameSave(targetSlot, dialog.newLabel)
                                 listModelRef.buildSavesList()
                             })
                         }
