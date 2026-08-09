@@ -119,13 +119,12 @@ Page {
 
             // --- Load other elements ---
             //AI generated
-
-            // ---- Toggles ----
             SectionHeader {
-                text:       qsTr("Content options")
-                visible:    Components.Settings.get("numToggles") > 0
+                text:       qsTr("Game specific settings")
+                visible:    Components.Settings.get("numToggles") + Components.Settings.get("numDropdowns") + Components.Settings.get("numSliders") + Components.Settings.get("numTextfields") > 0
             }
 
+            // ---- Toggles ----
             Repeater {
                 model: Components.Settings.get("numToggles")
 
@@ -140,11 +139,6 @@ Page {
             }
 
             // ---- Dropdowns ----
-            SectionHeader {
-                text:       qsTr("Game options")
-                visible:    Components.Settings.get("numDropdowns") > 0
-            }
-
             Repeater {
                 model: Components.Settings.get("numDropdowns")
 
@@ -167,11 +161,6 @@ Page {
             }
 
             // ---- Sliders ----
-            SectionHeader {
-                text:       qsTr("Game parameters")
-                visible:    Components.Settings.get("numSliders") > 0
-            }
-
             Repeater {
                 model: Components.Settings.get("numSliders")
 
@@ -190,11 +179,6 @@ Page {
             }
 
             // ---- Text fields ----
-            SectionHeader {
-                text:       qsTr("Unlock codes")
-                visible:    Components.Settings.get("numTextfields") > 0
-            }
-
             Repeater {
                 model: Components.Settings.get("numTextfields")
 
