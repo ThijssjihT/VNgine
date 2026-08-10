@@ -88,8 +88,7 @@ function resolveSetValue(cmd) {
             return variables[cmd.from.var]
         }
         if (cmd.from.setting !== undefined) {
-            //TODO: wire up from.setting
-            return cmd.value
+            return getSetting(cmd.from.setting)
         }
         console.warn("set: unrecognised 'from' key" + JSON.stringify(cmd.from))
     }
@@ -109,6 +108,9 @@ function interpolate(str) { //Every displayed string is routed through here, for
     return str.replace(/%([A-Za-z_][A-Za-z0-9_]*)%/g, function(match, name) { //regex made by AI
         if (variables.hasOwnProperty(name))
             return variables[name];
+        var settingValue = getSetting(name)
+        if (settingValue !== undefined)
+            return settingValue
         console.warn("Unknow variable in text: " + name);
         return match;
     });
