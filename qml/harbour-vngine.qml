@@ -12,6 +12,7 @@ ApplicationWindow {
     Component.onCompleted: {
         Engine.loadManifest(Qt.resolvedUrl("game")) // Load the game manifest into the Engine
         Components.Settings.initialize()            // We initialize settings
+        Engine.setSettingsProvider(Components.Settings.get) //Passing the Settings.get function into a Engine variable. This stuff is complicated!!! Something to do with scope, and the inability to import Settings into the engine, while we need settings from Settings in the engine.
         Components.SaveManager.initialize()
 
         var game = pageStack.currentPage    // GameScreen is already pushed to root

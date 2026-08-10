@@ -12,7 +12,17 @@ var gamePath        = "";
 var currentScene    = "";           //store what scene we are curently on, needed for saving / loading
 var gameInProgress  = false;        //we need to know if a game is in progress to toggle continue button functionality
 
+var settingsProvider= null;         //Stores a reference to a function normally out of scope, to make it available
 
+function setSettingsProvider(fn) {
+    settingsProvider = fn
+}
+
+function getSetting(key) {
+    if (settingsProvider) return settingsProvider(key)
+    console.warn ("Setting " + key + " requested before settings initialization")
+    return undefined
+}
 
 function loadJson(url) {
     var xhr = new XMLHttpRequest(); //not commenting on this, look up this and its methods in the mozilla mdn
@@ -68,6 +78,22 @@ function jumpToLabel(name) {
     }
     console.warn("Unknown label: " + name);
     return false;
+}
+
+function resolveSetValue(cmd) {
+    if (cmd.from) {
+        if (cmd.from.var !== undefined) {
+            if (!variables.hasOwnProperty(cmd.from.var))
+                console.warn("set: unknown source variable: " + cmd.from.var)
+            return variables[cmd.from.var]
+        }
+        if (cmd.from.setting !== undefined) {
+            //TODO: wire up from.setting
+            return cmd.value
+        }
+        console.warn("set: unrecognised 'from' key" + JSON.stringify(cmd.from))
+    }
+    return cmd.value
 }
 
 function applySet(name, op, value) {

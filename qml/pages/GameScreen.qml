@@ -249,7 +249,7 @@ Page {
               Oh, and change the default switch key while your at it.
             */
         case "set":
-            Engine.applySet(command.var, command.op, command.value)
+            Engine.applySet(command.var, command.op, Engine.resolveSetValue(command))
             processNext()
             break
 

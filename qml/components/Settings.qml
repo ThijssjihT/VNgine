@@ -24,8 +24,8 @@ QtObject {
     function get(key) {
         if (_settings.hasOwnProperty(key))
             return _settings[key]
-        if (_keyindex.hasOwnProperty(key))
-            return _settings[_keyindex[key]]
+        if (_keyIndex.hasOwnProperty(key))
+            return _settings[_keyIndex[key]]
         console.warn("Unknown setting: " + key)
         return undefined
     }
@@ -79,7 +79,7 @@ QtObject {
                 _settings["dropdown_" + dropDown + "_label"]    = manifest.dropdowns[dropDown].label
                 _settings["dropdown_" + dropDown + "_options"]  = manifest.dropdowns[dropDown].options
                 _settings["dropdown_" + dropDown + "_value"]    = manifest.dropdowns[dropDown].default
-                _keyIndex[dropDown] = "textfield_" + dropDown + "_value"
+                _keyIndex[dropDown] = "dropdown_" + dropDown + "_value"
             })
         }
 
@@ -92,7 +92,7 @@ QtObject {
                 _settings["toggle_key_" + index + "_key"]   = toggle
                 _settings["toggle_" + toggle + "_label"]    = manifest.toggles[toggle].label
                 _settings["toggle_" + toggle + "_value"]    = manifest.toggles[toggle].default
-                _keyIndex[toggle] = "textfield_" + toggle + "_value"
+                _keyIndex[toggle] = "toggle_" + toggle + "_value"
             })
         }
 
@@ -108,7 +108,7 @@ QtObject {
                 _settings["slider_" + slider + "_max"]      = manifest.sliders[slider].max
                 _settings["slider_" + slider + "_stepsize"] = manifest.sliders[slider].stepsize
                 _settings["slider_" + slider + "_value"]    = manifest.sliders[slider].default
-                _keyIndex[slider] = "textfield_" + slider + "_value"
+                _keyIndex[slider] = "slider_" + slider + "_value"
             })
         }
 
