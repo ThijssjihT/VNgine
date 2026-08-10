@@ -9,6 +9,7 @@ QtObject {
 
     property var _db: null          //for database connection
     property var _settings: ({})    //stores the settings
+    property var _keyIndex: ({})    //mapping plain key to internal storage key
     property bool ready: false
 
     function initialize() {
@@ -21,7 +22,12 @@ QtObject {
     }
 
     function get(key) {
-        return _settings[key]
+        if (_settings.hasOwnProperty(key))
+            return _settings[key]
+        if (_keyindex.hasOwnProperty(key))
+            return _settings[_keyindex[key]]
+        console.warn("Unknown setting: " + key)
+        return undefined
     }
 
     function set(key, value) {
@@ -73,6 +79,7 @@ QtObject {
                 _settings["dropdown_" + dropDown + "_label"]    = manifest.dropdowns[dropDown].label
                 _settings["dropdown_" + dropDown + "_options"]  = manifest.dropdowns[dropDown].options
                 _settings["dropdown_" + dropDown + "_value"]    = manifest.dropdowns[dropDown].default
+                _keyIndex[dropDown] = "textfield_" + dropDown + "_value"
             })
         }
 
@@ -85,6 +92,7 @@ QtObject {
                 _settings["toggle_key_" + index + "_key"]   = toggle
                 _settings["toggle_" + toggle + "_label"]    = manifest.toggles[toggle].label
                 _settings["toggle_" + toggle + "_value"]    = manifest.toggles[toggle].default
+                _keyIndex[toggle] = "textfield_" + toggle + "_value"
             })
         }
 
@@ -100,6 +108,7 @@ QtObject {
                 _settings["slider_" + slider + "_max"]      = manifest.sliders[slider].max
                 _settings["slider_" + slider + "_stepsize"] = manifest.sliders[slider].stepsize
                 _settings["slider_" + slider + "_value"]    = manifest.sliders[slider].default
+                _keyIndex[slider] = "textfield_" + slider + "_value"
             })
         }
 
@@ -112,6 +121,7 @@ QtObject {
                 _settings["textfield_key_" + index + "_key"]    = textfield
                 _settings["textfield_" + textfield + "_label"]  = manifest.textfields[textfield].label
                 _settings["textfield_" + textfield + "_value"]  = manifest.textfields[textfield].default
+                _keyIndex[textfield] = "textfield_" + textfield + "_value"
             })
         }
     }
