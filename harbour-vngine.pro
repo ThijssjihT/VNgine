@@ -26,6 +26,8 @@ DISTFILES += \
     qml/game/assets/sprites/liisa_1.png \
     qml/components/Settings.qml \
     qml/cover/CoverPage.qml \
+    qml/game/assets/ui/textbox/boring_textbox.json \
+    qml/game/assets/ui/textbox/colorful_textbox.json \
     qml/game/script/scene_0001.json \
     qml/harbour-vngine.qml \
     qml/icon.png \

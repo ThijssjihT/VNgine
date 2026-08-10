@@ -127,6 +127,28 @@
             "text": "You know I'm calling you that, because that's what you put into the textfields in the settings, right?"
         },
 
+        {
+            "cmd": "say",
+            "speaker": "Player",
+            "text": "Well, if would have been a game, I am sure it would have looked a bit better."
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Like this, %player_title%?"
+        },
+
+        {
+            "cmd": "textbox",
+            "style": "colorful_textbox"
+        },
+        {
+            "cmd": "say",
+            "speaker": "Player",
+            "text": "AAAARGH!."
+        },
+
         { "cmd": "jump", "scene": "scene_0002" }
     ]
 }

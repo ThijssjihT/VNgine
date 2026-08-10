@@ -19,6 +19,8 @@ Page {
     property bool   textAnimating:      false
     property real   spriteClearance:    0
 
+    property var    textboxStyle: ({ color: "#000000", opacity: 0.7 })
+
     RemorsePopup { id: remorsePopup }
 
     function assetPath(rel) {  // AI proposed and generated helper function
@@ -372,12 +374,14 @@ Page {
             }
 
             Rectangle {
+                readonly property color baseColor: textboxStyle.color
+
                 id:             textbox
                 anchors.bottom: parent.bottom
                 anchors.left:   parent.left
                 anchors.right:  parent.right
                 height:         parent.height * 0.25
-                color:          Qt.rgba(0, 0, 0, 0.7)
+                color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, textboxStyle.opacity)
 
                 Column {
                     anchors.fill:       parent

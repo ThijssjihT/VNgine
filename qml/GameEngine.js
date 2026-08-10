@@ -12,6 +12,8 @@ var gamePath        = "";
 var currentScene    = "";           //store what scene we are curently on, needed for saving / loading
 var gameInProgress  = false;        //we need to know if a game is in progress to toggle continue button functionality
 
+
+
 function loadJson(url) {
     var xhr = new XMLHttpRequest(); //not commenting on this, look up this and its methods in the mozilla mdn
     xhr.open("GET", url, false);
@@ -43,6 +45,14 @@ function loadScene(sceneId) {
     commands = data.commands;
     cmdIndex = 0;       //start at the beginning of the new scene
     labelIndex = {};    //empties the labelIndex to flush labels from previous scene
+}
+
+function loadTextboxStyle(styleId) {
+    var style = loadJson(gamePath + "/assets/ui/textbox/" + styleId + ".json");
+    return {
+        color:   style.color   || "#000000",
+        opacity: style.opacity !== undefined ? style.opacity : 0.7   // "style.opacity || 0.7" would override an intentional zero
+    };
 }
 
 function nextCommand() {
