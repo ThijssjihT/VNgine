@@ -65,6 +65,55 @@ function loadTextboxStyle(styleId) {
     };
 }
 
+function evaluateCondition(cond) {
+    var actualValue
+    if (cond.var !== undefined) {
+        actualValue = variables[cond.var]
+    }
+    else if (cond.setting !== undefined) {
+        actualValue = getSetting(cond.setting)
+    }
+    else if (cond.flag !== undefined) {
+        actualValue = variables[cond.flag]
+    }
+    else {
+        console.warn("undefined condition: " + JSON.stringify(cond))
+        console.warn("treating as false")
+        return false
+    }
+    if (actualValue === undefined) {
+        console.warn("value to condition to is undefined. Please check the condition: " + JSON.stringify(cond))
+        return false
+    }
+
+    if (cond.op === undefined) {
+        //if (actualValue) return true
+        return !!actualValue
+    }
+    if (cond.value === undefined) {
+        console.warn("no value to compare is set. Please check the condition: " + JSON.stringify(cond))
+        return false
+    }
+
+    switch (cond.op) {
+        case "==":
+            return actualValue === cond.value
+        case "!=":
+            return actualValue !== cond.value
+        case "<":
+            return actualValue < cond.value
+        case "<=":
+            return actualValue <= cond.value
+        case ">":
+            return actualValue > cond.value
+        case ">=":
+            return actualValue >= cond.value
+        default:
+            console.warn("Unknown condition op: " + cond.op)
+            return false
+    }
+}
+
 function nextCommand() {
     if (cmdIndex >= commands.length)    //there should ALWAYS be a next command, or the script is very wrong
         return null;                    //is this enough for error handling??? I don't know. Get back to this later.
