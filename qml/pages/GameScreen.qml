@@ -274,6 +274,17 @@ Page {
             processNext()
             break
 
+        case "jump_if":
+            if (Engine.evaluateCondition(command.condition)) {
+                if (command.label) {
+                    Engine.jumpToLabel(command.label)
+                } else if (command.scene) {
+                    Engine.loadScene(command.scene)
+                }
+            }
+            processNext()
+            break
+
         case "label":
             // labels are just markers, not actions: skip to the next command
             processNext()
