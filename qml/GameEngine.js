@@ -55,6 +55,12 @@ function loadScene(sceneId) {
     commands = data.commands;
     cmdIndex = 0;       //start at the beginning of the new scene
     labelIndex = {};    //empties the labelIndex to flush labels from previous scene
+
+    commands.forEach(function(command, index) {
+        if (command.cmd === "label") {
+            labelIndex[command.label] = index
+        }
+    })
 }
 
 function loadTextboxStyle(styleId) {
