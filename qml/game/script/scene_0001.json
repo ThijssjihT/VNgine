@@ -129,8 +129,183 @@
 
         {
             "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Let's see what else is in the settings..."
+        },
+
+        {
+            "cmd": "jump_if",
+            "condition": { "setting": "starting_wealth", "op": ">=", "value": "20"},
+            "label": "avarage_wealth"
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Poor guy, you don't seem to have much money. Just %starting_wealth% coins?"
+        },
+
+        { "cmd": "jump", "label": "wealth_settings_convergence" },
+
+        { "cmd": "label", "label": "avarage_wealth" },
+
+        {
+            "cmd": "jump_if",
+            "condition": { "setting": "starting_wealth", "op": ">=", "value": "40"},
+            "label": "big_wealth"
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "%starting_wealth% coins, huh? I guess that's avarage."
+        },
+
+        { "cmd": "jump", "label": "wealth_settings_convergence" },
+
+        { "cmd": "label", "label": "big_wealth" },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "%starting_wealth%? coins??? That's a lot!"
+        },
+
+        { "cmd": "label", "label": "wealth_settings_convergence" },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Okay, what more?"
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "*Mumbles* Arachnofobia..."
+        },
+
+        {
+            "cmd": "jump_if",
+            "condition": { "flag": "arachnofobia" },
+            "label": "arachnofobia"
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Not scared of spiders? I whish I was that brave."
+        },
+
+        { "cmd": "jump", "label": "arachnofobia_covergence" },
+
+        { "cmd": "label", "label": "arachnofobia" },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Scared of spiders. Yeah, who wouldn't?"
+        },
+
+        { "cmd": "label", "label": "arachnofobia_covergence" },
+
+        {
+            "cmd": "say",
+            "speaker": null,
+            "text": "Liisa looks to be reading on."
+        },
+
+        {
+            "cmd": "jump_if",
+            "condition": { "setting": "adult_content", "op": "==", "value": false },
+            "label": "adult_off"
+        },
+
+        {
+            "cmd": "say",
+            "speaker": null,
+            "text": "Then her face turns red and angry."
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Adult content? What kind of girl do you think I am? I'll tell you what %player_title%, you go into the settings right now, and change that!"
+        },
+
+        { "cmd": "label", "label": "adult_on" },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Go on. I'll wait..."
+        },
+
+        {
+            "cmd": "jump_if",
+            "condition": { "setting": "adult_content", "op": "==", "value": true },
+            "label": "adult_on"
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "That's better!"
+        },
+
+        { "cmd": "label", "label": "adult_off" },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Smut is turned off. Good. I don't like smut."
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Player",
+            "text": "Hey, well executed nudity can be tasteful. Not all adult content is smut."
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Oh yeah? Name one visual novel example..."
+        },
+
+        {
+            "cmd": "say",
+            "speaker": null,
+            "text": "..."
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Thought so."
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Player",
+            "text": "Okay, but this is real life. It isn't a visual novel. Right? Right?"
+        },
+
+        {
+            "cmd": "say",
+            "speaker": "Liisa",
+            "text": "Of course it is. We are inside a game."
+        },
+
+        {
+            "cmd": "say",
             "speaker": "Player",
             "text": "Well, if would have been a game, I am sure it would have looked a bit better."
+        },
+
+        {
+            "cmd": "textbox",
+            "style": "colorful_textbox"
         },
 
         {
@@ -139,10 +314,6 @@
             "text": "Like this, %player_title%?"
         },
 
-        {
-            "cmd": "textbox",
-            "style": "colorful_textbox"
-        },
         {
             "cmd": "say",
             "speaker": "Player",
