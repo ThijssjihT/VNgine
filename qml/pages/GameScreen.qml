@@ -9,23 +9,37 @@ Page {
     allowedOrientations:    Orientation.Landscape
     cutoutMode:             CutoutMode.FullScreen
 
-    property int    thumbWidth:     0
-    property int    thumbHeight:    0
+    property int    thumbWidth:         0
+    property int    thumbHeight:        0
 
     property string currentBg:          ""
     property string speakerName:        ""
     property string fullText:           ""
     property string visibleText:        ""
     property bool   textAnimating:      false
+    property bool   awaitingChoice:     false
     property real   spriteClearance:    0
 
-    property var    textboxStyle: ({ color: "#000000", opacity: 0.7 })
+    property var    textboxStyle:       ({ color: "#000000", opacity: 0.7 })
+    property var    choiceStyle:        ({ color: "#000000", opacity: 0.7 })
 
     RemorsePopup { id: remorsePopup }
 
     function assetPath(rel) {  // AI proposed and generated helper function
         return rel === "" ? "" : Engine.gamePath + "/assets/" + rel
     }
+
+/////////////////////////
+// --- Choice logic
+
+    ListModel { id: choiceModel}
+
+    function selectChoice(optionIndex) {
+        console.log("selected option " + optionIndex + ": " + JSON.stringify(Engine.activeChoice.options[optionIndex]))
+    }
+
+// --- End choice logic
+/////////////////////////
 
 /////////////////////////
 // --- Save game logic
@@ -123,11 +137,14 @@ Page {
 
     function resetSession() {
         clearSprites()
-        currentBg       = ""
-        speakerName     = ""
-        fullText        = ""
-        visibleText     = ""
-        textAnimating   = false
+        currentBg           = ""
+        speakerName         = ""
+        fullText            = ""
+        visibleText         = ""
+        textAnimating       = false
+        awaitingChoice      = false
+        Engine.activeChoice = null
+        choiceModel.clear()
     }
 
     onStatusChanged: {
@@ -243,7 +260,7 @@ Page {
 
         switch (command.cmd) {
             /*
-              only 4 commands implemented so far.
+              only 4 commands implemented so far. Nope, 10 now. I'm on fire!
               TODO: really? do I really need to be this explisit? Do the other commands!
               Check the design file for reference
               Oh, and change the default switch key while your at it.
@@ -283,6 +300,23 @@ Page {
                 }
             }
             processNext()
+            break
+
+        case "choice":
+            Engine.activeChoice = command
+            choiceModel.clear()
+            command.options.forEach(function(option, index) {
+                if (Engine.evaluateCondition(option.condition)) {
+                    choiceModel.append({ text: Engine.interpolate(option.text_key ? "[" + option.text_key + "]" : option.text || ""), optionIndex: index})
+                }
+            })
+            if (choiceModel.count === 0) {
+                console.warn("Choice with no visible options in " + Engine.currentScene + " on command " + Engine.cmdIndex + ", skipping")
+                Engine.activeChoice = null
+                processNext()
+                break
+            }
+            awaitingChoice = true
             break
 
         case "label":
@@ -362,6 +396,7 @@ Page {
             anchors.fill:   parent
 
             MouseArea {
+                enabled: !awaitingChoice // When waiting for choice input, we should not continue to the next script line.
                 anchors.fill: parent
                 onClicked: {
                     if (textAnimating) {
@@ -419,6 +454,42 @@ Page {
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode:       Text.WordWrap
                         width:          parent.width
+                    }
+                }
+            }
+
+            Grid {
+
+                id:                         choiceGrid
+                columns:                    1
+                spacing:                    Theme.paddingMedium
+                visible:                    awaitingChoice
+                anchors.verticalCenter:     parent.verticalCenter
+                anchors.horizontalCenter:   parent.horizontalCenter
+
+                Repeater {
+                    model: choiceModel
+                    delegate: Rectangle {
+                        readonly property color baseColor: choiceStyle.color
+
+                        id:     optionBox
+                        width:  (gameRoot.width * 0.8 - choiceGrid.spacing * (choiceGrid.columns - 1)) / choiceGrid.columns
+                        height: optionLabel.implicitHeight + Theme.paddingMedium * 2
+                        color:  Qt.rgba(baseColor.r, baseColor.g, baseColor.b, choiceStyle.opacity)
+
+                        Label {
+                            id:         optionLabel
+                            width:      parent.width - Theme.paddingMedium * 2
+                            text:       model.text
+                            wrapMode:   Text.WordWrap
+                        }
+                        MouseArea {
+                            id:             optionMouse
+                            anchors.fill:   parent
+                            onClicked:      selectChoice(model.optionIndex)
+                        }
+
+                        // ...
                     }
                 }
             }

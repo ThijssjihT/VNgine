@@ -13,6 +13,7 @@ var currentScene    = "";           //store what scene we are curently on, neede
 var gameInProgress  = false;        //we need to know if a game is in progress to toggle continue button functionality
 
 var settingsProvider= null;         //Stores a reference to a function normally out of scope, to make it available
+var activeChoice    = null;         //Stores all options for the choice the player is facing
 
 function setSettingsProvider(fn) {
     settingsProvider = fn
@@ -72,6 +73,7 @@ function loadTextboxStyle(styleId) {
 }
 
 function evaluateCondition(cond) {
+    if (!cond) return true
     var actualValue
     if (cond.var !== undefined) {
         actualValue = variables[cond.var]
@@ -81,6 +83,7 @@ function evaluateCondition(cond) {
     }
     else if (cond.flag !== undefined) {
         actualValue = variables[cond.flag]
+        if (actualValue === undefined) actualValue = getSetting(cond.flag)
     }
     else {
         console.warn("undefined condition: " + JSON.stringify(cond))

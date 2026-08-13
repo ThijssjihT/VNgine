@@ -77,6 +77,10 @@
         }
     },
 
+    "variables": {
+        "panic": 1
+    },
+
     "tagline": "A sample game to show developers how to use json file to script their game in VNgine",
 
     "credits": {
@@ -95,12 +99,6 @@
             "originally: miki",
             "miki asset pack",
             "By Noraneko Games"
-        ],
-        "asset3": [
-            "other sprites made with Character Creator VN - Sutemo",
-            "https://sutemo.itch.io/",
-            "asset packs by yuripourre",
-            "https://yuripourre.itch.io"
         ]
     }
 }

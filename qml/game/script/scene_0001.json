@@ -9,129 +9,37 @@
         { "cmd": "audio_bg", "file": "audio/music/Origami-chosic.com_.mp3" },
         { "cmd": "audio_sfx", "file": "audio/sfx/tram_distant.ogg", "channel": "game_fx" },
 
-        {
-            "cmd": "say",
-            "speaker": null,
-            "text": "You are at your local community center. Just in front of it is a notice board."
-        },
-        {
-            "cmd": "say",
-            "speaker": null,
-            "text": "Every time you've been here, you passed it, paying it no mind. But this time, your eyes are drawn to a peculiar piece of paper."
-        },
+        { "cmd": "say", "speaker": null, "text": "You are at your local community center. Just in front of it is a notice board." },
+        { "cmd": "say", "speaker": null, "text": "Every time you've been here, you passed it, paying it no mind. But this time, your eyes are drawn to a peculiar piece of paper." },
 
         { "cmd": "bg",    "image": "bg/noticeboard_closeup.png", "transition": "fade" },
 
-        {
-            "cmd": "say",
-            "speaker": "Paper on the notice board",
-            "text": "Once upon a time, a hobby programmer finaly started working on his goal of making an awesome game engine."
-        },
-        {
-            "cmd": "say",
-            "speaker": "Paper on the notice board",
-            "text": "A few weeks of hard work later, the results speak for themselves."
-        },
-        {
-            "cmd": "say",
-            "speaker": "Paper on the notice board",
-            "text": "This is said game engine, made for Sailfish OS. VNgine, a simple game engine for making visual novels."
-        },
-        {
-            "cmd": "say",
-            "speaker": "Player",
-            "text": "..."
-        },
-        {
-            "cmd": "say",
-            "speaker": null,
-            "text": "This is quite the piece of information. A thought enters your mind."
-        },
+        { "cmd": "say", "speaker": "Paper on the notice board", "text": "Once upon a time, a hobby programmer finaly started working on his goal of making an awesome game engine." },
+        { "cmd": "say", "speaker": "Paper on the notice board", "text": "A few weeks of hard work later, the results speak for themselves." },
+        { "cmd": "say", "speaker": "Paper on the notice board", "text": "This is said game engine, made for Sailfish OS. VNgine, a simple game engine for making visual novels." },
+        { "cmd": "say", "speaker": "Player", "text": "..."},
+        { "cmd": "say", "speaker": null, "text": "This is quite the piece of information. A thought enters your mind." },
 
         { "cmd": "audio_sfx", "file": "audio/sfx/boink.ogg", "channel": "game_fx" },
 
-        {
-            "cmd": "say",
-            "speaker": "Player",
-            "text": "NO WAY! IT CAN'T BE!"
-        },
+        { "cmd": "say", "speaker": "Player", "text": "NO WAY! IT CAN'T BE!" },
 
         { "cmd": "bg",    "image": "bg/centre_exterior_evening.png", "transition": "fade" },
 
-        {
-            "cmd": "say",
-            "speaker": "Player",
-            "text": "I am inside a game? And not even a good game? Just a sample game, to show off what the engine can do?"
-        },
-        {
-            "cmd": "say",
-            "speaker": "Player",
-            "text": "No, no, no. That can't be true. Right? Oh my... This can't be happening to me."
-        },
-        {
-            "cmd": "say",
-            "speaker": null,
-            "text": "You look at the notice board again. You look at your surroundings. You notice some assets are made with a lot of love. Others are clearly AI generated."
-        },
-        {
-            "cmd": "say",
-            "speaker": "Player",
-            "text": "How did I not see the AI generated content? I should have noticed sooner."
-        },
-        {
-            "cmd": "say",
-            "speaker": "Player",
-            "text": "All right. Just keep calm. I can fix this. Yes. I'll just have to have faith in myself. I can escape this. I'll pay good notice of everything around me. I'll learn about this gameworld. And when I understand everything, I'll be able to escape."
-        },
+        { "cmd": "say", "speaker": "Player", "text": "I am inside a game? And not even a good game? Just a sample game, to show off what the engine can do?" },
+        { "cmd": "say", "speaker": "Player", "text": "No, no, no. That can't be true. Right? Oh my... This can't be happening to me." },
+        { "cmd": "say", "speaker": null, "text": "You look at the notice board again. You look at your surroundings. You notice some assets are made with a lot of love. Others are clearly AI generated." },
+        { "cmd": "say", "speaker": "Player", "text": "How did I not see the AI generated content? I should have noticed sooner." },
+        { "cmd": "say", "speaker": "Player", "text": "All right. Just keep calm. I can fix this. Yes. I'll just have to have faith in myself. I can escape this. I'll pay good notice of everything around me. I'll learn about this gameworld. And when I understand everything, I'll be able to escape." },
         
-        {
-            "cmd": "sprite",
-            "id": "liisa",
-            "image": "sprites/liisa_1.png",
-            "position": "center"
-        },
+        { "cmd": "sprite", "id": "liisa", "image": "sprites/liisa_1.png", "position": "center" },
+        { "cmd": "say", "speaker": "Liisa", "text": "%player_title%? Are you okay?" },
+        { "cmd": "say", "speaker": "Liisa", "text": "You look like you've seen a ghost." },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "%player_title%? Are you okay?"
-        },
-
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "You look like you've seen a ghost."
-        },
-
-        {
-            "cmd": "sprite_remove",
-            "id": "liisa"
-        },
-
-        {
-            "cmd": "sprite",
-            "id": "liisa",
-            "image": "sprites/liisa_1.png",
-            "position": "right"
-        },
-
-        {
-            "cmd": "say",
-            "speaker": "Player",
-            "text": "%player_title%?"
-        },
-
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "You know I'm calling you that, because that's what you put into the textfields in the settings, right?"
-        },
-
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Let's see what else is in the settings..."
-        },
+        { "cmd": "sprite", "id": "liisa", "image": "sprites/liisa_1.png", "position": "right" },
+        { "cmd": "say", "speaker": "Player", "text": "%player_title%?" },
+        { "cmd": "say", "speaker": "Liisa", "text": "You know I'm calling you that, because that's what you put into the textfields in the settings, right?" },
+        { "cmd": "say", "speaker": "Liisa", "text": "Let's see what else is in the settings..." },
 
         {
             "cmd": "jump_if",
@@ -139,11 +47,7 @@
             "label": "avarage_wealth"
         },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Poor guy, you don't seem to have much money. Just %starting_wealth% coins?"
-        },
+        { "cmd": "say", "speaker": "Liisa", "text": "Poor guy, you don't seem to have much money. Just %starting_wealth% coins?" },
 
         { "cmd": "jump", "label": "wealth_settings_convergence" },
 
@@ -155,35 +59,18 @@
             "label": "big_wealth"
         },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "%starting_wealth% coins, huh? I guess that's avarage."
-        },
+        { "cmd": "say", "speaker": "Liisa", "text": "%starting_wealth% coins, huh? I guess that's avarage." },
 
         { "cmd": "jump", "label": "wealth_settings_convergence" },
 
         { "cmd": "label", "label": "big_wealth" },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "%starting_wealth%? coins??? That's a lot!"
-        },
+        { "cmd": "say", "speaker": "Liisa", "text": "%starting_wealth%? coins??? That's a lot!" },
 
         { "cmd": "label", "label": "wealth_settings_convergence" },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Okay, what more?"
-        },
-
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "*Mumbles* Arachnofobia..."
-        },
+        { "cmd": "say", "speaker": "Liisa", "text": "Okay, what more?" },
+        { "cmd": "say", "speaker": "Liisa", "text": "*Mumbles* Arachnofobia..." },
 
         {
             "cmd": "jump_if",
@@ -191,29 +78,17 @@
             "label": "arachnofobia"
         },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Not scared of spiders? I whish I was that brave."
-        },
+        { "cmd": "say", "speaker": "Liisa", "text": "Not scared of spiders? I whish I was that brave." },
 
         { "cmd": "jump", "label": "arachnofobia_covergence" },
 
         { "cmd": "label", "label": "arachnofobia" },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Scared of spiders. Yeah, who wouldn't?"
-        },
+        { "cmd": "say", "speaker": "Liisa", "text": "Scared of spiders. Yeah, who wouldn't?" },
 
         { "cmd": "label", "label": "arachnofobia_covergence" },
 
-        {
-            "cmd": "say",
-            "speaker": null,
-            "text": "Liisa looks to be reading on."
-        },
+        { "cmd": "say", "speaker": null, "text": "Liisa looks to be reading on." },
 
         {
             "cmd": "jump_if",
@@ -221,25 +96,12 @@
             "label": "adult_off"
         },
 
-        {
-            "cmd": "say",
-            "speaker": null,
-            "text": "Then her face turns red and angry."
-        },
-
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Adult content? What kind of girl do you think I am? I'll tell you what %player_title%, you go into the settings right now, and change that!"
-        },
+        { "cmd": "say", "speaker": null, "text": "Then her face turns red and angry." },
+        { "cmd": "say", "speaker": "Liisa", "text": "Adult content? What kind of girl do you think I am? I'll tell you what %player_title%, you go into the settings right now, and change that!" },
 
         { "cmd": "label", "label": "adult_on" },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Go on. I'll wait..."
-        },
+        { "cmd": "say", "speaker": "Liisa", "text": "Go on. I'll wait..." },
 
         {
             "cmd": "jump_if",
@@ -247,78 +109,64 @@
             "label": "adult_on"
         },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "That's better!"
-        },
+        { "cmd": "say", "speaker": "Liisa", "text": "That's better!" },
 
         { "cmd": "label", "label": "adult_off" },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Smut is turned off. Good. I don't like smut."
-        },
+        { "cmd": "say", "speaker": "Liisa", "text": "Smut is turned off. Good. I don't like smut." },
+        { "cmd": "say", "speaker": "Player", "text": "Hey, well executed nudity can be tasteful. Not all adult content is smut." },
+        { "cmd": "say", "speaker": "Liisa", "text": "Oh yeah? Name one visual novel example..." },
+        { "cmd": "say", "speaker": null, "text": "..." },
+        { "cmd": "say", "speaker": "Liisa", "text": "Thought so." },
+        { "cmd": "say", "speaker": "Player", "text": "Okay, but this is real life. It isn't a visual novel. Right? Right?" },
+        { "cmd": "say", "speaker": "Liisa", "text": "Of course it is. We are inside a game." },
+        { "cmd": "say", "speaker": "Player", "text": "Well, if would have been a game, I am sure it would have looked a bit better." },
+
+        { "cmd": "textbox", "style": "colorful_textbox" },
+
+        { "cmd": "say", "speaker": "Liisa", "text": "Like this, %player_title%?" },
+
+        { "cmd": "set", "var": "panic", "op": "add", "value": 6 },
+
+{ "label": "start_panicing", "cmd": "label" },
 
         {
-            "cmd": "say",
-            "speaker": "Player",
-            "text": "Hey, well executed nudity can be tasteful. Not all adult content is smut."
+            "cmd": "choice",
+            "options": [
+                {
+                    "text": "Don't panic",
+                    "condition": { "var": "panic", "op": "<", "value": 3},
+                    "next": "dont_panic"
+                },
+                {
+                    "text": "Panic",
+                    "condition": null,
+                    "effects": [{ "var": "panic", "op": "sub", "value": 1 }],
+                    "next": "label_panic"
+                },
+                {
+                    "text": "Panic hard",
+                    "condition": null,
+                    "effects": [{ "var": "panic", "op": "sub", "value": 1 }]
+                }
+            ]
         },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Oh yeah? Name one visual novel example..."
-        },
+        { "cmd": "say", "speaker": "Player", "text": "AAAARGH!." },
+        { "cmd": "say", "speaker": "Liisa", "text": "Calm down, %player_title%" },
 
-        {
-            "cmd": "say",
-            "speaker": null,
-            "text": "..."
-        },
+        { "cmd": "jump", "label": "start_panicing" },
+        { "cmd": "label", "label": "label_panic" },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Thought so."
-        },
+        { "cmd": "say", "speaker": "Player", "text": "AAAARGH!." },
+        { "cmd": "say", "speaker": "Liisa", "text": "Don't worry, it is not real. It is just to snow the conditional choice system." },
+        { "cmd": "say", "speaker": "Liisa", "text": "As your panic will start to reduce, another option will reveal itself. Have patience." },
 
-        {
-            "cmd": "say",
-            "speaker": "Player",
-            "text": "Okay, but this is real life. It isn't a visual novel. Right? Right?"
-        },
+        { "cmd": "jump", "label": "start_panicing" },
 
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Of course it is. We are inside a game."
-        },
+        { "cmd": "label", "label": "dont_panic" },
 
-        {
-            "cmd": "say",
-            "speaker": "Player",
-            "text": "Well, if would have been a game, I am sure it would have looked a bit better."
-        },
-
-        {
-            "cmd": "textbox",
-            "style": "colorful_textbox"
-        },
-
-        {
-            "cmd": "say",
-            "speaker": "Liisa",
-            "text": "Like this, %player_title%?"
-        },
-
-        {
-            "cmd": "say",
-            "speaker": "Player",
-            "text": "AAAARGH!."
-        },
+        { "cmd": "say", "speaker": "Liisa", "text": "Good, you seem to have calmed down a litte." },
 
         { "cmd": "jump", "scene": "scene_0002" }
     ]
