@@ -123,6 +123,13 @@ function evaluateCondition(cond) {
     }
 }
 
+function applyEffects(effects) {
+    if (!effects) return;
+    effects.forEach(function(effect) {
+        applySet(effect.var, effect.op, resolveSetValue(effect))
+    })
+}
+
 function nextCommand() {
     if (cmdIndex >= commands.length)    //there should ALWAYS be a next command, or the script is very wrong
         return null;                    //is this enough for error handling??? I don't know. Get back to this later.
@@ -154,6 +161,13 @@ function resolveSetValue(cmd) {
 }
 
 function applySet(name, op, value) {
+    if (value === undefined) {
+        //debugging info: if something goes completely wrong here, it is probably
+        //because of wrong value. Please call this function not with cmd.value, but
+        // resolveSetValue(command) instead.
+        console.warn("applySet: undefined value for '" + name + "', op '" + op + "' — ignoring");
+        return;
+    }
     if (op === "set")      variables[name] = value;
     else if (op === "add") variables[name] = (variables[name] || 0) + value;
     else if (op === "sub") variables[name] = (variables[name] || 0) - value;

@@ -30,15 +30,42 @@ Page {
     }
 
 /////////////////////////
-// --- Choice logic
+// --- Branching logic
 
     ListModel { id: choiceModel}
 
-    function selectChoice(optionIndex) {
-        console.log("selected option " + optionIndex + ": " + JSON.stringify(Engine.activeChoice.options[optionIndex]))
+    function applyJump(target) {
+        if (target.label)       Engine.jumpToLabel(target.label)
+        else if (target.scene)  Engine.loadScene(target.scene)
+        else {
+            // Does nothing if no key is present
+            // This is deliberate, and not an unhandled branch
+            // The game will just continue with the next line
+            // This prevents having to write extra labels and jumps
+            // Still we want to warn a game author for possible typos:
+            console.warn("No jumping is set for this option.")
+            console.warn("This may very well be intentional, in that case ignore this warning.")
+            console.warn("But check for unintentional behaviour (for example typos)")
+        }
     }
 
-// --- End choice logic
+    function choiceTearDown() {
+        awaitingChoice = false
+        choiceModel.clear()
+        Engine.activeChoice = null
+    }
+
+    function selectChoice(optionIndex) {
+        var selectedOption = Engine.activeChoice.options[optionIndex]
+        console.log("selected option " + optionIndex + ": " + JSON.stringify(selectedOption))
+        // don't delete this console.log. It is important for debugging typos in option branching.
+        choiceTearDown()
+        Engine.applyEffects(selectedOption.effects)
+        applyJump(selectedOption)
+        processNext()
+    }
+
+// --- End branching logic
 /////////////////////////
 
 /////////////////////////
@@ -283,22 +310,12 @@ Page {
             break
 
         case "jump":
-            if (command.label) {
-                Engine.jumpToLabel(command.label)
-            } else if (command.scene) {
-                Engine.loadScene(command.scene)
-            }
+            applyJump(command)
             processNext()
             break
 
         case "jump_if":
-            if (Engine.evaluateCondition(command.condition)) {
-                if (command.label) {
-                    Engine.jumpToLabel(command.label)
-                } else if (command.scene) {
-                    Engine.loadScene(command.scene)
-                }
-            }
+            if (Engine.evaluateCondition(command.condition)) applyJump(command)
             processNext()
             break
 
@@ -478,10 +495,16 @@ Page {
                         color:  Qt.rgba(baseColor.r, baseColor.g, baseColor.b, choiceStyle.opacity)
 
                         Label {
-                            id:         optionLabel
-                            width:      parent.width - Theme.paddingMedium * 2
-                            text:       model.text
-                            wrapMode:   Text.WordWrap
+                            id:                     optionLabel
+                            anchors.left:           parent.left
+                            anchors.right:          parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.margins:        Theme.paddingMedium
+                            text:                   model.text
+                            wrapMode:               Text.WordWrap
+                            horizontalAlignment:    Text.AlignHCenter
+                            color:                  Theme.primaryColor
+                            font.pixelSize:         Theme.fontSizeSmall
                         }
                         MouseArea {
                             id:             optionMouse

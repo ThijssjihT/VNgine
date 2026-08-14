@@ -43,7 +43,7 @@
 
         {
             "cmd": "jump_if",
-            "condition": { "setting": "starting_wealth", "op": ">=", "value": "20"},
+            "condition": { "setting": "starting_wealth", "op": ">=", "value": 20},
             "label": "avarage_wealth"
         },
 
@@ -55,7 +55,7 @@
 
         {
             "cmd": "jump_if",
-            "condition": { "setting": "starting_wealth", "op": ">=", "value": "40"},
+            "condition": { "setting": "starting_wealth", "op": ">=", "value": 40},
             "label": "big_wealth"
         },
 
@@ -135,14 +135,14 @@
             "options": [
                 {
                     "text": "Don't panic",
-                    "condition": { "var": "panic", "op": "<", "value": 3},
-                    "next": "dont_panic"
+                    "condition": { "var": "panic", "op": "<", "value": 3 },
+                    "label": "dont_panic"
                 },
                 {
                     "text": "Panic",
                     "condition": null,
                     "effects": [{ "var": "panic", "op": "sub", "value": 1 }],
-                    "next": "label_panic"
+                    "label": "label_panic"
                 },
                 {
                     "text": "Panic hard",

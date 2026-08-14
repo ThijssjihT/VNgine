@@ -78,7 +78,7 @@
     },
 
     "variables": {
-        "panic": 1
+        "panic": { "type": "int", "default": 1 }
     },
 
     "tagline": "A sample game to show developers how to use json file to script their game in VNgine",
