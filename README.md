@@ -3,12 +3,12 @@ A visual novel game engine for SailfishOS
 
 ## Status
 
-⚠️ **Under active development.** The engine is not yet ready for production use. Documented functionality may be missing or functionaly discrepant.
+⚠️ **Under active development.** The engine is not yet ready for production use. Documented functionality may be missing or functionally discrepant.
 
-⚠️ **Parts of the code is co-written by AI.** AI is used to give code examples, and to help with bugs. Purely AI generated code is now being rewritten by a human. Engine.js is still largely made by AI, but comments, improvements and approving is done by a human.
+⚠️ **Parts of the code is written with help of AI.** AI is used to give small code snippet examples, to help with bugs, and to generate repetitive work from a human made original. This used to say "co-written by AI" but these parts of the code have by now been rewritten by a human.
 
 ## Overview
-VNgine is used to build visual novel games. VN developers using VNgine bundle their game with the engine in a complete package, installed directly from the store or any other distribution channel. There is no seperate engine installation, and no game library browsing. Your game is a single self-contained app.
+VNgine is used to build visual novel games. VN developers using VNgine bundle their game with the engine in a complete package, installed directly from the store or any other distribution channel. There is no separate engine installation, and no game library browsing. Your game is a single self-contained app.
 
 You provide the story scripts, assets and metadata. The engine handles rendering, input, saves, settings and localisation.
 
@@ -16,7 +16,6 @@ You provide the story scripts, assets and metadata. The engine handles rendering
 - **Bundled engine.** Your game is a self contained application, with ease of use of your game's user in mind. Players download the game directly from Harbour or other distribution channels. There is no need for installing a seperate engine or browsing game libraries.
 - **SailfishOS feel.** VNgine follows the Sailfish UI conventions as much as possible. Pull-down menus, page stack navigation, every thing is there. Your game will feel right at home on SailfishOS
 - **Harbour-first.** VNgine and base games target Harbour compliance.
-- **Adjustable settings.** VNgine contains basic settings, like text speed and volume sliders. You can adjust settings available to your players. For example, a player name input field, or adult content or arachnofobia enable/disable toggles.
 
 ## Features
 
@@ -27,21 +26,24 @@ You provide the story scripts, assets and metadata. The engine handles rendering
 - Dialogue with typewriter effect and tap-to-advance
 - Basic script playback and command execution
 - Sprites with positioning
-
-### In development
+- Save/Load system
 - Choice system with conditional visibility
 - Variable system for storing game variables
-- Audio playback: background music
-- Save/Load system
+
+### In development
+- Adjustable speaker colors
+- Textbox styling and theming
+- Adjustable speaker colors
+- Splash screens
+- Sprite objects to easily put in animations or composite sprites
 
 ### Planned
 - HUD for displaying game variables
 - Sprite fade transitions
 - Background transitions
 - Multi-language support
-- Audio: sound effects, character voice
+- Audio: sound effects, character voice, background music
 - Text effects
-- Adjustable speaker colors
 
 ## Quick Start
 
