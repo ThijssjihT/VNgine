@@ -20,8 +20,9 @@ Page {
     property bool   awaitingChoice:     false
     property real   spriteClearance:    0
 
-    property var    textboxStyle:       ({ color: "#000000", opacity: 0.7 })
-    property var    choiceStyle:        ({ color: "#000000", opacity: 0.7 })
+    property var    textboxStyle:       ({})
+    property var    choiceStyle:        ({})
+    property var    hudStyle:           ({})
 
     RemorsePopup { id: remorsePopup }
 
@@ -124,9 +125,12 @@ Page {
         }
         // TODO: SOUND
         return {
-            background: currentBg,
-            sprites:    sprites,
-            dialogue:   { speaker: speakerName, text: fullText }
+            background:     currentBg,
+            sprites:        sprites,
+            dialogue:       { speaker: speakerName, text: fullText },
+            textboxStyle:   textboxStyle,
+            choiceStyle:    choiceStyle,
+            hudStyle:       hudStyle
         }
     }
 
@@ -137,6 +141,9 @@ Page {
             var s = screenBlob.sprites[i]
             showSprite(s.spriteId, s.spriteSource, s.position)
         }
+        if (screenBlob.textboxStyle) textboxStyle = screenBlob.textboxStyle
+        if (screenBlob.choiceStyle) choiceStyle = screenBlob.choiceStyle
+        if (screenBlob.hudStyle) hudStyle = screenBlob.hudStyle
         if (screenBlob.dialogue) {
             speakerName   = screenBlob.dialogue.speaker
             fullText      = screenBlob.dialogue.text
@@ -172,6 +179,9 @@ Page {
         awaitingChoice      = false
         Engine.activeChoice = null
         choiceModel.clear()
+        textboxStyle        = Engine.resolveDefaultStyle("textbox")
+        choiceStyle         = Engine.resolveDefaultStyle("choice")
+        hudStyle            = Engine.resolveDefaultStyle("hud")
     }
 
     onStatusChanged: {
@@ -351,8 +361,19 @@ Page {
             processNext()
             break
 
-        case "textbox":
-            textboxStyle = Engine.loadTextboxStyle(command.style)
+        case "style":
+            var loadedStyle
+            try {
+                loadedStyle = Engine.loadStyleFile(command.category, command.style)
+            } catch (e) {
+                console.warn("style command: could not load \"" + command.style + "\" for category \"" + command.category + "\", keeping current style")
+                processNext()
+                break
+            }
+            if (command.category === "textbox")     textboxStyle = loadedStyle
+            else if (command.category === "choice") choiceStyle  = loadedStyle
+            else if (command.category === "hud")    hudStyle     = loadedStyle
+            else console.warn("style command: unknown category \"" + command.category + "\"")
             processNext()
             break
 

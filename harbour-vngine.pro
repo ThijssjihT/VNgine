@@ -20,6 +20,10 @@ SOURCES += \
 DISTFILES += \
     qml/components/Constants.js \
     qml/components/SaveManager.qml \
+    qml/engine_defaults/default_choice.json \
+    qml/engine_defaults/default_hud \
+    qml/engine_defaults/default_hud.json \
+    qml/engine_defaults/default_textbox.json \
     qml/game/assets/bg/centre_exterior_evening.png \
     qml/game/assets/bg/centre_interior_evening.png \
     qml/game/assets/bg/noticeboard_closeup.png \

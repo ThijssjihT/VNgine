@@ -4,6 +4,9 @@
     "default_language": "en",
     "entry_scene": "scene_0001",
     "save_display_variable": "chapter_title",
+    "default_styles": {
+        "textbox": "boring_textbox"
+    },
 
     "audio_channels": {
         "music": {

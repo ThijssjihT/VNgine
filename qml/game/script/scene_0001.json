@@ -122,7 +122,7 @@
         { "cmd": "say", "speaker": "Liisa", "text": "Of course it is. We are inside a game." },
         { "cmd": "say", "speaker": "Player", "text": "Well, if would have been a game, I am sure it would have looked a bit better." },
 
-        { "cmd": "textbox", "style": "colorful_textbox" },
+        { "cmd": "style", "category": "textbox", "style": "colorful_textbox" },
 
         { "cmd": "say", "speaker": "Liisa", "text": "Like this, %player_title%?" },
 

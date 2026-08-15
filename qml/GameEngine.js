@@ -8,15 +8,20 @@ var cmdIndex        = 0;            //the index, or step, we are on in the list 
 var labelIndex      = {};           //oject that holds all index numbers of the labels.
                                     //On a jump command, this is referenced to look up the label
                                     //and set the cmdIndex to the corresponding number.
-var gamePath        = "";
-var currentScene    = "";           //store what scene we are curently on, needed for saving / loading
-var gameInProgress  = false;        //we need to know if a game is in progress to toggle continue button functionality
+var gamePath            = "";
+var engineDefaultsPath  = "";
+var currentScene        = "";       //store what scene we are curently on, needed for saving / loading
+var gameInProgress      = false;    //we need to know if a game is in progress to toggle continue button functionality
 
 var settingsProvider= null;         //Stores a reference to a function normally out of scope, to make it available
 var activeChoice    = null;         //Stores all options for the choice the player is facing
 
 function setSettingsProvider(fn) {
     settingsProvider = fn
+}
+
+function setEngineDefaultsPath(path) {
+    engineDefaultsPath = path
 }
 
 function getSetting(key) {
@@ -64,12 +69,25 @@ function loadScene(sceneId) {
     })
 }
 
-function loadTextboxStyle(styleId) {
-    var style = loadJson(gamePath + "/assets/ui/textbox/" + styleId + ".json");
-    return {
-        color:   style.color   || "#000000",
-        opacity: style.opacity !== undefined ? style.opacity : 0.7   // "style.opacity || 0.7" would override an intentional zero
-    };
+function resolveDefaultStyle(category) {
+    var styleId = undefined;
+    if (manifest.default_styles !== undefined) styleId = manifest.default_styles[category];
+    if (styleId !== undefined) {
+        try {
+            return loadStyleFile(category, styleId)
+        }
+        catch (e) {
+            console.warn("default_styles." + category + " (" + styleId + ") not found, falling back to engine default")
+        }
+    }
+    return loadStyleFile(category, null)
+}
+
+function loadStyleFile(category, styleId) {
+    var style = ({})
+    if (styleId) style = loadJson(gamePath + "/assets/ui/" + category + "/" + styleId + ".json");
+    else style = loadJson(engineDefaultsPath + "/default_" + category + ".json");
+    return style
 }
 
 function evaluateCondition(cond) {
