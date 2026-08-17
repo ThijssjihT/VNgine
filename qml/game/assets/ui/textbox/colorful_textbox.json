@@ -1,4 +1,6 @@
 {
-    "color": "#3050C0",
-    "opacity": 0.7
+    "style": {
+        "color": "#3050C0",
+        "opacity": 0.7
+    }
 }

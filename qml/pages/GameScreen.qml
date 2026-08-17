@@ -179,9 +179,9 @@ Page {
         awaitingChoice      = false
         Engine.activeChoice = null
         choiceModel.clear()
-        textboxStyle        = Engine.resolveDefaultStyle("textbox")
-        choiceStyle         = Engine.resolveDefaultStyle("choice")
-        hudStyle            = Engine.resolveDefaultStyle("hud")
+        textboxStyle        = Engine.resolveStyle("textbox", null)
+        choiceStyle         = Engine.resolveStyle("choice", null)
+        hudStyle            = Engine.resolveStyle("hud", null)
     }
 
     onStatusChanged: {
@@ -364,7 +364,7 @@ Page {
         case "style":
             var loadedStyle
             try {
-                loadedStyle = Engine.loadStyleFile(command.category, command.style)
+                loadedStyle = Engine.resolveStyle(command.category, command.style)
             } catch (e) {
                 console.warn("style command: could not load \"" + command.style + "\" for category \"" + command.category + "\", keeping current style")
                 processNext()

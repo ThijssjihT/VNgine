@@ -69,25 +69,77 @@ function loadScene(sceneId) {
     })
 }
 
-function resolveDefaultStyle(category) {
-    var styleId = undefined;
-    if (manifest.default_styles !== undefined) styleId = manifest.default_styles[category];
-    if (styleId !== undefined) {
-        try {
-            return loadStyleFile(category, styleId)
-        }
-        catch (e) {
-            console.warn("default_styles." + category + " (" + styleId + ") not found, falling back to engine default")
-        }
+function resolveStyle(category, styleId) {                  //resolves loading a preconfigured style in a category (textbox, choice, hud, ...)
+    var engineDefault = loadJson(engineDefaultsPath + "/default_" + category + ".json")
+    if (!styleId) return mergeStyle({}, engineDefault.style)
+    var styleOverlay = loadStyleChain(category, styleId, [])
+    if (styleOverlay === null) {
+        console.warn("Style " + styleId + " could not be loaded")
+        console.warn("Falling back on engine default")
+        return mergeStyle({}, engineDefault.style)
     }
-    return loadStyleFile(category, null)
+    return mergeStyle(engineDefault.style, styleOverlay)
 }
 
-function loadStyleFile(category, styleId) {
-    var style = ({})
-    if (styleId) style = loadJson(gamePath + "/assets/ui/" + category + "/" + styleId + ".json");
-    else style = loadJson(engineDefaultsPath + "/default_" + category + ".json");
-    return style
+function mergeStyle(base, override) {                       //merges styles together, so a preconfigured style can be based on another style
+    var result = {}
+    var key = null
+    for (key in base) {
+        result[key] = base[key]
+    }
+    for (key in override) {
+        if (isPlainObject(result[key]) && isPlainObject(override[key])) {
+            result[key] = mergeStyle(result[key], override[key])
+        }
+        else {
+            result[key] = override[key]
+        }
+    }
+    return result
+}
+
+function isPlainObject(value) {                             //guard against recognizing null and arrays as objects
+    if (value !== null)
+        if (typeof value === "object")
+            if (Array.isArray(value) === false)
+                return true
+    return false
+}
+
+function loadStyleChain(category, styleId, visited) {
+    if ((styleId.indexOf(".") !== -1 ) || (styleId.indexOf("/") !== -1 ) || (styleId.indexOf("\\") !== -1 )) { // reject styles from other directories, quick and dirty protection against invalid inheritance
+        console.warn(styleId + " is not a valid filename.")
+        return null
+    }
+    if (visited.indexOf(styleId) !== -1) {
+        console.warn("circular style dependancy. " + visited.join(" -> ") + " -> " + styleId)
+        console.warn("returning null")
+        return null
+    } else {
+        visited.push(styleId)
+    }
+
+    var parsedStyleFile = {}
+    try {
+        parsedStyleFile = loadJson(gamePath + "/assets/ui/" + category + "/" + styleId + ".json")
+    }
+    catch(e) {
+        console.warn("Could not load " + gamePath + "/assets/ui/" + category + "/" + styleId + ".json")
+        console.warn(e)
+        return null
+    }
+
+    if (!isPlainObject(parsedStyleFile.style)) {
+        console.warn(styleId + " has no valid style block ...")
+        return null
+    }
+
+    if (parsedStyleFile.base) {
+        var parentStyle = loadStyleChain(category, parsedStyleFile.base, visited)   // load parent style first
+        if (parentStyle === null) return null                                       // broken dependancy fails the whole cycle
+        return mergeStyle(parentStyle, parsedStyleFile.style)                       // replace parent properties with new properties
+    }
+    return mergeStyle({}, parsedStyleFile.style)
 }
 
 function evaluateCondition(cond) {
