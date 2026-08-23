@@ -467,7 +467,7 @@ Page {
 // --- Textbox ---
 
             Rectangle {
-                readonly property color baseColor:  textboxStyle.color
+                readonly property color baseColor:  textboxStyle.background.color
                 readonly property color borderBase: textboxStyle.border.color
 
                 readonly property bool  atTop:       textboxStyle.position === "top"
@@ -476,7 +476,7 @@ Page {
                 id:             textbox
                 height:         parent.height * textboxStyle.height
                 radius:         textboxStyle.radius * Theme.pixelRatio
-                color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, textboxStyle.opacity)
+                color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, textboxStyle.background.opacity)
 
                 border.width:   textboxStyle.border.width * Theme.pixelRatio
                 border.color:   Qt.rgba(borderBase.r, borderBase.g, borderBase.b, textboxStyle.border.opacity)
