@@ -370,9 +370,18 @@ Page {
                 processNext()
                 break
             }
-            if (command.category === "textbox")     textboxStyle = loadedStyle
-            else if (command.category === "choice") choiceStyle  = loadedStyle
-            else if (command.category === "hud")    hudStyle     = loadedStyle
+            if (command.category === "textbox") {
+                textboxStyle        = loadedStyle
+                activeStyleIds.text = command.category
+            }
+            else if (command.category === "choice") {
+                choiceStyle             = loadedStyle
+                activeStyleIds.choice   = command.category
+            }
+            else if (command.category === "hud") {
+                hudStyle            = loadedStyle
+                activeStyleIds.hud  = command.category
+            }
             else console.warn("style command: unknown category \"" + command.category + "\"")
             processNext()
             break
