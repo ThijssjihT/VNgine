@@ -18,34 +18,15 @@ SOURCES += \
     src/harbour-vngine.cpp
 
 DISTFILES += \
-    qml/components/Constants.js \
-    qml/components/SaveManager.qml \
-    qml/engine_defaults/default_choice.json \
-    qml/engine_defaults/default_hud \
-    qml/engine_defaults/default_hud.json \
-    qml/engine_defaults/default_textbox.json \
-    qml/game/assets/bg/centre_exterior_evening.png \
-    qml/game/assets/bg/centre_interior_evening.png \
-    qml/game/assets/bg/noticeboard_closeup.png \
-    qml/game/assets/sprites/liisa_1.png \
-    qml/components/Settings.qml \
-    qml/cover/CoverPage.qml \
-    qml/game/assets/ui/textbox/boring_textbox.json \
-    qml/game/assets/ui/textbox/colorful_textbox.json \
-    qml/game/script/scene_0001.json \
     qml/harbour-vngine.qml \
-    qml/icon.png \
-    qml/pages/GameScreen.qml \
-    qml/pages/LoadGamePage.qml \
-    qml/pages/SaveGamePage.qml \
-    qml/pages/SettingsPage.qml \
-    qml/pages/TitlePage.qml \
     rpm/harbour-vngine.changes.in \
     rpm/harbour-vngine.changes.run.in \
     rpm/harbour-vngine.spec \
     translations/*.ts \
     harbour-vngine.desktop \
-    vngineIcon.svg
+    vngineIcon.svg \
+    $$files(qml/game/**, true) \
+    $$files(qml/engine/**, true)
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 

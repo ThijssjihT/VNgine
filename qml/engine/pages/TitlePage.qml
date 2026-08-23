@@ -69,7 +69,7 @@ Page {
             Image {
                 width:      parent.width
                 height:     width * 9 / 16
-                source:     Qt.resolvedUrl("../game/banner.png")    //replace this for custom url from manifest???
+                source:     Qt.resolvedUrl("../../game/banner.png")    //replace this for custom url from manifest???
                 fillMode:   Image.PreserveAspectCrop
             }
 
@@ -244,7 +244,6 @@ Page {
     }
 
     Component.onCompleted: {
-        Engine.loadManifest(Qt.resolvedUrl("../game"))
         title.title = Engine.manifest.title
         introlabel.text = Engine.manifest.tagline
 
