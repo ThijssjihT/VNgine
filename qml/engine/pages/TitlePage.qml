@@ -244,7 +244,6 @@ Page {
     }
 
     Component.onCompleted: {
-        Engine.loadManifest(Qt.resolvedUrl("../game"))
         title.title = Engine.manifest.title
         introlabel.text = Engine.manifest.tagline
 
