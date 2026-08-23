@@ -20,6 +20,7 @@ Page {
     property bool   awaitingChoice:     false
     property real   spriteClearance:    0
 
+    property var    activeStyleIds:     ({ textbox: null, choice: null, hud: null })
     property var    textboxStyle:       ({})
     property var    choiceStyle:        ({})
     property var    hudStyle:           ({})
@@ -128,9 +129,7 @@ Page {
             background:     currentBg,
             sprites:        sprites,
             dialogue:       { speaker: speakerName, text: fullText },
-            textboxStyle:   textboxStyle,
-            choiceStyle:    choiceStyle,
-            hudStyle:       hudStyle
+            activeStyleIds: activeStyleIds
         }
     }
 
@@ -141,9 +140,10 @@ Page {
             var s = screenBlob.sprites[i]
             showSprite(s.spriteId, s.spriteSource, s.position)
         }
-        if (screenBlob.textboxStyle) textboxStyle = screenBlob.textboxStyle
-        if (screenBlob.choiceStyle) choiceStyle = screenBlob.choiceStyle
-        if (screenBlob.hudStyle) hudStyle = screenBlob.hudStyle
+        activeStyleIds  = screenBlob.activeStyleIds
+        textboxStyle    = Engine.resolveStyle(text, activeStyleIds.textbox)
+        choiceStyle     = Engine.resolveStyle(choice, activeStyleIds.choice)
+        hudStyle        = Engine.resolveStyle(hud, activeStyleIds.hud)
         if (screenBlob.dialogue) {
             speakerName   = screenBlob.dialogue.speaker
             fullText      = screenBlob.dialogue.text
@@ -445,6 +445,8 @@ Page {
                 }
             }
 
+// --- Graphics ---
+
             Image {
                 id:             background
                 anchors.fill:   parent
@@ -461,6 +463,8 @@ Page {
                     y:                  spriteY(model.position, height)
                 }
             }
+
+// --- Textbox ---
 
             Rectangle {
                 readonly property color baseColor: textboxStyle.color
@@ -495,6 +499,8 @@ Page {
                     }
                 }
             }
+
+// --- Choice ---
 
             Grid {
 
