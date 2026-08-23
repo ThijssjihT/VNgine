@@ -18,28 +18,28 @@ SOURCES += \
     src/harbour-vngine.cpp
 
 DISTFILES += \
-    qml/components/Constants.js \
-    qml/components/SaveManager.qml \
-    qml/engine_defaults/default_choice.json \
-    qml/engine_defaults/default_hud \
-    qml/engine_defaults/default_hud.json \
-    qml/engine_defaults/default_textbox.json \
+    qml/engine/components/Constants.js \
+    qml/engine/components/SaveManager.qml \
+    qml/engine/engine_defaults/default_choice.json \
+    qml/engine/engine_defaults/default_hud \
+    qml/engine/engine_defaults/default_hud.json \
+    qml/engine/engine_defaults/default_textbox.json \
     qml/game/assets/bg/centre_exterior_evening.png \
     qml/game/assets/bg/centre_interior_evening.png \
     qml/game/assets/bg/noticeboard_closeup.png \
     qml/game/assets/sprites/liisa_1.png \
-    qml/components/Settings.qml \
-    qml/cover/CoverPage.qml \
+    qml/engine/components/Settings.qml \
+    qml/engine/cover/CoverPage.qml \
     qml/game/assets/ui/textbox/boring_textbox.json \
     qml/game/assets/ui/textbox/colorful_textbox.json \
     qml/game/script/scene_0001.json \
     qml/harbour-vngine.qml \
-    qml/icon.png \
-    qml/pages/GameScreen.qml \
-    qml/pages/LoadGamePage.qml \
-    qml/pages/SaveGamePage.qml \
-    qml/pages/SettingsPage.qml \
-    qml/pages/TitlePage.qml \
+    qml/engine/icon.png \
+    qml/engine/pages/GameScreen.qml \
+    qml/engine/pages/LoadGamePage.qml \
+    qml/engine/pages/SaveGamePage.qml \
+    qml/engine/pages/SettingsPage.qml \
+    qml/engine/pages/TitlePage.qml \
     rpm/harbour-vngine.changes.in \
     rpm/harbour-vngine.changes.run.in \
     rpm/harbour-vngine.spec \
