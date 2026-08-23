@@ -1,6 +1,28 @@
 {
-    "style": {
-        "color": "#000000",
-        "opacity": 0.7
-    }
+  "style": {
+    "position": "bottom",
+    "height": 0.25,
+    "margins": {
+      "left": 0,
+      "right": 0,
+      "top": 0,
+      "bottom": 0
+    },
+    "padding": {
+      "left": 24,
+      "right": 24,
+      "top": 24,
+      "bottom": 24
+    },
+    "background": {
+      "color": "#000000",
+      "opacity": 0.7
+    },
+    "border": {
+      "width": 0,
+      "color": "#000000",
+      "opacity": 1
+    },
+    "radius": 0
+  }
 }

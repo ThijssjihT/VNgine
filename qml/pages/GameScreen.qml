@@ -467,18 +467,36 @@ Page {
 // --- Textbox ---
 
             Rectangle {
-                readonly property color baseColor: textboxStyle.color
+                readonly property color baseColor:  textboxStyle.color
+                readonly property color borderBase: textboxStyle.border.color
+
+                readonly property bool  atTop:       textboxStyle.position === "top"
+                readonly property bool  atCenter:    textboxStyle.position === "center"
 
                 id:             textbox
-                anchors.bottom: parent.bottom
-                anchors.left:   parent.left
-                anchors.right:  parent.right
-                height:         parent.height * 0.25
+                height:         parent.height * textboxStyle.height
+                radius:         textboxStyle.radius * Theme.pixelRatio
                 color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, textboxStyle.opacity)
 
+                border.width:   textboxStyle.border.width * Theme.pixelRatio
+                border.color:   Qt.rgba(borderBase.r, borderBase.g, borderBase.b, textboxStyle.border.opacity)
+
+                anchors.left:           parent.left
+                anchors.leftMargin:     textboxStyle.margins.left * Theme.pixelRatio
+                anchors.right:          parent.right
+                anchors.rightMargin:    textboxStyle.margins.right * Theme.pixelRatio
+                anchors.top:            atTop ? parent.top : undefined
+                anchors.topMargin:      textboxStyle.margins.top * Theme.pixelRatio
+                anchors.bottom:         (atTop || atCenter) ? undefined : parent.bottom
+                anchors.bottomMargin:   textboxStyle.margins.bottom * Theme.pixelRatio
+                anchors.verticalCenter: atCenter ? parent.verticalCenter : undefined
+
                 Column {
-                    anchors.fill:       parent
-                    anchors.margins:    Theme.paddingMedium
+                    anchors.fill:           parent
+                    anchors.leftMargin:     textboxStyle.padding.left * Theme.pixelRatio
+                    anchors.rightMargin:    textboxStyle.padding.right * Theme.pixelRatio
+                    anchors.topMargin:      textboxStyle.padding.top * Theme.pixelRatio
+                    anchors.bottomMargin:   textboxStyle.padding.bottom * Theme.pixelRatio
 
                     Label {
                         id:             speakerLabel
