@@ -105,7 +105,7 @@ Page {
     // Save menu item:
     function doManualSave() {
         stageSaveGame()
-        pageStack.push(Qt.resolvedUrl("Save.qml"))
+        pageStack.push(Qt.resolvedUrl("SaveGamePage.qml"))
     }
 
     function computeThumbSize() {

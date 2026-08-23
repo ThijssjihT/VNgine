@@ -20,6 +20,7 @@ SOURCES += \
 DISTFILES += \
     qml/engine/components/Constants.js \
     qml/engine/components/SaveManager.qml \
+    qml/engine/components/VNgineApplicationWindow.qml \
     qml/engine/engine_defaults/default_choice.json \
     qml/engine/engine_defaults/default_hud \
     qml/engine/engine_defaults/default_hud.json \
