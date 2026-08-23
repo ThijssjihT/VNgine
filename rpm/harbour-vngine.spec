@@ -1,7 +1,7 @@
 Name:       harbour-vngine
 
 Summary:    harbour-vngine
-Version:    0.2
+Version:    0.3
 Release:    1
 License:    LICENSE
 URL:        http://example.org/
