@@ -370,17 +370,17 @@ Page {
                 processNext()
                 break
             }
-            if (command.category === "textbox") {
+            if (command.category === "text") {
                 textboxStyle        = loadedStyle
-                activeStyleIds.text = command.category
+                activeStyleIds.text = command.style
             }
             else if (command.category === "choice") {
                 choiceStyle             = loadedStyle
-                activeStyleIds.choice   = command.category
+                activeStyleIds.choice   = command.style
             }
             else if (command.category === "hud") {
                 hudStyle            = loadedStyle
-                activeStyleIds.hud  = command.category
+                activeStyleIds.hud  = command.style
             }
             else console.warn("style command: unknown category \"" + command.category + "\"")
             processNext()
@@ -483,7 +483,7 @@ Page {
                 readonly property bool  atCenter:    textboxStyle.position === "center"
 
                 id:             textbox
-                height:         parent.height * textboxStyle.height
+                height:         (parent.height - Theme.pixelRatio * (textboxStyle.margins.top + textboxStyle.margins.bottom)) * textboxStyle.height
                 radius:         textboxStyle.radius * Theme.pixelRatio
                 color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, textboxStyle.background.opacity)
 
