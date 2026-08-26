@@ -528,45 +528,73 @@ Page {
             }
 
 // --- Choice ---
+// PARTIALLY AI GENERATED AND HUMAN MODIFIED
 
-            Grid {
+            Rectangle {
+                id: choiceFrame
 
-                id:                         choiceGrid
-                columns:                    1
-                spacing:                    Theme.paddingMedium
-                visible:                    awaitingChoice
-                anchors.verticalCenter:     parent.verticalCenter
-                anchors.horizontalCenter:   parent.horizontalCenter
+                readonly property var   gridStyle:      choiceStyle.grid
+                readonly property color baseColor:      gridStyle.background.color
+                readonly property color borderColor:    gridStyle.border.color
 
-                Repeater {
-                    model: choiceModel
-                    delegate: Rectangle {
-                        readonly property color baseColor: choiceStyle.color
+                readonly property real  maxWidth:       parent.width - Theme.pixelRatio * (gridStyle.margins.left + gridStyle.margins.right)
+                readonly property real  maxHeight:      parent.height - Theme.pixelRatio * (gridStyle.margins.top + gridStyle.margins.bottom)
 
-                        id:     optionBox
-                        width:  (gameRoot.width * 0.8 - choiceGrid.spacing * (choiceGrid.columns - 1)) / choiceGrid.columns
-                        height: optionLabel.implicitHeight + Theme.paddingMedium * 2
-                        color:  Qt.rgba(baseColor.r, baseColor.g, baseColor.b, choiceStyle.opacity)
+                visible:        awaitingChoice
+                width:          maxWidth * gridStyle.width
+                height:         maxHeight * gridStyle.height
+                radius:         gridStyle.radius * Theme.pixelRatio
+                color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, gridStyle.background.opactiy)
 
-                        Label {
-                            id:                     optionLabel
-                            anchors.left:           parent.left
-                            anchors.right:          parent.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            anchors.margins:        Theme.paddingMedium
-                            text:                   model.text
-                            wrapMode:               Text.WordWrap
-                            horizontalAlignment:    Text.AlignHCenter
-                            color:                  Theme.primaryColor
-                            font.pixelSize:         Theme.fontSizeSmall
+                border.width:   gridStyle.border.width * Theme.pixelRatio
+                border.color:   Qt.rgba(borderColor.r, borderColor.g, borderColor.b, gridStyle.border.opactiy)
+
+                x:  gridStyle.margins.left * Theme.pixelRatio + (maxWidth - width) / 2
+                y:  gridStyle.margins.right * Theme.pixelRatio + (maxHeight - height) / 2
+
+                Grid {
+                    id:         choiceGrid
+                    columns:    choiceFrame.gridStyle.columns
+                    spacing:    choiceFrame.gridStyle.spacing * Theme.pixelRatio
+                    x:          choiceFrame.gridStyle.padding.left * Theme.pixelRatio
+                    y:          choiceFrame.gridStyle.padding.top * Theme.pixelRatio
+
+                    anchors.verticalCenter:     parent.verticalCenter
+                    anchors.horizontalCenter:   parent.horizontalCenter
+
+                    Repeater {
+                        model: choiceModel
+                        delegate: Rectangle {
+                            readonly property var   optionStyle:    choiceStyle.option
+                            readonly property color baseColor:      optionStyle.background.color
+                            readonly property color borderColor:    optionStyle.border.color
+
+                            id:     optionBox
+                            width:  (choiceFrame.width - Theme.pixelRatio * (choiceFrame.gridStyle.padding.left + choiceFrame.gridStyle.padding.right) - choiceGrid.spacing * (choiceGrid.columns -1)) / choiceGrid.columns
+                            height: optionLabel.implicitHeight + Theme.pixelRatio * (optionStyle.padding.top + optionStyle.padding.bottom)
+                            radius: optionStyle * Theme.pixelRatio
+                            color:  Qt.rgba(baseColor.r, baseColor.g, baseColor.b, optionStyle.background.opacity)
+
+                            border.width:   optionStyle.border.width * Theme.pixelRatio
+                            border.color:   Qt.rgba(borderColor.r, borderColor.g, borderColor.b, optionStyle.border.opacity)
+
+                            Label {
+                                id:                     optionLabel
+                                x:                      parent.optionStyle.padding.left * Theme.pixelRatio
+                                width:                  parent.width - Theme.pixelRatio * (parent.optionStyle.padding.left + parent.optionStyle.padding.right)
+                                anchors.verticalCenter: parent.verticalCenter
+                                text:                   model.text
+                                wrapMode:               Text.WordWrap
+                                horizontalAlignment:    Text.AlignHCenter
+                                color:                  Theme.primaryColor
+                                font.pixelSize:         Theme.fontSizeSmall
+                            }
+                            MouseArea {
+                                id:             optionMouse
+                                anchors.fill:   parent
+                                onClicked:      selectChoice(model.optionIndex)
+                            }
                         }
-                        MouseArea {
-                            id:             optionMouse
-                            anchors.fill:   parent
-                            onClicked:      selectChoice(model.optionIndex)
-                        }
-
-                        // ...
                     }
                 }
             }

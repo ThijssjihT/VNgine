@@ -1,6 +1,22 @@
 {
     "style": {
-        "color": "#000000",
-        "opacity": 0.7
+        "grid": {
+            "columns": 1,
+            "spacing": 16,
+            "width": 0.8,
+            "margins":    { "left": 0, "right": 0, "top": 0, "bottom": 0 },
+            "padding":    { "left": 0, "right": 0, "top": 0, "bottom": 0 },
+            "background": { "color": "#000000", "opacity": 0 },
+            "border":     { "width": 0, "color": "#000000", "opacity": 1 },
+            "radius": 0
+        },
+        "option": {
+            "min_height": 0,
+            "padding":    { "left": 24, "right": 24, "top": 16, "bottom": 16 },
+            "background": { "color": "#000000", "opacity": 0.7 },
+            "border":     { "width": 0, "color": "#000000", "opacity": 1 },
+            "radius": 0,
+            "text":       { "color": null }
+        }
     }
 }
