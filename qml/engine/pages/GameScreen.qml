@@ -1,4 +1,5 @@
 import QtQuick 2.6
+import QtMultimedia 5.0
 import Sailfish.Silica 1.0
 import "../components" as Components
 import "../GameEngine.js" as Engine
@@ -18,6 +19,7 @@ Page {
     property string visibleText:        ""
     property bool   textAnimating:      false
     property bool   awaitingChoice:     false
+    property bool   bgTrackAActive:     true
     property real   spriteClearance:    0
 
     property var    activeStyleIds:     ({ textbox: null, choice: null, hud: null })
@@ -275,6 +277,107 @@ Page {
 /////////////////////////
 
 /////////////////////////
+// --- Audio ---
+
+    //Need 2 background music items for crossfading and other animations
+    Audio {
+        id:         bgMusic_a
+        loops:      Audio.Infinite
+        volume:     0
+        onError: {
+            if (error === Audio.ResourceError || error === Audio.FormatError) {
+                console.warn("bgMusic_a failed to load: " + errorString)
+            } else {
+                console.warn("bgMusic_a failing to play: " + errorString)
+            }
+            stop()
+        }
+    }
+    Audio {
+        id:         bgMusic_b
+        loops:      Audio.Infinite
+        volume:     0
+        onError: {
+            if (error === Audio.ResourceError || error === Audio.FormatError) {
+                console.warn("bgMusic_b failed to load: " + errorString)
+            } else {
+                console.warn("bgMusic_b failing to play: " + errorString)
+            }
+            stop()
+        }
+    }
+    //Having separate animation instead of general fadeIn, fadeOut
+    //makes that we don't need live binding and thus to guard against overlap
+    PropertyAnimation {
+        id:             fadeOutA
+        target:         bgMusic_a
+        property:       "volume"
+        to:             0.0
+        duration:       800
+        easing.type:    Easing.Linear
+        onStopped:      bgMusic_a.stop()
+    }
+    PropertyAnimation {
+        id:             fadeOutB
+        target:         bgMusic_b
+        property:       "volume"
+        to:             0.0
+        duration:       800
+        easing.type:    Easing.Linear
+        onStopped:      bgMusic_b.stop()
+    }
+    PropertyAnimation {
+        id:             fadeInA
+        target:         bgMusic_a
+        property:       "volume"
+        to:             0.8
+        duration:       800
+        easing.type:    Easing.Linear
+    }
+    PropertyAnimation {
+        id:             fadeInB
+        target:         bgMusic_b
+        property:       "volume"
+        to:             0.8
+        duration:       800
+        easing.type:    Easing.Linear
+    }
+
+    function crossFade(track, fadeTime) {
+        var songPath = assetPath("audio/" + track)
+        if (bgTrackAActive) {
+            bgMusic_b.source = songPath
+            fadeOutA.duration = fadeTime || 800
+            fadeInB.duration = fadeTime || 800
+            fadeOutA.start()
+            fadeInB.start()
+            bgMusic_b.play()
+        }
+        else {
+            bgMusic_a.source = songPath
+            fadeOutB.duration = fadeTime || 800
+            fadeInA.duration = fadeTime || 800
+            fadeOutB.start()
+            fadeInA.start()
+            bgMusic_a.play()
+        }
+        bgTrackAActive = !bgTrackAActive
+    }
+
+    function handleAudioBgAction(action) {
+        switch (action.action) {
+            case "crossfade":
+                crossFade(action.track, action.fadeTime)
+                break
+            default:
+                console.warn("audio_bg action not implemented: " + action.action)
+        }
+    }
+
+// --- End Audio ---
+/////////////////////////
+
+/////////////////////////
 // --- Game logic ---
 
     /*
@@ -386,6 +489,11 @@ Page {
             processNext()
             break
 
+        case "audio_bg":
+            handleAudioBgAction(command)
+            processNext()
+            break
+
         default:
             // unknown command: log and skip so the game does not stall
             console.warn("Not every command is yet implemented.")
@@ -433,7 +541,6 @@ Page {
                 }
             }
         }
-
 
 /////////////////////////
 // --- Layer Stack ---
@@ -544,10 +651,10 @@ Page {
                 width:          maxWidth * gridStyle.width
                 height:         maxHeight * gridStyle.height
                 radius:         gridStyle.radius * Theme.pixelRatio
-                color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, gridStyle.background.opactiy)
+                color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, gridStyle.background.opacity)
 
                 border.width:   gridStyle.border.width * Theme.pixelRatio
-                border.color:   Qt.rgba(borderColor.r, borderColor.g, borderColor.b, gridStyle.border.opactiy)
+                border.color:   Qt.rgba(borderColor.r, borderColor.g, borderColor.b, gridStyle.border.opacity)
 
                 x:  gridStyle.margins.left * Theme.pixelRatio + (maxWidth - width) / 2
                 y:  gridStyle.margins.right * Theme.pixelRatio + (maxHeight - height) / 2
@@ -572,7 +679,7 @@ Page {
                             id:     optionBox
                             width:  (choiceFrame.width - Theme.pixelRatio * (choiceFrame.gridStyle.padding.left + choiceFrame.gridStyle.padding.right) - choiceGrid.spacing * (choiceGrid.columns -1)) / choiceGrid.columns
                             height: optionLabel.implicitHeight + Theme.pixelRatio * (optionStyle.padding.top + optionStyle.padding.bottom)
-                            radius: optionStyle * Theme.pixelRatio
+                            radius: optionStyle.radius * Theme.pixelRatio
                             color:  Qt.rgba(baseColor.r, baseColor.g, baseColor.b, optionStyle.background.opacity)
 
                             border.width:   optionStyle.border.width * Theme.pixelRatio
@@ -606,6 +713,6 @@ Page {
     }
 
     Component.onCompleted: {
-
+        Engine.setAudioBgProvider(handleAudioBgAction)
     }
 }

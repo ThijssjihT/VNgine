@@ -6,7 +6,7 @@
         { "cmd": "show_hud", "var": "chapter_title", "visible": true },
 
         { "cmd": "bg",    "image": "bg/centre_exterior_evening.png", "transition": "fade" },
-        { "cmd": "audio_bg", "file": "audio/music/Origami-chosic.com_.mp3" },
+        { "cmd": "audio_bg", "action": "crossfade", "track": "music/Origami.mp3" },
         { "cmd": "audio_sfx", "file": "audio/sfx/tram_distant.ogg", "channel": "game_fx" },
 
         { "cmd": "say", "speaker": null, "text": "You are at your local community center. Just in front of it is a notice board." },

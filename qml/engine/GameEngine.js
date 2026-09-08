@@ -13,11 +13,16 @@ var engineDefaultsPath  = "";
 var currentScene        = "";       //store what scene we are curently on, needed for saving / loading
 var gameInProgress      = false;    //we need to know if a game is in progress to toggle continue button functionality
 
+var audioBgProvider = null;         //Stores a reference to a function normally out of scope, to make it available
 var settingsProvider= null;         //Stores a reference to a function normally out of scope, to make it available
 var activeChoice    = null;         //Stores all options for the choice the player is facing
 
 function setSettingsProvider(fn) {
     settingsProvider = fn
+}
+
+function setAudioBgProvider(fn) {
+    audioBgProvider = fn;
 }
 
 function setEngineDefaultsPath(path) {
