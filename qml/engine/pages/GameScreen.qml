@@ -343,7 +343,7 @@ Page {
         easing.type:    Easing.Linear
     }
 
-    function crossFade(track, fadeTime) {
+    function doCrossFade(track, fadeTime) {
         var songPath = assetPath("audio/" + track)
         if (bgTrackAActive) {
             bgMusic_b.source = songPath
@@ -364,10 +364,35 @@ Page {
         bgTrackAActive = !bgTrackAActive
     }
 
+    function doStop(fadeTime) {
+        var fadeOut = bgTrackAActive ? fadeOutA : fadeOutB
+        fadeOut.duration = fadeTime || 0
+        fadeOut.start()
+    }
+
+    function doPause() {
+        var active = bgTrackAActive ? bgMusic_a : bgMusic_b
+        active.pause()
+    }
+
+    function doResume() {
+        var active = bgTrackAActive ? bgMusic_a : bgMusic_b
+        active.play()
+    }
+
     function handleAudioBgAction(action) {
         switch (action.action) {
             case "crossfade":
-                crossFade(action.track, action.fadeTime)
+                doCrossFade(action.track, action.fadeTime)
+                break
+            case "stop":
+                doStop(action.fadeTime)
+                break
+            case "pause":
+                doPause()
+                break
+            case "resume":
+                doResume()
                 break
             default:
                 console.warn("audio_bg action not implemented: " + action.action)
