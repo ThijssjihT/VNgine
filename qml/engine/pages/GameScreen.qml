@@ -316,65 +316,49 @@ Page {
     //Having separate animation instead of general fadeIn, fadeOut
     //makes that we don't need live binding and thus to guard against overlap
     PropertyAnimation {
-        id:             fadeOutA
-        target:         bgMusic_a
-        property:       "volume"
-        to:             0.0
-        duration:       800
-        easing.type:    Easing.Linear
-        onStopped:      bgMusic_a.stop()
+        id:         fadeVolumeA
+        target:     bgMusic_a
+        property:   "volume"
+        property bool stopOnFinish: false
+        onStopped: {
+            if (stopOnFinish) bgMusic_a.stop()
+        }
     }
+
     PropertyAnimation {
-        id:             fadeOutB
-        target:         bgMusic_b
-        property:       "volume"
-        to:             0.0
-        duration:       800
-        easing.type:    Easing.Linear
-        onStopped:      bgMusic_b.stop()
-    }
-    PropertyAnimation {
-        id:             fadeInA
-        target:         bgMusic_a
-        property:       "volume"
-        to:             0.8
-        duration:       800
-        easing.type:    Easing.Linear
-    }
-    PropertyAnimation {
-        id:             fadeInB
-        target:         bgMusic_b
-        property:       "volume"
-        to:             0.8
-        duration:       800
-        easing.type:    Easing.Linear
+        id:         fadeVolumeB
+        target:     bgMusic_b
+        property:   "volume"
+        property bool stopOnFinish: false
+        onStopped: {
+            if (stopOnFinish) bgMusic_b.stop()
+        }
     }
 
     function doCrossFade(track, fadeTime) {
-        var songPath = assetPath("audio/" + track)
-        if (bgTrackAActive) {
-            bgMusic_b.source = songPath
-            fadeOutA.duration = fadeTime || 800
-            fadeInB.duration = fadeTime || 800
-            fadeOutA.start()
-            fadeInB.start()
-            bgMusic_b.play()
-        }
-        else {
-            bgMusic_a.source = songPath
-            fadeOutB.duration = fadeTime || 800
-            fadeInA.duration = fadeTime || 800
-            fadeOutB.start()
-            fadeInA.start()
-            bgMusic_a.play()
-        }
+        var fadeOut     = bgTrackAActive ? fadeVolumeA : fadeVolumeB
+        var fadeIn      = bgTrackAActive ? fadeVolumeB : fadeVolumeA
+        var fadeInTarget= bgTrackAActive ? bgMusic_b : bgMusic_a
+
+        fadeVolume(fadeOut, 0, fadeTime, true) //fade out old track, then stop
+
+        fadeInTarget.source = assetPath("audio/" + track)
+        fadeInTarget.play()
+        fadeVolume(fadeIn, 0.8, fadeTime, false) //fade in new track
+                                                 //TODO: make volume variable
         bgTrackAActive = !bgTrackAActive
     }
 
+    function fadeVolume(animation, endVolume, duration, stopOnFinish) {
+        animation.stopOnFinish  = !!stopOnFinish
+        animation.duration      = duration || 0
+        animation.to            = endVolume
+        animation.start()
+    }
+
     function doStop(fadeTime) {
-        var fadeOut = bgTrackAActive ? fadeOutA : fadeOutB
-        fadeOut.duration = fadeTime || 0
-        fadeOut.start()
+        var fadeOut = bgTrackAActive ? fadeVolumeA : fadeVolumeB
+        fadeVolume(fadeOut, 0, fadeTime, true)
     }
 
     function doPause() {
