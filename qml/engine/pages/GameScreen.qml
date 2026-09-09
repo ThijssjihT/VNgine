@@ -11,16 +11,16 @@ Page {
     cutoutMode:             CutoutMode.FullScreen
 
     property int    thumbWidth:         0
-    property int    thumbHeight:        0
+    property int    thumbHeight:        0       //For save game thumbnail
 
-    property string currentBg:          ""
+    property string currentBg:          ""      //background image, could have been better named
     property string speakerName:        ""
     property string fullText:           ""
     property string visibleText:        ""
     property bool   textAnimating:      false
     property bool   awaitingChoice:     false
-    property bool   bgTrackAActive:     true
-    property real   spriteClearance:    0
+    property bool   bgTrackAActive:     true    //needed for crossfading audio
+    property real   spriteClearance:    0       //sprite padding when left or right aligned
 
     property var    activeStyleIds:     ({ textbox: null, choice: null, hud: null })
     property var    textboxStyle:       ({})
@@ -152,6 +152,7 @@ Page {
             visibleText   = screenBlob.dialogue.text   // full line, no typewriter replay
             textAnimating = false
         }
+        //TODO: possible bug? What if we save during a choice? Can we load and accurately rebuild the screen from that blob?
         //TODO: sound
     }
 
