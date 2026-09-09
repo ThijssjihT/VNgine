@@ -53,9 +53,13 @@ QtObject {
     function stagePendingSave(sceneId, cmdIndex, variables, screen, presetLabel) {
         // This is called by GameScreen, to save game state into a variable
         // while GameScreen is still visible, before a pageStack.push() is called
+        var commandIndex    = cmdIndex
+        var currentCommand  = Engine.commands[cmdIndex - 1].cmd
+
+        if (currentCommand === "choice") commandIndex--
         _pending = {
             sceneId:        sceneId,        //What scene we are in
-            cmdIndex:       cmdIndex,       //What row we are on at this scene
+            cmdIndex:       commandIndex,   //What row we are on at this scene
             variables:      variables,      //JS object containing all variables and their values
             screen:         screen,         //JS object containing instructions for building up every thing on screen
             presetLabel:    presetLabel,    //User overwritable save game label

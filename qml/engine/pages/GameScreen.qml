@@ -143,9 +143,9 @@ Page {
             showSprite(s.spriteId, s.spriteSource, s.position)
         }
         activeStyleIds  = screenBlob.activeStyleIds
-        textboxStyle    = Engine.resolveStyle(text, activeStyleIds.textbox)
-        choiceStyle     = Engine.resolveStyle(choice, activeStyleIds.choice)
-        hudStyle        = Engine.resolveStyle(hud, activeStyleIds.hud)
+        textboxStyle    = Engine.resolveStyle("textbox", activeStyleIds.text)
+        choiceStyle     = Engine.resolveStyle("choice", activeStyleIds.choice)
+        hudStyle        = Engine.resolveStyle("hud", activeStyleIds.hud)
         if (screenBlob.dialogue) {
             speakerName   = screenBlob.dialogue.speaker
             fullText      = screenBlob.dialogue.text
@@ -170,6 +170,12 @@ Page {
         Components.SaveManager.finishLoading()
         buildScreenFromScreenBlob(Components.SaveManager.pendingScreen())
         Components.SaveManager.clearPendingLoad()
+        if (!Engine.commands[Engine.cmdIndex]) {    // if we save on a script authoring error, and load that game
+            Engine.cmdIndex--                       // we go back one line
+            processNext()                           // and trigger the existing fail code
+        } else if (Engine.commands[Engine.cmdIndex].cmd === "choice") {
+            processNext()                           // if saved on a choice, we retrigger that code
+        }
     }
 
     function resetSession() {
@@ -499,7 +505,7 @@ Page {
                 processNext()
                 break
             }
-            if (command.category === "text") {
+            if (command.category === "textbox") {
                 textboxStyle        = loadedStyle
                 activeStyleIds.text = command.style
             }
