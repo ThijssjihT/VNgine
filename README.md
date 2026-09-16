@@ -5,7 +5,7 @@ A visual novel game engine for SailfishOS
 
 ⚠️ **Under active development.** The engine is not yet ready for production use. Documented functionality may be missing or functionally discrepant.
 
-⚠️ **Parts of the code is written with help of AI.** AI is used to give small code snippet examples, to help with bugs, and to generate repetitive work from a human made original. This used to say "co-written by AI" but these parts of the code have by now been rewritten by a human, apart from a few tiny snippets. They are clearly marked in the source.
+⚠️ **Parts of the code is written with help of AI.** AI is used to give small code snippet examples, to help with bugs, and to generate repetitive work from a human made original. This used to say "co-written by AI" but these parts of the code have by now been re**written by a human**, apart from a few tiny snippets. They are clearly marked in the source.
 
 ## Overview
 VNgine is used to build visual novel games. VN developers using VNgine bundle their game with the engine in a complete package, installed directly from the store or any other distribution channel. There is no separate engine installation, and no game library browsing. Your game is a single self-contained app.
