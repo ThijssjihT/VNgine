@@ -17,7 +17,6 @@ Page {
     property string speakerName:        ""
     property bool   awaitingChoice:     false
     property bool   bgTrackAActive:     true    //needed for crossfading audio
-    property real   spriteClearance:    0       //sprite padding when left or right aligned
 
     property var    activeStyleIds:     ({ textbox: null, choice: null, hud: null })
     property var    textboxStyle:       ({})
@@ -115,16 +114,7 @@ Page {
     }
 
     function buildScreenBlob() {
-        var sprites = []
-        for (var i = 0; i < spriteModel.count; i++) {
-            var s = spriteModel.get(i)
-            sprites.push({
-                spriteId:     s.spriteId,
-                spriteSource: s.spriteSource,
-                position:     s.position
-            })
-        }
-        // TODO: SOUND
+        var sprites = spriteLayer.toList()
         return {
             background:     currentBg,
             sprites:        sprites,
@@ -136,10 +126,7 @@ Page {
     function buildScreenFromScreenBlob(screenBlob) {
         if (!screenBlob) return
         currentBg = screenBlob.background
-        for (var i = 0; i < screenBlob.sprites.length; i++) {
-            var s = screenBlob.sprites[i]
-            showSprite(s.spriteId, s.spriteSource, s.position)
-        }
+        spriteLayer.restoreFrom(screenBlob.sprites)
         activeStyleIds  = screenBlob.activeStyleIds
         textboxStyle    = Engine.resolveStyle("textbox", activeStyleIds.text)
         choiceStyle     = Engine.resolveStyle("choice", activeStyleIds.choice)
@@ -175,7 +162,7 @@ Page {
     }
 
     function resetSession() {
-        clearSprites()
+        spriteLayer.clear()
         typewriter.setImmediate("")
         currentBg           = ""
         speakerName         = ""
@@ -196,54 +183,6 @@ Page {
     }
 
 // --- End save game logic
-/////////////////////////
-
-
-/////////////////////////
-// --- Spritemodel ---
-
-    ListModel { id: spriteModel }
-
-    function showSprite(sId, src, pos) {
-        for (var i = 0; i < spriteModel.count; i++) {
-            if (spriteModel.get(i).spriteId === sId) {
-                spriteModel.setProperty(i, "spriteSource", src)
-                spriteModel.setProperty(i, "position", pos)
-                /*
-                  We can't set a x and y position here, because it will need to reference
-                  object sizes, like the size of the sprite and such. At the point where
-                  this function runs, the spriteModel is being populated, so nothing has
-                  yet been drawn. So we give the Image object the raw data, and let it
-                  calculate its own position.
-                */
-                return
-            }
-        }
-        spriteModel.append({ "spriteId": sId, "spriteSource": src, "position": pos })
-    }
-
-    function removeSprite(sId) {
-        for (var i = 0; i < spriteModel.count; i++)
-            if (spriteModel.get(i).spriteId === sId) { spriteModel.remove(i); return }
-    }
-
-    function clearSprites() { spriteModel.clear() }
-
-    function spriteX(pos, sprWidth) {
-        if (pos === "left")     return 0
-        if (pos === "right")    return gameRoot.width - sprWidth
-        if (pos.indexOf("%") !== -1)                    //If exact x and y coordinates are given
-            return parseFloat(pos.split(",")[0] / 100 * gameRoot.width - sprWidth / 2)
-        return (gameRoot.width - sprWidth) / 2          //Default center position
-    }
-
-    function spriteY(pos, sprHight) {
-        if (pos.indexOf("%") !== -1)
-            return parseFloat(pos.split(",")[1]) / 100 * gameRoot.height - sprHight
-        return gameRoot.height - sprHight - spriteClearance   // presets: bottom
-    }
-
-// --- End Spritemodel
 /////////////////////////
 
 /////////////////////////
@@ -442,12 +381,12 @@ Page {
             break
 
         case "sprite":
-            showSprite(command.id, command.image, command.position)
+            spriteLayer.show(command.id, command.image, command.position)
             processNext()
             break
 
         case "sprite_remove":
-            removeSprite(command.id)
+            spriteLayer.remove(command.id)
             processNext()
             break
 
@@ -548,8 +487,6 @@ Page {
                 }
             }
 
-// --- Graphics ---
-
             Image {
                 id:             background
                 anchors.fill:   parent
@@ -557,14 +494,9 @@ Page {
                 fillMode:       Image.PreserveAspectCrop  //Crop, or black borders? Maybe in the game.json?
             }
 
-            Repeater {
-                model: spriteModel
-                delegate: Image {
-                    source:             assetPath(model.spriteSource)
-                    sourceSize.height:  gameRoot.height * 0.9
-                    x:                  spriteX(model.position, width)
-                    y:                  spriteY(model.position, height)
-                }
+            Components.SpriteLayer {
+                id:             spriteLayer
+                anchors.fill:   parent
             }
 
             Components.TextboxLayer{
