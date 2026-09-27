@@ -567,130 +567,17 @@ Page {
                 }
             }
 
-// --- Textbox ---
-
-            Rectangle {
-                readonly property color baseColor:  textboxStyle.background.color
-                readonly property color borderBase: textboxStyle.border.color
-
-                readonly property bool  atTop:       textboxStyle.position === "top"
-                readonly property bool  atCenter:    textboxStyle.position === "center"
-
-                id:             textbox
-                height:         (parent.height - Theme.pixelRatio * (textboxStyle.margins.top + textboxStyle.margins.bottom)) * textboxStyle.height
-                radius:         textboxStyle.radius * Theme.pixelRatio
-                color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, textboxStyle.background.opacity)
-
-                border.width:   textboxStyle.border.width * Theme.pixelRatio
-                border.color:   Qt.rgba(borderBase.r, borderBase.g, borderBase.b, textboxStyle.border.opacity)
-
-                anchors.left:           parent.left
-                anchors.leftMargin:     textboxStyle.margins.left * Theme.pixelRatio
-                anchors.right:          parent.right
-                anchors.rightMargin:    textboxStyle.margins.right * Theme.pixelRatio
-                anchors.top:            atTop ? parent.top : undefined
-                anchors.topMargin:      textboxStyle.margins.top * Theme.pixelRatio
-                anchors.bottom:         (atTop || atCenter) ? undefined : parent.bottom
-                anchors.bottomMargin:   textboxStyle.margins.bottom * Theme.pixelRatio
-                anchors.verticalCenter: atCenter ? parent.verticalCenter : undefined
-
-                Column {
-                    anchors.fill:           parent
-                    anchors.leftMargin:     textboxStyle.padding.left * Theme.pixelRatio
-                    anchors.rightMargin:    textboxStyle.padding.right * Theme.pixelRatio
-                    anchors.topMargin:      textboxStyle.padding.top * Theme.pixelRatio
-                    anchors.bottomMargin:   textboxStyle.padding.bottom * Theme.pixelRatio
-
-                    Label {
-                        id:             speakerLabel
-                        text:           speakerName
-                        color:          Theme.highlightColor
-                        font.pixelSize: Theme.fontSizeSmall
-                        font.bold:      true
-                        visible:        speakerName !== ""
-                    }
-
-                    Label {
-                        id:             dialogueLabel
-                        text:           typewriter.visibleText
-                        color:          Theme.primaryColor
-                        font.pixelSize: Theme.fontSizeSmall
-                        wrapMode:       Text.WordWrap
-                        width:          parent.width
-                    }
-                }
+            Components.TextboxLayer{
+                style:      textboxStyle
+                speaker:    speakerName
+                text:       typewriter.visibleText
             }
 
-// --- Choice ---
-// PARTIALLY AI GENERATED AND HUMAN MODIFIED
-
-            Rectangle {
-                id: choiceFrame
-
-                readonly property var   gridStyle:      choiceStyle.grid
-                readonly property color baseColor:      gridStyle.background.color
-                readonly property color borderColor:    gridStyle.border.color
-
-                readonly property real  maxWidth:       parent.width - Theme.pixelRatio * (gridStyle.margins.left + gridStyle.margins.right)
-                readonly property real  maxHeight:      parent.height - Theme.pixelRatio * (gridStyle.margins.top + gridStyle.margins.bottom)
-
-                visible:        awaitingChoice
-                width:          maxWidth * gridStyle.width
-                height:         maxHeight * gridStyle.height
-                radius:         gridStyle.radius * Theme.pixelRatio
-                color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, gridStyle.background.opacity)
-
-                border.width:   gridStyle.border.width * Theme.pixelRatio
-                border.color:   Qt.rgba(borderColor.r, borderColor.g, borderColor.b, gridStyle.border.opacity)
-
-                x:  gridStyle.margins.left * Theme.pixelRatio + (maxWidth - width) / 2
-                y:  gridStyle.margins.right * Theme.pixelRatio + (maxHeight - height) / 2
-
-                Grid {
-                    id:         choiceGrid
-                    columns:    choiceFrame.gridStyle.columns
-                    spacing:    choiceFrame.gridStyle.spacing * Theme.pixelRatio
-                    x:          choiceFrame.gridStyle.padding.left * Theme.pixelRatio
-                    y:          choiceFrame.gridStyle.padding.top * Theme.pixelRatio
-
-                    anchors.verticalCenter:     parent.verticalCenter
-                    anchors.horizontalCenter:   parent.horizontalCenter
-
-                    Repeater {
-                        model: choiceModel
-                        delegate: Rectangle {
-                            readonly property var   optionStyle:    choiceStyle.option
-                            readonly property color baseColor:      optionStyle.background.color
-                            readonly property color borderColor:    optionStyle.border.color
-
-                            id:     optionBox
-                            width:  (choiceFrame.width - Theme.pixelRatio * (choiceFrame.gridStyle.padding.left + choiceFrame.gridStyle.padding.right) - choiceGrid.spacing * (choiceGrid.columns -1)) / choiceGrid.columns
-                            height: optionLabel.implicitHeight + Theme.pixelRatio * (optionStyle.padding.top + optionStyle.padding.bottom)
-                            radius: optionStyle.radius * Theme.pixelRatio
-                            color:  Qt.rgba(baseColor.r, baseColor.g, baseColor.b, optionStyle.background.opacity)
-
-                            border.width:   optionStyle.border.width * Theme.pixelRatio
-                            border.color:   Qt.rgba(borderColor.r, borderColor.g, borderColor.b, optionStyle.border.opacity)
-
-                            Label {
-                                id:                     optionLabel
-                                x:                      parent.optionStyle.padding.left * Theme.pixelRatio
-                                width:                  parent.width - Theme.pixelRatio * (parent.optionStyle.padding.left + parent.optionStyle.padding.right)
-                                anchors.verticalCenter: parent.verticalCenter
-                                text:                   model.text
-                                wrapMode:               Text.WordWrap
-                                horizontalAlignment:    Text.AlignHCenter
-                                color:                  Theme.primaryColor
-                                font.pixelSize:         Theme.fontSizeSmall
-                            }
-                            MouseArea {
-                                id:             optionMouse
-                                anchors.fill:   parent
-                                onClicked:      selectChoice(model.optionIndex)
-                            }
-                        }
-                    }
-                }
+            Components.ChoiceOverlay {
+                style:              choiceStyle
+                active:             awaitingChoice
+                choiceModel:        choiceModel
+                onOptionSelected:   selectChoice(index)
             }
         }
 
