@@ -15,9 +15,6 @@ Page {
 
     property string currentBg:          ""      //background image, could have been better named
     property string speakerName:        ""
-    property string fullText:           ""
-    property string visibleText:        ""
-    property bool   textAnimating:      false
     property bool   awaitingChoice:     false
     property bool   bgTrackAActive:     true    //needed for crossfading audio
     property real   spriteClearance:    0       //sprite padding when left or right aligned
@@ -28,6 +25,7 @@ Page {
     property var    hudStyle:           ({})
 
     RemorsePopup { id: remorsePopup }
+    Components.Typewriter { id: typewriter }
 
     function assetPath(rel) {  // AI proposed and generated helper function
         return rel === "" ? "" : Engine.gamePath + "/assets/" + rel
@@ -130,7 +128,7 @@ Page {
         return {
             background:     currentBg,
             sprites:        sprites,
-            dialogue:       { speaker: speakerName, text: fullText },
+            dialogue:       { speaker: speakerName, text: typewriter.fullText },
             activeStyleIds: activeStyleIds
         }
     }
@@ -148,9 +146,7 @@ Page {
         hudStyle        = Engine.resolveStyle("hud", activeStyleIds.hud)
         if (screenBlob.dialogue) {
             speakerName   = screenBlob.dialogue.speaker
-            fullText      = screenBlob.dialogue.text
-            visibleText   = screenBlob.dialogue.text   // full line, no typewriter replay
-            textAnimating = false
+            typewriter.setImmediate(screenBlob.dialogue.text)
         }
         //TODO: possible bug? What if we save during a choice? Can we load and accurately rebuild the screen from that blob?
         //TODO: sound
@@ -180,11 +176,9 @@ Page {
 
     function resetSession() {
         clearSprites()
+        typewriter.setImmediate("")
         currentBg           = ""
         speakerName         = ""
-        fullText            = ""
-        visibleText         = ""
-        textAnimating       = false
         awaitingChoice      = false
         Engine.activeChoice = null
         choiceModel.clear()
@@ -252,37 +246,6 @@ Page {
 // --- End Spritemodel
 /////////////////////////
 
-
-/////////////////////////
-// --- Typewriter ---
-    Timer {
-        id:         typewriterTimer
-        interval:   15
-        repeat:     true
-        onTriggered: {
-            if (visibleText.length < fullText.length) {
-                visibleText = fullText.substring(0, visibleText.length + 1)
-            } else {
-                typewriterTimer.stop()
-                textAnimating = false
-            }
-        }
-    }
-
-    function startTypewriter() {
-        visibleText     = ""
-        textAnimating   = true
-        typewriterTimer.start()
-    }
-
-    function skipTypewriter() {
-        typewriterTimer.stop()
-        visibleText     = fullText
-        textAnimating   = false
-    }
-// --- End Typewriter ---
-/////////////////////////
-
 /////////////////////////
 // --- Audio ---
 
@@ -335,7 +298,19 @@ Page {
         }
     }
 
-    function doCrossFade(track, fadeTime) {
+    function effectiveVolume(channelKey, multiplier) {
+        var settingsVolume = Components.Settings.get(("audio_" + channelKey + "_value") / 100)
+        return settingsVolume * (multiplier === undefined ? 1.0 : multiplier)
+    }
+
+    function fadeVolume(animation, endVolume, duration, stopOnFinish) {
+        animation.stopOnFinish  = !!stopOnFinish
+        animation.duration      = duration || 0
+        animation.to            = endVolume
+        animation.start()
+    }
+
+    function doCrossFade(track, fadeTime, volume) {
         var fadeOut     = bgTrackAActive ? fadeVolumeA : fadeVolumeB
         var fadeIn      = bgTrackAActive ? fadeVolumeB : fadeVolumeA
         var fadeInTarget= bgTrackAActive ? bgMusic_b : bgMusic_a
@@ -344,16 +319,13 @@ Page {
 
         fadeInTarget.source = assetPath("audio/" + track)
         fadeInTarget.play()
-        fadeVolume(fadeIn, 0.8, fadeTime, false) //fade in new track
-                                                 //TODO: make volume variable
+        fadeVolume(fadeIn, effectiveVolume("music", volume), fadeTime, false) //fade in new track
         bgTrackAActive = !bgTrackAActive
     }
 
-    function fadeVolume(animation, endVolume, duration, stopOnFinish) {
-        animation.stopOnFinish  = !!stopOnFinish
-        animation.duration      = duration || 0
-        animation.to            = endVolume
-        animation.start()
+    function doSetMusicVolume(multiplier, fadeTime) {
+        var fadeAnimationSelect = bgTrackAActive ? fadeVolumeA : fadeVolumeB
+        fadeVolume(fadeAnimationSelect, effectiveVolume("music", multiplier), fadeTime, false)
     }
 
     function doStop(fadeTime) {
@@ -433,8 +405,7 @@ Page {
 
         case "say":
             speakerName = Engine.interpolate(command.speaker || "")
-            fullText    = Engine.resolveText(command)
-            startTypewriter()
+            typewriter.start(Engine.resolveText(command))
             // stop here. Next command is processed after player input.
             break
 
@@ -569,8 +540,8 @@ Page {
                 enabled: !awaitingChoice // When waiting for choice input, we should not continue to the next script line.
                 anchors.fill: parent
                 onClicked: {
-                    if (textAnimating) {
-                        skipTypewriter()
+                    if (typewriter.animating) {
+                        typewriter.skip()
                     } else {
                         processNext()
                     }
@@ -641,7 +612,7 @@ Page {
 
                     Label {
                         id:             dialogueLabel
-                        text:           visibleText
+                        text:           typewriter.visibleText
                         color:          Theme.primaryColor
                         font.pixelSize: Theme.fontSizeSmall
                         wrapMode:       Text.WordWrap
@@ -729,6 +700,6 @@ Page {
     }
 
     Component.onCompleted: {
-        Engine.setAudioBgProvider(handleAudioBgAction)
+
     }
 }
