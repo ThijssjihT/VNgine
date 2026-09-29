@@ -468,9 +468,6 @@ Page {
             }
         }
 
-/////////////////////////
-// --- Layer Stack ---
-
         Item {
             id:             gameRoot
             anchors.fill:   parent
@@ -512,12 +509,7 @@ Page {
                 onOptionSelected:   selectChoice(index)
             }
         }
-
-// --- End Layer Stack ---
-/////////////////////////
-
     }
-
     Component.onCompleted: {
 
     }
