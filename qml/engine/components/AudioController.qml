@@ -1,9 +1,15 @@
+pragma Singleton
 import QtQuick 2.6
 import QtMultimedia 5.0
 import Sailfish.Silica 1.0
+import "../GameEngine.js" as Engine
 
 Item {
     property bool   bgTrackAActive:     true    //needed for crossfading audio
+
+    function assetPath(rel) {
+        return rel === "" ? "" : Engine.gamePath + "/assets/" + rel
+    }
 
     //Need 2 background music items for crossfading and other animations
     Audio {
@@ -56,7 +62,7 @@ Item {
     }
 
     function effectiveVolume(channelKey, multiplier) {
-        var settingsVolume = Components.Settings.get(("audio_" + channelKey + "_value") / 100)
+        var settingsVolume = Settings.get("audio_" + channelKey + "_value") / 100
         return settingsVolume * (multiplier === undefined ? 1.0 : multiplier)
     }
 

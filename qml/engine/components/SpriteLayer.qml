@@ -6,6 +6,10 @@ Item {
 
     property real clearance: 0
 
+    function assetPath(rel) {
+        return rel === "" ? "" : Engine.gamePath + "/assets/" + rel
+    }
+
     ListModel { id: spriteModel }
 
     Repeater {
