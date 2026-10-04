@@ -1,0 +1,23 @@
+{
+    "layers": [
+        { "id": "main", "z": 10 }
+    ],
+    "assets": [
+        { "id": "eyesOpen", "layer": "main", "file": "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile.png" },
+        { "id": "eyesClosed", "layer": "main", "file": "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile_ClosedEyes.png" }
+    ],
+    "animations": [
+        {
+            "animationId": "blink",
+            "type": "loop",
+            "steps": [
+                { "id": "eyesOpen",   "duration": 4000, "randomize": 500 },
+                { "id": "eyesClosed", "duration": 150 },
+                { "id": "eyesOpen",   "duration": 4000, "randomize": 500 },
+                { "id": "eyesClosed", "duration": 150 },
+                { "id": "eyesOpen",   "duration": 4000, "randomize": 500 },
+                { "id": "eyesClosed", "duration": 1000, "randomize": 500 }
+            ]
+        }
+    ]
+}
