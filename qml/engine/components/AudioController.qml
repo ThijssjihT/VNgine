@@ -6,6 +6,10 @@ import "../GameEngine.js" as Engine
 
 Item {
     property bool   bgTrackAActive:     true    //needed for crossfading audio
+    property var    musicQueue:         []
+    property int    musicIndex:         0       //track in the queue
+    property bool   musicLoop:          true
+    readonly property int defaultFadeDuration: 800
 
     function assetPath(rel) {
         return rel === "" ? "" : Engine.gamePath + "/assets/" + rel
@@ -14,8 +18,8 @@ Item {
     //Need 2 background music items for crossfading and other animations
     Audio {
         id:         bgMusic_a
-        loops:      Audio.Infinite
         volume:     0
+        onStatusChanged: if (status === Audio.EndOfMedia) advanceQueue(bgMusic_a)
         onError: {
             if (error === Audio.ResourceError || error === Audio.FormatError) {
                 console.warn("bgMusic_a failed to load: " + errorString)
@@ -28,8 +32,8 @@ Item {
 
     Audio {
         id:         bgMusic_b
-        loops:      Audio.Infinite
         volume:     0
+        onStatusChanged: if (status === Audio.EndOfMedia) advanceQueue(bgMusic_b)
         onError: {
             if (error === Audio.ResourceError || error === Audio.FormatError) {
                 console.warn("bgMusic_b failed to load: " + errorString)
@@ -39,6 +43,7 @@ Item {
             stop()
         }
     }
+
     //Having separate animation instead of general fadeIn, fadeOut
     //makes that we don't need live binding and thus to guard against overlap
     PropertyAnimation {
@@ -67,22 +72,54 @@ Item {
     }
 
     function fadeVolume(animation, endVolume, duration, stopOnFinish) {
+        //First stop the running animation to get more predictable behaviour
+        //when we try to do 2 animations simultaniously
+        animation.stopOnFinish  = false
+        animation.stop()
+
+        //Set up the animation
         animation.stopOnFinish  = !!stopOnFinish
         animation.duration      = duration || 0
         animation.to            = endVolume
         animation.start()
     }
 
-    function doCrossFade(track, fadeTime, volume) {
-        var fadeOut     = bgTrackAActive ? fadeVolumeA : fadeVolumeB
-        var fadeIn      = bgTrackAActive ? fadeVolumeB : fadeVolumeA
-        var fadeInTarget= bgTrackAActive ? bgMusic_b : bgMusic_a
+    function playQueueTrack(element, index) {
+        element.loops   = (musicQueue.length === 1 && musicLoop) ? Audio.Infinite : 1
+        element.source  = Engine.assetPath("audio/" + musicQueue[index])
+        element.play()
+    }
 
-        fadeVolume(fadeOut, 0, fadeTime, true) //fade out old track, then stop
+    function advanceQueue(element) {
+        var active = bgTrackAActive ? bgMusic_a : bgMusic_b
+        if (element !== active || musicQueue.length === 0) return
 
-        fadeInTarget.source = assetPath("audio/" + track)
-        fadeInTarget.play()
-        fadeVolume(fadeIn, effectiveVolume("music", volume), fadeTime, false) //fade in new track
+        var next = musicIndex + 1
+        if (next >= musicQueue.length) {
+            if (!musicLoop) return
+            next = 0
+        }
+        musicIndex = next
+        playQueueTrack(element, next)
+    }
+
+    function doSetMusic(tracks, loop, transistion, fadeTime, volume) {
+        if (tracks === undefined || tracks.length === 0) {
+            console.warn("setMusic: needs a non-empty \"tracks\" list")
+            return
+        }
+        musicQueue  = tracks
+        musicIndex  = 0
+        musicLoop   = (loop !== false)
+
+        var duration = (transistion === "cut") ? 0 : (fadeTime !== undefined ? fadeTime : defaultFadeDuration)
+        var fadeOut  = bgTrackAActive ? fadeVolumeA : fadeVolumeB
+        var fadeIn   = bgTrackAActive ? fadeVolumeB : fadeVolumeA
+        var incoming = bgTrackAActive ? bgMusic_b : bgMusic_a
+
+        fadeVolume(fadeOut, 0, duration, true)
+        playQueueTrack(incoming, 0)
+        fadeVolume(fadeIn, effectiveVolume("music", volume), duration, false)
         bgTrackAActive = !bgTrackAActive
     }
 
@@ -93,6 +130,7 @@ Item {
 
     function doStop(fadeTime) {
         var fadeOut = bgTrackAActive ? fadeVolumeA : fadeVolumeB
+        musicQueue = []
         fadeVolume(fadeOut, 0, fadeTime, true)
     }
 
@@ -108,8 +146,8 @@ Item {
 
     function handleAudioBgAction(action) {
         switch (action.action) {
-            case "crossfade":
-                doCrossFade(action.track, action.fadeTime)
+            case "setMusic":
+                doSetMusic(action.tracks, action.loop, action.transition, action.fadeTime, action.volume)
                 break
             case "stop":
                 doStop(action.fadeTime)
