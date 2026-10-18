@@ -111,13 +111,14 @@ Page {
         thumbHeight = Math.round(thumbWidth * gameRoot.height / gameRoot.width)
     }
 
-    function buildScreenBlob() {
+    function buildScreenBlob() {  //leftover name, also saves sounds and styles into the blob together with the graphics
         var sprites = spriteLayer.toList()
         return {
             background:     currentBg,
             sprites:        sprites,
             dialogue:       { speaker: speakerName, text: typewriter.fullText },
-            activeStyleIds: activeStyleIds
+            activeStyleIds: activeStyleIds,
+            sound:          Components.AudioController.toBlob()
         }
     }
 
@@ -133,8 +134,7 @@ Page {
             speakerName   = screenBlob.dialogue.speaker
             typewriter.setImmediate(screenBlob.dialogue.text)
         }
-        //TODO: possible bug? What if we save during a choice? Can we load and accurately rebuild the screen from that blob?
-        //TODO: sound
+        Components.AudioController.restoreFrom(screenBlob.sound)
     }
 
     function beginNew() {
@@ -170,6 +170,7 @@ Page {
         textboxStyle        = Engine.resolveStyle("textbox", null)
         choiceStyle         = Engine.resolveStyle("choice", null)
         hudStyle            = Engine.resolveStyle("hud", null)
+        Components.AudioController.doStop(0)
     }
 
     onStatusChanged: {

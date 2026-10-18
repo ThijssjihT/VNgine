@@ -5,10 +5,11 @@ import Sailfish.Silica 1.0
 import "../GameEngine.js" as Engine
 
 Item {
-    property bool   bgTrackAActive:     true    //needed for crossfading audio
-    property var    musicQueue:         []
-    property int    musicIndex:         0       //track in the queue
-    property bool   musicLoop:          true
+    property bool   bgTrackAActive: true    //needed for crossfading audio
+    property var    musicQueue:     []
+    property int    musicIndex:     0       //track in the queue
+    property bool   musicLoop:      true
+    property real   musicVolume:    1.0
     readonly property int defaultFadeDuration: 800
 
     function assetPath(rel) {
@@ -103,14 +104,15 @@ Item {
         playQueueTrack(element, next)
     }
 
-    function doSetMusic(tracks, loop, transistion, fadeTime, volume) {
+    function doSetMusic(tracks, loop, transistion, fadeTime, volume, startIndex) {
         if (tracks === undefined || tracks.length === 0) {
             console.warn("setMusic: needs a non-empty \"tracks\" list")
             return
         }
         musicQueue  = tracks
-        musicIndex  = 0
+        musicIndex  = (startIndex !== undefined && startIndex < tracks.length) ? startIndex : 0
         musicLoop   = (loop !== false)
+        musicVolume = (volume !== undefined) ? volume : 1.0
 
         var duration = (transistion === "cut") ? 0 : (fadeTime !== undefined ? fadeTime : defaultFadeDuration)
         var fadeOut  = bgTrackAActive ? fadeVolumeA : fadeVolumeB
@@ -118,13 +120,14 @@ Item {
         var incoming = bgTrackAActive ? bgMusic_b : bgMusic_a
 
         fadeVolume(fadeOut, 0, duration, true)
-        playQueueTrack(incoming, 0)
+        playQueueTrack(incoming, musicIndex)
         fadeVolume(fadeIn, effectiveVolume("music", volume), duration, false)
         bgTrackAActive = !bgTrackAActive
     }
 
     function doSetMusicVolume(multiplier, fadeTime) {
         var fadeAnimationSelect = bgTrackAActive ? fadeVolumeA : fadeVolumeB
+        musicVolume = multiplier
         fadeVolume(fadeAnimationSelect, effectiveVolume("music", multiplier), fadeTime, false)
     }
 
@@ -161,5 +164,16 @@ Item {
             default:
                 console.warn("audio_bg action not implemented: " + action.action)
         }
+    }
+
+    function toBlob() {
+        if (musicQueue.length === 0) return { music: null }
+        return { music: { tracks: musicQueue, index: musicIndex, loop: musicLoop, volume: musicVolume } }
+    }
+
+    function restoreFrom(blob) {
+        if (!blob || !blob.music) return
+        var m = blob.music
+        doSetMusic(m.tracks, m.loop, "cut", 0, m.volume, m.index)
     }
 }

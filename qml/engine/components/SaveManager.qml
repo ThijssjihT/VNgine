@@ -61,7 +61,7 @@ QtObject {
             sceneId:        sceneId,        //What scene we are in
             cmdIndex:       commandIndex,   //What row we are on at this scene
             variables:      variables,      //JS object containing all variables and their values
-            screen:         screen,         //JS object containing instructions for building up every thing on screen
+            screen:         screen,         //JS object containing instructions for building up everything the player sees and hears (graphics, text, styles, sound)
             presetLabel:    presetLabel,    //User overwritable save game label
             slot:           -1
         }
