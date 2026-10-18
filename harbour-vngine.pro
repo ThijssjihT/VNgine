@@ -18,7 +18,6 @@ SOURCES += \
     src/harbour-vngine.cpp
 
 DISTFILES += \
-    qml/game/assets/sprites/liisaBlink.json \
     qml/harbour-vngine.qml \
     rpm/harbour-vngine.changes.in \
     rpm/harbour-vngine.changes.run.in \

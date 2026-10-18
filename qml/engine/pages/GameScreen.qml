@@ -302,6 +302,11 @@ Page {
             processNext()
             break
 
+        case "audio_sfx":
+            Components.AudioController.playSfx(command.file, command.channel, command.volume)
+            processNext()
+            break
+
         default:
             // unknown command: log and skip so the game does not stall
             console.warn("Not every command is yet implemented.")

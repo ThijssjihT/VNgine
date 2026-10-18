@@ -12,6 +12,33 @@ Item {
     property real   musicVolume:    1.0
     readonly property int defaultFadeDuration: 800
 
+    //Four slots for effects. Add more if needed
+    SfxSlot { id: sfx0 }
+    SfxSlot { id: sfx1 }
+    SfxSlot { id: sfx2 }
+    SfxSlot { id: sfx3 }
+    property var sfxPool: [sfx0, sfx1, sfx2, sfx3]
+
+    function playSfx(file, channel, volume) {
+        if (file === undefined) {
+            console.warn("audio_sfx: missing \"file\"")
+            return
+        }
+        for (var i = 0; i < sfxPool.length; i++) {
+            var slot = sfxPool[i]
+            if (!slot.busy) {
+                slot.busy   = true
+                slot.volume = effectiveVolume(channel, volume)
+                slot.source = Engine.assetPath("audio/" + file)
+                slot.play()
+                return
+            }
+        }
+        console.warn("audio_sfx: all " + sfxPool.length + " slots busy, skipping " + file)
+        console.warn("Please check for using sfx for music or other long files")
+        console.warn("You may add extra slots by modifying AudioController.qml")
+    }
+
     function assetPath(rel) {
         return rel === "" ? "" : Engine.gamePath + "/assets/" + rel
     }
