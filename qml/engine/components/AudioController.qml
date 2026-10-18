@@ -12,6 +12,14 @@ Item {
     property real   musicVolume:    1.0
     readonly property int defaultFadeDuration: 800
 
+    Connections {
+        target:  Settings
+        onSettingChanged: {
+            var channel = channelFromKey(key)
+            if (channel !== undefined) applyChannelVolume(channel)
+        }
+    }
+
     //Four slots for effects. Add more if needed
     SfxSlot { id: sfx0 }
     SfxSlot { id: sfx1 }

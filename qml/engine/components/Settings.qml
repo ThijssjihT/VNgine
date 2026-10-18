@@ -12,6 +12,8 @@ QtObject {
     property var _keyIndex: ({})    //mapping plain key to internal storage key
     property bool ready: false
 
+    signal settingChanged(string key, var value)
+
     function initialize() {
         _db = LocalStorage.openDatabaseSync(
                     Constants.dbName, Constants.dbVersion,
@@ -33,6 +35,7 @@ QtObject {
     function set(key, value) {
         _settings[key] = value
         _db.transaction(function(tx) { tx.executeSql("INSERT OR REPLACE INTO settings (key, value, type) VALUES (?, ?, ?)", [key, JSON.stringify(value), typeof value])})
+        settingChanged(key, value)
     }
 
     function _applyManifest(manifest) {
