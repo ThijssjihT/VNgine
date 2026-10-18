@@ -51,7 +51,7 @@ Item {
         if (pos === "left")     return 0
         if (pos === "right")    return width - sprWidth
         if (pos.indexOf("%") !== -1)                    //If exact x and y coordinates are given
-            return parseFloat(pos.split(",")[0] / 100 * gameRoot.width - sprWidth / 2)
+            return parseFloat(pos.split(",")[0] / 100 * width - sprWidth / 2)
         return (width - sprWidth) / 2          //Default center position
     }
 

@@ -69,6 +69,25 @@ function loadScene(sceneId) {
     })
 }
 
+function makeStaticSpriteState(imagePath) {
+    return {
+        layers:     [ { id: "main", z: 0} ],
+        assets:     [ { id: "staticSprite", layer: "main", file: imagePath } ],
+        animations: [ { animationId: "blink", type: "static", steps: [ { id: "staticSprite" } ] } ]
+    }
+}
+
+function loadSpriteState(stateId) {
+    // 1. filename guard, as loadStyleChain does
+    // 2. load + parse, try/catch, return null on failure
+    // 3. build assetIndex: { assetId: { layer: ..., file: ... } }
+    // 4. build layerIndex from the layers array, check duplicates
+    // 5. resolve every step's id through assetIndex into { layer, file, duration, randomize }
+    // 6. set each layer's initial file from the first step that writes it
+    // 7. sort layers by z ascending
+    return null;
+}
+
 function resolveStyle(category, styleId) {                  //resolves loading a preconfigured style in a category (textbox, choice, hud, ...)
     var engineDefault = loadJson(engineDefaultsPath + "/default_" + category + ".json")
     if (!styleId) return mergeStyle({}, engineDefault.style)
