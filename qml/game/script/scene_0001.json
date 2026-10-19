@@ -7,7 +7,7 @@
 
         { "cmd": "bg",    "image": "bg/centre_exterior_evening.png", "transition": "fade" },
         { "cmd": "audio_bg", "action": "setMusic", "tracks": ["music/Origami.mp3"], "transition": "crossfade", "fadeTime": 800 },
-        { "cmd": "audio_sfx", "file": "sfx/tram_distant.mp3" },
+        { "cmd": "audio_fx", "file": "sfx/tram_distant.mp3" },
 
         { "cmd": "say", "speaker": null, "text": "You are at your local community center. Just in front of it is a notice board." },
         { "cmd": "say", "speaker": null, "text": "Every time you've been here, you passed it, paying it no mind. But this time, your eyes are drawn to a peculiar piece of paper." },
@@ -20,11 +20,11 @@
         { "cmd": "say", "speaker": "Player", "text": "..."},
         { "cmd": "say", "speaker": null, "text": "This is quite the piece of information. A thought enters your mind." },
 
-        { "cmd": "audio_sfx", "file": "sfx/boink.mp3" },
+        { "cmd": "audio_fx", "file": "sfx/boink.mp3" },
 
         { "cmd": "say", "speaker": "Player", "text": "NO WAY! IT CAN'T BE!" },
 
-        { "cmd": "bg",    "image": "bg/centre_exterior_evening.png", "transition": "fade" },
+        { "cmd": "bg", "image": "bg/centre_exterior_evening.png", "transition": "fade" },
 
         { "cmd": "say", "speaker": "Player", "text": "I am inside a game? And not even a good game? Just a sample game, to show off what the engine can do?" },
         { "cmd": "say", "speaker": "Player", "text": "No, no, no. That can't be true. Right? Oh my... This can't be happening to me." },

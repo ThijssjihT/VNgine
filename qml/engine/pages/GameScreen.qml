@@ -24,10 +24,6 @@ Page {
     RemorsePopup { id: remorsePopup }
     Components.Typewriter { id: typewriter }
 
-    function assetPath(rel) {  // AI proposed and generated helper function
-        return rel === "" ? "" : Engine.gamePath + "/assets/" + rel
-    }
-
 /////////////////////////
 // --- Branching logic
 
@@ -170,7 +166,7 @@ Page {
         textboxStyle        = Engine.resolveStyle("textbox", null)
         choiceStyle         = Engine.resolveStyle("choice", null)
         hudStyle            = Engine.resolveStyle("hud", null)
-        Components.AudioController.doStop(0)
+        Components.AudioController.stopAll(100)
     }
 
     onStatusChanged: {
@@ -302,8 +298,13 @@ Page {
             processNext()
             break
 
-        case "audio_sfx":
-            Components.AudioController.playSfx(command.file, command.channel, command.volume)
+        case "audio_fx":
+            Components.AudioController.playSfx(command.file, command.volume)
+            processNext()
+            break
+
+        case "audio_loop":
+            Components.AudioController.handleAudioLoopAction(command)
             processNext()
             break
 
@@ -374,7 +375,7 @@ Page {
             Image {
                 id:             background
                 anchors.fill:   parent
-                source:         assetPath(currentBg)
+                source:         Engine.assetPath(currentBg)
                 fillMode:       Image.PreserveAspectCrop  //Crop, or black borders? Maybe in the game.json?
             }
 

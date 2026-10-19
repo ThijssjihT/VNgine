@@ -6,16 +6,12 @@ Item {
 
     property real clearance: 0
 
-    function assetPath(rel) {
-        return rel === "" ? "" : Engine.gamePath + "/assets/" + rel
-    }
-
     ListModel { id: spriteModel }
 
     Repeater {
         model: spriteModel
         delegate: Image {
-            source:             spriteLayer.assetPath(model.spriteSource)
+            source:             Engine.assetPath(model.spriteSource)
             sourceSize.height:  spriteLayer.height * 0.9
             x:                  spriteLayer.spriteX(model.position, width)
             y:                  spriteLayer.spriteY(model.position, height)

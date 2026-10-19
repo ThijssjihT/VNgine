@@ -38,18 +38,18 @@ Item {
     LoopFXSlot { id: lfx1 }
     LoopFXSlot { id: lfx2 }
     LoopFXSlot { id: lfx3 }
-    property var sfxPool: [lfx0, lfx1, lfx2, lfx3]
+    property var loopPool: [lfx0, lfx1, lfx2, lfx3] //palindrome
 
     function playSfx(file, volume) {
         if (file === undefined) {
-            console.warn("audio_sfx: missing \"file\"")
+            console.warn("audio_fx: missing \"file\"")
             return
         }
         for (var i = 0; i < sfxPool.length; i++) {
             var slot = sfxPool[i]
             if (!slot.busy) {
                 slot.busy   = true
-                slot.volume = effectiveVolume("gamefxChannel", volume)
+                slot.volume = effectiveVolume(gamefxChannel, volume)
                 slot.source = Engine.assetPath("audio/" + file)
                 slot.play()
                 return
@@ -57,12 +57,98 @@ Item {
         }
         console.warn("audio_sfx: all " + sfxPool.length + " slots busy, skipping " + file)
         console.warn("Please check for using sfx for music or other long files")
+        console.warn("or consider using audio_loop")
         console.warn("You may add extra slots by modifying AudioController.qml")
     }
 
-    function assetPath(rel) {
-        return rel === "" ? "" : Engine.gamePath + "/assets/" + rel
+    function handleAudioLoopAction(action) {
+        switch (action.action) {
+            case "start":
+                playLoopFx(action.id, action.file, action.volume, action.fadeTime)
+                break
+            case "stop":
+                stopLoopFx(action.id, action.fadeTime)
+                break
+            case "stopAll":
+                stopAllLoopFx(action.fadeTime)
+                break
+        }
     }
+
+    function findLoopSlot(id) {
+        for (var i = 0; i < loopPool.length; i++) {
+            if (loopPool[i].busy && loopPool[i].loopId === id) return loopPool[i]
+        }
+        return null
+    }
+
+    function findFreeLoopSlot() {
+        for (var i = 0; i < loopPool.length; i++) {
+            if (!loopPool[i].busy) return loopPool[i]
+        }
+        return null
+    }
+
+    function playLoopFx(id, file, volume, fadeTime) {
+        if (file === undefined) {
+            console.warn("audio_loop: missing \"file\"")
+            return
+        }
+        var multiPlier  = (volume !== undefined) ? volume : 1.0
+        var slot        = findLoopSlot(id)
+
+        if (slot !== null && slot.file === file) { //Loop is already running, adjust the volume
+            slot.baseVolume = multiPlier
+            fadeVolume(slot.fader, effectiveVolume(loopingfxChannel, multiPlier), fadeTime, false)
+            console.warn("Loop is already running. Adjusting volume if necessary.")
+            return
+        }
+
+        if (slot === null) slot = findFreeLoopSlot()
+        if (slot === null) {
+            console.warn("audio_loop: all " + loopPool.length + " slots busy, skipping " + file)
+            console.warn("You may add extra slots by modifying AudioController.qml")
+            return
+        }
+
+        slot.busy       = true
+        slot.loopId     = id
+        slot.file       = file
+        slot.baseVolume = multiPlier
+        slot.source     = Engine.assetPath("audio/" + file)
+        slot.volume     = 0
+        slot.play()
+        fadeVolume(slot.fader, effectiveVolume(loopingfxChannel, multiPlier), fadeTime, false)
+    }
+
+    function stopLoopFx(id, fadeTime) {
+        var slot = findLoopSlot(id)
+        if (slot === null ) {
+            console.warn("stopping loop not possible: no active loop with id " + id)
+            return
+        }
+        fadeVolume(slot.fader, 0, fadeTime, true)
+        return
+    }
+
+    function stopAllLoopFx(fadeTime) {
+        loopPool.forEach(function(slot) {
+            if (slot.busy) fadeVolume(slot.fader, 0, fadeTime, true)
+        })
+    }
+
+    function applyLoopingFXVolume(fadeTime) {
+        loopPool.forEach(function(slot) {
+            if (slot.busy) {
+                fadeVolume(slot.fader, effectiveVolume(loopingfxChannel, slot.baseVolume), 100, false)
+            }
+        })
+    }
+
+    function stopAll(fadeTime) {
+        stopAllLoopFx(fadeTime)
+        doStop(fadeTime)
+     }
 
     //Need 2 background music items for crossfading and other animations
     Audio {
@@ -118,7 +204,7 @@ Item {
     function applyMusicVolume() {
         if (musicQueue.length === 0) return
         var animation = bgTrackAActive ? fadeVolumeA : fadeVolumeB
-        fadeVolume(animanimation, effectiveVolume(musicChannel, musicVolume), 100, false)
+        fadeVolume(animation, effectiveVolume(musicChannel, musicVolume), 100, false)
     }
 
     function effectiveVolume(channelKey, multiplier) {
@@ -224,13 +310,26 @@ Item {
     }
 
     function toBlob() {
-        if (musicQueue.length === 0) return { music: null }
-        return { music: { tracks: musicQueue, index: musicIndex, loop: musicLoop, volume: musicVolume } }
+        var loops = []
+        for (var i = 0; i < loopPool.length; i++) {
+            var s = loopPool[i]
+            if (s.busy) loops.push({ id: s.loopId, file: s.file, volume: s.baseVolume})
+        }
+        var music = (musicQueue.length === 0) ? null : { tracks: musicQueue, index: musicIndex, loop: musicLoop, volume: musicVolume }
+        return {
+            music: music,
+            loops: loops
+        }
     }
 
     function restoreFrom(blob) {
-        if (!blob || !blob.music) return
-        var m = blob.music
-        doSetMusic(m.tracks, m.loop, "cut", 0, m.volume, m.index)
+        if (!blob) return
+        if (blob.music) {
+            var m = blob.music
+            doSetMusic(m.tracks, m.loop, "cut", 0, m.volume, m.index)
+        }
+        (blob.loops || []).foreach(function (l) {
+            playLoopFx(l.id, l.file, l.volume)
+        } )
     }
 }

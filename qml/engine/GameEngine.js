@@ -24,6 +24,10 @@ function setEngineDefaultsPath(path) {
     engineDefaultsPath = path
 }
 
+function assetPath(rel) {
+    return rel === "" ? "" : gamePath + "/assets/" + rel
+}
+
 function getSetting(key) {
     if (settingsProvider) return settingsProvider(key)
     console.warn ("Setting " + key + " requested before settings initialization")
