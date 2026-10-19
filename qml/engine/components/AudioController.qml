@@ -10,13 +10,19 @@ Item {
     property int    musicIndex:     0       //track in the queue
     property bool   musicLoop:      true
     property real   musicVolume:    1.0
-    readonly property int       defaultFadeDuration: 800
-    readonly property string    musicChannel: "music"
+    readonly property int       defaultFadeDuration:    800
+    readonly property string    musicChannel:           "music"
+    readonly property string    gamefxChannel:          "game_fx"
+    readonly property string    loopingfxChannel:       "looping_fx"
+    readonly property string    textfxChannel:          "text_fx"
+    readonly property string    voiceChannel:           "voice"
 
     Connections {
         target:  Settings
         onSettingChanged: {
             if (key === "audio_" + musicChannel + "_value") applyMusicVolume()
+            if (key === "audio_" + loopingfxChannel + "_value") applyLoopingFXVolume()
+            // It might be better to have one function doing the volume changes, taking the channel as an argument
         }
     }
 
@@ -27,7 +33,14 @@ Item {
     SfxSlot { id: sfx3 }
     property var sfxPool: [sfx0, sfx1, sfx2, sfx3]
 
-    function playSfx(file, channel, volume) {
+    //Four slots for looping effects. Add more if needed
+    LoopFXSlot { id: lfx0 }
+    LoopFXSlot { id: lfx1 }
+    LoopFXSlot { id: lfx2 }
+    LoopFXSlot { id: lfx3 }
+    property var sfxPool: [lfx0, lfx1, lfx2, lfx3]
+
+    function playSfx(file, volume) {
         if (file === undefined) {
             console.warn("audio_sfx: missing \"file\"")
             return
@@ -36,7 +49,7 @@ Item {
             var slot = sfxPool[i]
             if (!slot.busy) {
                 slot.busy   = true
-                slot.volume = effectiveVolume(channel, volume)
+                slot.volume = effectiveVolume("gamefxChannel", volume)
                 slot.source = Engine.assetPath("audio/" + file)
                 slot.play()
                 return
@@ -104,8 +117,8 @@ Item {
 
     function applyMusicVolume() {
         if (musicQueue.length === 0) return
-        var anim = bgTrackAActive ? fadeVolumeA : fadeVolumeB
-        fadeVolume(anim, effectiveVolume(musicChannel, musicVolume), 100, false)
+        var animation = bgTrackAActive ? fadeVolumeA : fadeVolumeB
+        fadeVolume(animanimation, effectiveVolume(musicChannel, musicVolume), 100, false)
     }
 
     function effectiveVolume(channelKey, multiplier) {
