@@ -10,13 +10,13 @@ Item {
     property int    musicIndex:     0       //track in the queue
     property bool   musicLoop:      true
     property real   musicVolume:    1.0
-    readonly property int defaultFadeDuration: 800
+    readonly property int       defaultFadeDuration: 800
+    readonly property string    musicChannel: "music"
 
     Connections {
         target:  Settings
         onSettingChanged: {
-            var channel = channelFromKey(key)
-            if (channel !== undefined) applyChannelVolume(channel)
+            if (key === "audio_" + musicChannel + "_value") applyMusicVolume()
         }
     }
 
@@ -102,6 +102,12 @@ Item {
         }
     }
 
+    function applyMusicVolume() {
+        if (musicQueue.length === 0) return
+        var anim = bgTrackAActive ? fadeVolumeA : fadeVolumeB
+        fadeVolume(anim, effectiveVolume(musicChannel, musicVolume), 100, false)
+    }
+
     function effectiveVolume(channelKey, multiplier) {
         var settingsVolume = Settings.get("audio_" + channelKey + "_value") / 100
         return settingsVolume * (multiplier === undefined ? 1.0 : multiplier)
@@ -139,7 +145,7 @@ Item {
         playQueueTrack(element, next)
     }
 
-    function doSetMusic(tracks, loop, transistion, fadeTime, volume, startIndex) {
+    function doSetMusic(tracks, loop, transition, fadeTime, volume, startIndex) {
         if (tracks === undefined || tracks.length === 0) {
             console.warn("setMusic: needs a non-empty \"tracks\" list")
             return
@@ -149,21 +155,21 @@ Item {
         musicLoop   = (loop !== false)
         musicVolume = (volume !== undefined) ? volume : 1.0
 
-        var duration = (transistion === "cut") ? 0 : (fadeTime !== undefined ? fadeTime : defaultFadeDuration)
+        var duration = (transition === "cut") ? 0 : (fadeTime !== undefined ? fadeTime : defaultFadeDuration)
         var fadeOut  = bgTrackAActive ? fadeVolumeA : fadeVolumeB
         var fadeIn   = bgTrackAActive ? fadeVolumeB : fadeVolumeA
         var incoming = bgTrackAActive ? bgMusic_b : bgMusic_a
 
         fadeVolume(fadeOut, 0, duration, true)
         playQueueTrack(incoming, musicIndex)
-        fadeVolume(fadeIn, effectiveVolume("music", volume), duration, false)
+        fadeVolume(fadeIn, effectiveVolume(musicChannel, volume), duration, false)
         bgTrackAActive = !bgTrackAActive
     }
 
     function doSetMusicVolume(multiplier, fadeTime) {
         var fadeAnimationSelect = bgTrackAActive ? fadeVolumeA : fadeVolumeB
         musicVolume = multiplier
-        fadeVolume(fadeAnimationSelect, effectiveVolume("music", multiplier), fadeTime, false)
+        fadeVolume(fadeAnimationSelect, effectiveVolume(musicChannel, multiplier), fadeTime, false)
     }
 
     function doStop(fadeTime) {
@@ -186,6 +192,9 @@ Item {
         switch (action.action) {
             case "setMusic":
                 doSetMusic(action.tracks, action.loop, action.transition, action.fadeTime, action.volume)
+                break
+            case "setVolume":
+                doSetMusicVolume(action.volume, action.fadeTime)
                 break
             case "stop":
                 doStop(action.fadeTime)
