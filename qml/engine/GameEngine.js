@@ -77,19 +77,150 @@ function makeStaticSpriteState(imagePath) {
     return {
         layers:     [ { id: "main", z: 0} ],
         assets:     [ { id: "staticSprite", layer: "main", file: imagePath } ],
-        animations: [ { animationId: "blink", type: "static", steps: [ { id: "staticSprite" } ] } ]
+        animations: [ { animationId: "static", type: "once", steps: [ { id: "staticSprite" } ] } ]
     }
 }
 
 function loadSpriteState(stateId) {
-    // 1. filename guard, as loadStyleChain does
+    // 1. filename guard
+
+    // Reject everything but a plain id
+    if ((stateId.indexOf(".") !== -1) || (stateId.indexOf("/") !== -1) || (stateId.indexOf("\\") !== -1)) {  //copied AI output
+        console.warn("Sprite state \"" + stateId + "\" is not valid. (no extensions or / or \\ are allowed)")
+        return null
+    }
+
     // 2. load + parse, try/catch, return null on failure
-    // 3. build assetIndex: { assetId: { layer: ..., file: ... } }
-    // 4. build layerIndex from the layers array, check duplicates
+    var path = gamePath + "/assets/sprites/" + stateId + ".json";
+    var rawData = null
+    try {
+        rawData = loadJson(path)
+    } catch (e) {
+        console.warn("Could not load sprite state " + path)
+        console.warn(e)
+        return null
+    }
+
+    return normalizeSpriteState(rawData, stateId + ".json")
+}
+
+function normalizeSpriteState(rawData, sourceName) {
+    // 3. build layerIndex from the layers array, check duplicates
+    var layersById = buildLayersById(rawData, sourceName)
+    if (layersById === null) return null
+
+    // 4. build assetIndex: { assetId: { layer: ..., file: ... } }
+    var assetsById = buildAssetsById(rawData, layersById, sourceName)
+    if (assetsById === null) return null
+
     // 5. resolve every step's id through assetIndex into { layer, file, duration, randomize }
     // 6. set each layer's initial file from the first step that writes it
     // 7. sort layers by z ascending
     return null;
+}
+
+function buildLayersById(rawData, sourceName) {
+    /* EXAMPLE:
+      Input:
+        { "id": "eyes",  "z": 20 },
+        { "id": "body",  "z": 10 },
+        { "id": "mouth", "z": 30 }
+      Output
+        {
+            eyes:  { z: 20 },
+            body:  { z: 10 },
+            mouth: { z: 30 }
+        }
+    */
+    // Note: no sorting happens here. This is only a lookup table by id;
+    // draw order is handled later, when the layers array is sorted by z
+
+    if (!Array.isArray(rawData.layers) || rawData.layers.length === 0) {
+        console.warn(sourceName + " has corrupt layer data, should be an array.")
+        return null
+    }
+
+    var layersById = {}
+    for (var i = 0; i < rawData.layers.length; i++) { //foreach would be possible, but I want to return an early null
+        var layer = rawData.layers[i]
+
+        // AI generated checks
+        // Checking the layer is an object with a string id and a numeric z
+        if (!isPlainObject(layer)) {
+            console.warn(sourceName + ": layer " + i + " is not an object")
+            return null
+        }
+        if (typeof layer.id !== "string") {
+            console.warn(sourceName + ": layer " + i + " needs a string \"id\"")
+            return null
+        }
+        if (typeof layer.z !== "number") {
+            console.warn(sourceName + ": layer \"" + layer.id + "\" needs a numeric \"z\"")
+            return null
+        }
+        // End of AI generated checks
+
+        // Checking for unique id
+        if (layersById.hasOwnProperty(layer.id)) {
+            console.warn(sourceName + ": layer " + i + " has duplicate id \"" + layer.id + "\"")
+            return null
+        }
+
+        layersById[layer.id] = { z: layer.z }
+    }
+
+    return layersById
+}
+
+function buildAssetsById(rawData, layersById, sourceName) {
+    /* EXAMPLE:
+      Input:
+        { "id": "eyesOpen", "layer": "main", "file": "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile.png" },
+        { "id": "eyesClosed", "layer": "main", "file": "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile_ClosedEyes.png" }
+      Output
+        {
+            eyesOpen:   { layer: "main", file: "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile.png" },
+            eyesClosed: { layer: "main", file: "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile_ClosedEyes.png" }
+        }
+    */
+
+    if (!Array.isArray(rawData.assets)) {
+        console.warn(sourceName + " has corrupt asset data, should be an array.")
+        return null
+    }
+
+    var assetsById = {}
+    for (var i = 0; i < rawData.assets.length; i++) { //foreach would be possible, but I want to return an early null
+        var asset = rawData.assets[i]
+
+        // AI generated checks
+        // Checking the asset is an object with string id, layer and file
+        if (!isPlainObject(asset)) {
+            console.warn(sourceName + ": asset " + i + " is not an object")
+            return null
+        }
+        if (typeof asset.id !== "string" || typeof asset.layer !== "string" || typeof asset.file !== "string") {
+            console.warn(sourceName + ": asset " + i + " needs string fields \"id\", \"layer\" and \"file\"")
+            return null
+        }
+        // End AI generated checks
+
+        // Checking for unique id
+        if (assetsById.hasOwnProperty(asset.id)) {
+            console.warn(sourceName + ": asset " + i + " has duplicate id \"" + asset.id + "\"")
+            return null
+        }
+
+        // Checking if the asset is assigned to a layer
+        if (!layersById.hasOwnProperty(asset.layer)) {
+            console.warn(sourceName + ": asset " + asset.id + " has no valid layer \"" + asset.layer + "\"")
+            return null
+        }
+
+        assetsById[asset.id] = { layer: asset.layer, file: asset.file }
+    }
+
+    return assetsById
 }
 
 function resolveStyle(category, styleId) {                  //resolves loading a preconfigured style in a category (textbox, choice, hud, ...)
