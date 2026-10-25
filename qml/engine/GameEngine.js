@@ -110,15 +110,15 @@ function normalizeSpriteState(rawData, sourceName) {
     if (layersById === null) return null
 
     // 4. Assets: array of { id, file, z }, repeater loops over this
-    var assetsById = buildAssets(rawData, layersById, sourceName)
-    if (assetsById === null) return null
+    var assetArray = buildAssets(rawData, layersById, sourceName)
+    if (assetArray === null) return null
 
     // 5. animations: check every step's asset id exists, fill in duration
     var animationArray = resolveAnimations(rawData, assetsById, sourceName)
     if (animationArray === null) return null
 
     // 6. Warn about unused assets
-    return { assets: assets, animations: animations }
+    return { assets: assetArray, animations: animationArray }
 }
 
 function buildLayersById(rawData, sourceName) {
