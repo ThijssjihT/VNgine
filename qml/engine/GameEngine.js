@@ -74,11 +74,11 @@ function loadScene(sceneId) {
 }
 
 function makeStaticSpriteState(imagePath) {
-    return {
+    return normalizeSpriteState({
         layers:     [ { id: "main", z: 0} ],
         assets:     [ { id: "staticSprite", layer: "main", file: imagePath } ],
         animations: [ { animationId: "static", type: "once", steps: [ { id: "staticSprite" } ] } ]
-    }
+    }, imagePath)
 }
 
 function loadSpriteState(stateId) {
@@ -109,14 +109,16 @@ function normalizeSpriteState(rawData, sourceName) {
     var layersById = buildLayersById(rawData, sourceName)
     if (layersById === null) return null
 
-    // 4. build assetIndex: { assetId: { layer: ..., file: ... } }
-    var assetsById = buildAssetsById(rawData, layersById, sourceName)
+    // 4. Assets: array of { id, file, z }, repeater loops over this
+    var assetsById = buildAssets(rawData, layersById, sourceName)
     if (assetsById === null) return null
 
-    // 5. resolve every step's id through assetIndex into { layer, file, duration, randomize }
-    // 6. set each layer's initial file from the first step that writes it
-    // 7. sort layers by z ascending
-    return null;
+    // 5. animations: check every step's asset id exists, fill in duration
+    var animationArray = resolveAnimations(rawData, assetsById, sourceName)
+    if (animationArray === null) return null
+
+    // 6. Warn about unused assets
+    return { assets: assets, animations: animations }
 }
 
 function buildLayersById(rawData, sourceName) {
@@ -125,18 +127,12 @@ function buildLayersById(rawData, sourceName) {
         { "id": "eyes",  "z": 20 },
         { "id": "body",  "z": 10 },
         { "id": "mouth", "z": 30 }
-      Output
-        {
-            eyes:  { z: 20 },
-            body:  { z: 10 },
-            mouth: { z: 30 }
-        }
+      Output:
+        { eyes: 20, body: 10, mouth: 30 }
     */
-    // Note: no sorting happens here. This is only a lookup table by id;
-    // draw order is handled later, when the layers array is sorted by z
-
+    // The order of the layers is not important, because qml image has a z property for draw order
     if (!Array.isArray(rawData.layers) || rawData.layers.length === 0) {
-        console.warn(sourceName + " has corrupt layer data, should be an array.")
+        console.warn(sourceName + " has corrupt layer data, should be a non-empty array.")
         return null
     }
 
@@ -166,30 +162,30 @@ function buildLayersById(rawData, sourceName) {
             return null
         }
 
-        layersById[layer.id] = { z: layer.z }
+        layersById[layer.id] = layer.z
     }
 
     return layersById
 }
 
-function buildAssetsById(rawData, layersById, sourceName) {
+function buildAssets (rawData, layersById, sourceName) {
     /* EXAMPLE:
       Input:
         { "id": "eyesOpen", "layer": "main", "file": "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile.png" },
         { "id": "eyesClosed", "layer": "main", "file": "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile_ClosedEyes.png" }
-      Output
-        {
-            eyesOpen:   { layer: "main", file: "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile.png" },
-            eyesClosed: { layer: "main", file: "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile_ClosedEyes.png" }
-        }
+      Output:
+        [
+            { id: "eyesOpen", file: "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile.png", z: 10 },
+            { id: "eyesClosed", file: "Liisa/MikiNewstyle/Miki/Casual/Miki_Casual_Smile_ClosedEyes.png", z: 10 }
+        ]
     */
 
-    if (!Array.isArray(rawData.assets)) {
-        console.warn(sourceName + " has corrupt asset data, should be an array.")
+    if (!Array.isArray(rawData.assets) || rawData.assets.length === 0) {
+        console.warn(sourceName + " has corrupt asset data, should be a non-empty array.")
         return null
     }
 
-    var assetsById = {}
+    var assets = []
     for (var i = 0; i < rawData.assets.length; i++) { //foreach would be possible, but I want to return an early null
         var asset = rawData.assets[i]
 
@@ -206,21 +202,121 @@ function buildAssetsById(rawData, layersById, sourceName) {
         // End AI generated checks
 
         // Checking for unique id
-        if (assetsById.hasOwnProperty(asset.id)) {
+        if (findAssetIndex(assets, asset.id) !== -1) {
             console.warn(sourceName + ": asset " + i + " has duplicate id \"" + asset.id + "\"")
             return null
         }
 
         // Checking if the asset is assigned to a layer
         if (!layersById.hasOwnProperty(asset.layer)) {
-            console.warn(sourceName + ": asset " + asset.id + " has no valid layer \"" + asset.layer + "\"")
+            console.warn(sourceName + ": asset \"" + asset.id + "\" has no valid layer \"" + asset.layer + "\"")
             return null
         }
 
-        assetsById[asset.id] = { layer: asset.layer, file: asset.file }
+        assets.push({ id: asset.id, file: asset.file, z: layersById[asset.layer] })
     }
 
-    return assetsById
+    return assets
+}
+
+function findAssetIndex(assets, id) {
+    for (var i = 0; i < assets.length; i++) {
+        if (assets[i].id === id) return i
+    }
+    return -1
+}
+
+function resolveAnimations(rawData, assets, sourceName) {
+    /* EXAMPLE:
+      Input:
+        { "animationId": "blink", "type": "loop", "steps": [
+            { "id": "eyesOpen",   "duration": 4000, "randomize": 500 },
+            { "id": "eyesClosed", "duration": 150 }
+        ] },
+        { "animationId": "gasp", "type": "once", "steps": [
+            { "id": "mouthClosed", "duration": 2000 },
+            { "id": "mouthOpen" }
+        ] }
+      Output:
+        [
+            { animationId: "blink", type: "loop", steps: [
+                { id: "eyesOpen",   duration: 4000, randomize: 500 },
+                { id: "eyesClosed", duration: 150,  randomize: 0 }
+            ] },
+            { animationId: "gasp", type: "once", steps: [
+                { id: "mouthClosed", duration: 2000, randomize: 0 },
+                { id: "mouthOpen",   duration: 0,    randomize: 0 }
+            ] }
+        ]
+    */
+
+    if (!Array.isArray(rawData.animations) || rawData.animations.length === 0) {
+        console.warn(sourceName + " has corrupt animation data, should be a non-empty array.")
+        return null
+    }
+
+    var animations = []
+    for (var i = 0; i < rawData.animations.length; i++) {
+        var animation = rawData.animations[i]
+
+        if(!isPlainObject(animation)) {
+            console.warn(sourceName + ": animation " + i + " is not an object")
+            return null
+        }
+        if(animation.type !== "loop" && animation.type !== "once") {
+            console.warn(sourceName + ": animation " + i + " has an unknown animation type")
+            console.warn("expect type \"loop\" or \"once\"")
+            return null
+        }
+        if(!Array.isArray(animation.steps) || animation.steps.length === 0) {
+            console.warn(sourceName + ": animation " + i + " has no valid steps data, should be a non-empty array.")
+            return null
+        }
+        if(typeof animation.animationId !== "string" || animation.animationId === "") {
+            animation.animationId = "aid" + i
+            console.warn(sourceName + ": No animation ID set. New ID: \"" + animation.animationId + "\"")
+        }
+
+        if (animation.steps.length === 1 && animation.type === "loop") {
+            console.warn(sourceName + ": animation " + i + " is of type \"loop\" with just 1 step")
+            console.warn("Changing type to \"once\"")
+            animation.type = "once"
+        }
+
+        var steps = []
+        for (var j = 0; j < animation.steps.length; j++) {
+            var step = animation.steps[j]
+
+            if (!isPlainObject(step)) {
+                console.warn(sourceName + ": animation " + i + " step " + j + ": is not an object")
+                return null
+            }
+            if (typeof step.id !== "string" || findAssetIndex(assets, step.id) === -1) {
+                console.warn(sourceName + ": animation " + i + " step " + j + ":")
+                console.warn("\"" + step.id + "\" is not in use for an asset.")
+                return null
+            }
+            if (typeof step.duration !== "number" || step.duration <= 0)  {
+                if (animation.type === "once" && j === animation.steps.length - 1) { // allow undefined or 0 duration only for last step in an animation that isn't looped.
+                    step.duration = 0
+                } else {
+                    console.warn (sourceName + ": animation " + i + " step " + j + ":")
+                    console.warn("Duration not set")
+                    return null
+                }
+            }
+            if (step.randomize === undefined) {
+                step.randomize = 0
+            } else if (typeof step.randomize !== "number" || step.randomize < 0) {
+                console.warn(sourceName + ": animation " + i + " step " + j + ": randomize should be a number of 0 or more")
+                return null
+            }
+
+            steps.push({ id: step.id, duration: step.duration, randomize: step.randomize })
+        }
+        animations.push({ animationId: animation.animationId, type: animation.type, steps: steps})
+    }
+    return animations
 }
 
 function resolveStyle(category, styleId) {                  //resolves loading a preconfigured style in a category (textbox, choice, hud, ...)

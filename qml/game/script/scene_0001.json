@@ -34,6 +34,7 @@
         
         { "cmd": "sprite", "id": "liisa", "image": "sprites/liisa_1.png", "position": "center" },
         { "cmd": "say", "speaker": "Liisa", "text": "%player_title%? Are you okay?" },
+        { "cmd": "sprite", "id": "liisa", "image": "sprites/liisaBlink.json", "position": "center" },
         { "cmd": "say", "speaker": "Liisa", "text": "You look like you've seen a ghost." },
 
         { "cmd": "sprite", "id": "liisa", "image": "sprites/liisa_1.png", "position": "right" },
