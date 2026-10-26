@@ -11,7 +11,7 @@ Item {
     Repeater {
         model: spriteModel
         delegate: Image {
-            source:             Engine.assetPath(model.spriteSource)
+            source:             Engine.assetPath("sprites/" + model.spriteSource)
             sourceSize.height:  spriteLayer.height * 0.9
             x:                  spriteLayer.spriteX(model.position, width)
             y:                  spriteLayer.spriteY(model.position, height)
