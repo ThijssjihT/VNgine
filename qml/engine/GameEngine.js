@@ -73,6 +73,34 @@ function loadScene(sceneId) {
     })
 }
 
+function getExtension(path) {
+    var dot = path.lastIndexOf(".")
+    if (dot <=0) return ""
+    return path.substring(dot + 1).toLowerCase()
+}
+
+function beginSpritePipeline(path) {
+    var IMAGE_EXTENSIONS = { png: true, jpg: true, jpeg: true }
+
+    // 1. filename guard
+    if (typeof path !== "string" || path === "") {
+        console.warn("Sprite has no file set")
+        return null
+    }
+    if (path.indexOf("..") !== -1 || path.charAt(0) === "/" || path.indexOf("\\") !== -1) {
+        console.warn("Sprite path \"" + path + "\" is not valid. Use a path relative to assets/sprites, without \"..\" or \"\\\"")
+        return null
+    }
+
+    // 2. delegate to correct asset handler
+    var extension = getExtension(path)
+    if (IMAGE_EXTENSIONS[extension] === true) return makeStaticSpriteState(path)
+    if (extension === "json") return loadSpriteState(path)
+
+    console.warn("Sprite \"" + path + "\" has an unknown file type. Expected .json, .png, .jpg, .jpeg")
+    return null
+}
+
 function makeStaticSpriteState(imagePath) {
     return normalizeSpriteState({
         layers:     [ { id: "main", z: 0} ],
@@ -82,42 +110,36 @@ function makeStaticSpriteState(imagePath) {
 }
 
 function loadSpriteState(stateId) {
-    // 1. filename guard
+    var fullPath = assetPath("sprites/" + stateId)
 
-    // Reject everything but a plain id
-    if ((stateId.indexOf(".") !== -1) || (stateId.indexOf("/") !== -1) || (stateId.indexOf("\\") !== -1)) {  //copied AI output
-        console.warn("Sprite state \"" + stateId + "\" is not valid. (no extensions or / or \\ are allowed)")
-        return null
-    }
-
-    // 2. load + parse, try/catch, return null on failure
-    var path = gamePath + "/assets/sprites/" + stateId + ".json";
+    // 3. load + parse, try/catch, return null on failure
     var rawData = null
     try {
-        rawData = loadJson(path)
+        rawData = loadJson(fullPath)
     } catch (e) {
-        console.warn("Could not load sprite state " + path)
+        console.warn("Could not load sprite state " + fullPath)
         console.warn(e)
         return null
     }
 
-    return normalizeSpriteState(rawData, stateId + ".json")
+    return normalizeSpriteState(rawData, stateId)
 }
 
 function normalizeSpriteState(rawData, sourceName) {
-    // 3. build layerIndex from the layers array, check duplicates
+    // 4. build layerIndex from the layers array, check duplicates
     var layersById = buildLayersById(rawData, sourceName)
     if (layersById === null) return null
 
-    // 4. Assets: array of { id, file, z }, repeater loops over this
+    // 5. Assets: array of { id, file, z }, repeater loops over this
     var assetArray = buildAssets(rawData, layersById, sourceName)
     if (assetArray === null) return null
 
-    // 5. animations: check every step's asset id exists, fill in duration
-    var animationArray = resolveAnimations(rawData, assetsById, sourceName)
+    // 6. animations: check every step's asset id exists, fill in duration
+    var animationArray = resolveAnimations(rawData, assetArray, sourceName)
     if (animationArray === null) return null
 
-    // 6. Warn about unused assets
+    // 7. TODO: Warn about unused assets, because they are drawn, even when not visible
+
     return { assets: assetArray, animations: animationArray }
 }
 

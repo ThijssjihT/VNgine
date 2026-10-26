@@ -32,12 +32,12 @@
         { "cmd": "say", "speaker": "Player", "text": "How did I not see the AI generated content? I should have noticed sooner." },
         { "cmd": "say", "speaker": "Player", "text": "All right. Just keep calm. I can fix this. Yes. I'll just have to have faith in myself. I can escape this. I'll pay good notice of everything around me. I'll learn about this gameworld. And when I understand everything, I'll be able to escape." },
         
-        { "cmd": "sprite", "id": "liisa", "image": "sprites/liisa_1.png", "position": "center" },
+        { "cmd": "sprite", "id": "liisa", "image": "liisa_1.png", "position": "center" },
         { "cmd": "say", "speaker": "Liisa", "text": "%player_title%? Are you okay?" },
-        { "cmd": "sprite", "id": "liisa", "image": "sprites/liisaBlink.json", "position": "center" },
+        { "cmd": "sprite", "id": "liisa", "image": "liisaBlink.json", "position": "center" },
         { "cmd": "say", "speaker": "Liisa", "text": "You look like you've seen a ghost." },
 
-        { "cmd": "sprite", "id": "liisa", "image": "sprites/liisa_1.png", "position": "right" },
+        { "cmd": "sprite", "id": "liisa", "image": "liisa_1.png", "position": "right" },
         { "cmd": "say", "speaker": "Player", "text": "%player_title%?" },
         { "cmd": "say", "speaker": "Liisa", "text": "You know I'm calling you that, because that's what you put into the textfields in the settings, right?" },
         { "cmd": "say", "speaker": "Liisa", "text": "Let's see what else is in the settings..." },
