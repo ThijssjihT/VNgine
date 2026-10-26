@@ -3,6 +3,7 @@ import QtQuick 2.6
 import QtMultimedia 5.0
 import Sailfish.Silica 1.0
 import "../GameEngine.js" as Engine
+import "."
 
 Item {
     property bool   bgTrackAActive: true    //needed for crossfading audio
@@ -22,7 +23,6 @@ Item {
         onSettingChanged: {
             if (key === "audio_" + musicChannel + "_value") applyMusicVolume()
             if (key === "audio_" + loopingfxChannel + "_value") applyLoopingFXVolume()
-            // It might be better to have one function doing the volume changes, taking the channel as an argument
         }
     }
 
