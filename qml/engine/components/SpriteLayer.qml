@@ -1,4 +1,5 @@
 import QtQuick 2.6
+import QtQml 2.2
 import "../GameEngine.js" as Engine
 
 Item {
@@ -10,11 +11,66 @@ Item {
 
     Repeater {
         model: spriteModel
-        delegate: Image {
-            source:             Engine.assetPath("sprites/" + model.spriteSource)
-            sourceSize.height:  spriteLayer.height * 0.9
-            x:                  spriteLayer.spriteX(model.position, width)
-            y:                  spriteLayer.spriteY(model.position, height)
+        delegate: Item {
+            id: sprite
+
+            property var spriteState: Engine.beginSpritePipeline(model.spriteSource)
+
+            height:     spriteLayer.height * 0.9
+            width:      assetRepeater.count > 0 ? assetRepeater.itemAt(0).width : 0
+            x:          spriteLayer.spriteX(model.position, width)
+            y:          spriteLayer.spriteY(model.position, height)
+
+            Repeater {
+                id:     assetRepeater
+                model:  sprite.spriteState !== null ? sprite.spriteState.assets : []
+                delegate: Image {
+                    property string assetId: modelData.id
+                    source:             Engine.assetPath("sprites/" + modelData.file)
+                    sourceSize.height:  sprite.height
+                    z:                  modelData.z
+                    visible:            false
+                }
+            }
+
+            Instantiator {  //create a timer for each animation
+                model: sprite.spriteState !== null ? sprite.spriteState.animations : []
+
+                delegate: Timer {
+                    property var animation: modelData
+                    property int stepIndex: 0
+                    property var shownImage:null
+
+                    running:            assetRepeater.count === sprite.spriteState.assets.length  //Make sure all imgages exist before starting timers, so it can't miss.
+                    repeat:             true
+                    triggeredOnStart:   true  //immediately trigger to show first image and set timer length
+
+                    onTriggered: {
+                        var step = animation.steps[stepIndex]
+
+                        if (shownImage !== null) shownImage.visible = false
+                        shownImage = sprite.findImage(step.id)
+                        shownImage.visible = true
+
+                        if (animation.type === "once" && stepIndex === animation.steps.length - 1) {
+                            stop()
+                            return
+                        }
+
+                        var offset = Math.round((Math.random() * 2 - 1) * step.randomize)
+                        interval = Math.max(1, step.duration + offset)
+                        stepIndex = (stepIndex + 1) % animation.steps.length
+                    }
+                }
+            }
+
+            //used by timers to find the Image for an animation step
+            function findImage(assetId) {
+                for (var i = 0; i < assetRepeater.count; i++) {
+                    if (assetRepeater.itemAt(i).assetId === assetId) return assetRepeater.itemAt(i)
+                }
+                return null
+            }
         }
     }
 
