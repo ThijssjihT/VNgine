@@ -85,7 +85,10 @@ These commands are accepted in scripts but currently do nothing. The engine logs
 ## Quick Start
 
 ### For Game Authors
+Optionally, AI written tools are available to help with app development on https://thijssjiht.github.io/vngine-web/
 
+Create a new qml app in the Sailfish OS IDE
+Copy over the engine folder from this project
 Create a game folder inside your app bundle:
 
 ```
@@ -98,10 +101,14 @@ qml/game/
 ├── assets/
 │   ├── bg/                # Background images (JPEG/PNG)
 │   ├── sprites/           # Character sprites (PNG, transparent)
-│   └── audio/
-│       ├── music/
-│       ├── sfx/
-│       └── voice/
+│   ├── audio/
+│   │   ├── music/
+│   │   ├── sfx/
+│   │   └── voice/
+│   └── ui/
+│       ├── textbox/
+│       ├── choice/
+│       └── hud/
 └── i18n/
     ├── en.json
     └── nl.json
@@ -115,7 +122,6 @@ qml/game/
     "version": "1.0.0",
     "default_language": "en",
     "entry_scene": "scene_0000",
-    "has_adult_content": false,
     "audio_channels": {
         "music": {
             "label": "Music",
@@ -165,3 +171,21 @@ qml/game/
     ]
 }
 ```
+
+### Example textbox styling with parenting: textbox_thijs.json
+
+```json
+{
+    "base": "textbox_base",
+    "style": {
+        "background": {
+            "color": "#141B24"
+        },
+        "border": {
+            "color": "#6E8FB8"
+        }
+    }
+}
+```
+
+
