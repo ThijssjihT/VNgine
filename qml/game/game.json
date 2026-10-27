@@ -45,8 +45,8 @@
             "label": "Adult content",
             "default": true
         },
-        "arachnofobia": {
-            "label": "Arachnofobia mode",
+        "arachnophobia": {
+            "label": "Arachnophobia mode",
             "default": false
         }
     },

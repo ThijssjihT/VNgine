@@ -3,7 +3,7 @@ Type=Application
 X-Nemo-Application-Type=silica-qt5
 Icon=harbour-vngine
 Exec=harbour-vngine
-Name=VNgine Sample Game
+Name=VNgine Demo
 # translation example:
 # your app name in German locale (de)
 #

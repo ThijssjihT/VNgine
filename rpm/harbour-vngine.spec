@@ -2,9 +2,9 @@ Name:       harbour-vngine
 
 Summary:    harbour-vngine
 Version:    0.4
-Release:    1
-License:    LICENSE
-URL:        http://example.org/
+Release:    0.1
+License:    GPLv3
+URL:        https://github.com/ThijssjihT/VNgine
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   sailfishsilica-qt5 >= 0.10.9
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
@@ -14,7 +14,7 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  desktop-file-utils
 
 %description
-A visual novel game engine for SailfishOS
+A visual novel game engine for SailfishOS with an included sample demo.
 
 
 %prep

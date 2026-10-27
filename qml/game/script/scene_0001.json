@@ -70,23 +70,23 @@
         { "cmd": "label", "label": "wealth_settings_convergence" },
 
         { "cmd": "say", "speaker": "Liisa", "text": "Okay, what more?" },
-        { "cmd": "say", "speaker": "Liisa", "text": "*Mumbles* Arachnofobia..." },
+        { "cmd": "say", "speaker": "Liisa", "text": "*Mumbles* Arachnophobia..." },
 
         {
             "cmd": "jump_if",
-            "condition": { "flag": "arachnofobia" },
-            "label": "arachnofobia"
+            "condition": { "flag": "arachnophobia" },
+            "label": "arachnophobia"
         },
 
         { "cmd": "say", "speaker": "Liisa", "text": "Not scared of spiders? I whish I was that brave." },
 
-        { "cmd": "jump", "label": "arachnofobia_covergence" },
+        { "cmd": "jump", "label": "arachnophobia_covergence" },
 
-        { "cmd": "label", "label": "arachnofobia" },
+        { "cmd": "label", "label": "arachnophobia" },
 
         { "cmd": "say", "speaker": "Liisa", "text": "Scared of spiders. Yeah, who wouldn't?" },
 
-        { "cmd": "label", "label": "arachnofobia_covergence" },
+        { "cmd": "label", "label": "arachnophobia_covergence" },
 
         { "cmd": "say", "speaker": null, "text": "Liisa looks to be reading on." },
 
