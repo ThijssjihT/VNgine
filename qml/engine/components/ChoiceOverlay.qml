@@ -19,7 +19,7 @@ Rectangle {
 
     visible:        active
     width:          maxWidth * gridStyle.width
-    height:         maxHeight * gridStyle.height
+    height:         choiceGrid.height + Theme.pixelRatio * (gridStyle.padding.top + gridStyle.padding.bottom)
     radius:         gridStyle.radius * Theme.pixelRatio
     color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, gridStyle.background.opacity)
 
@@ -27,7 +27,7 @@ Rectangle {
     border.color:   Qt.rgba(borderColor.r, borderColor.g, borderColor.b, gridStyle.border.opacity)
 
     x:  gridStyle.margins.left * Theme.pixelRatio + (maxWidth - width) / 2
-    y:  gridStyle.margins.right * Theme.pixelRatio + (maxHeight - height) / 2
+    y:  gridStyle.margins.top * Theme.pixelRatio + (maxHeight - height) / 2
 
     Grid {
         id:         choiceGrid
@@ -48,7 +48,7 @@ Rectangle {
 
                 id:     optionBox
                 width:  (choiceFrame.width - Theme.pixelRatio * (choiceFrame.gridStyle.padding.left + choiceFrame.gridStyle.padding.right) - choiceGrid.spacing * (choiceGrid.columns -1)) / choiceGrid.columns
-                height: optionLabel.implicitHeight + Theme.pixelRatio * (optionStyle.padding.top + optionStyle.padding.bottom)
+                height: Math.max(optionLabel.implicitHeight + Theme.pixelRatio * (optionStyle.padding.top + optionStyle.padding.bottom), optionStyle.min_height * Theme.pixelRatio)
                 radius: optionStyle.radius * Theme.pixelRatio
                 color:  Qt.rgba(baseColor.r, baseColor.g, baseColor.b, optionStyle.background.opacity)
 
@@ -63,7 +63,7 @@ Rectangle {
                     text:                   model.text
                     wrapMode:               Text.WordWrap
                     horizontalAlignment:    Text.AlignHCenter
-                    color:                  Theme.primaryColor
+                    color:                  parent.optionStyle.text.color !== null ? parent.optionStyle.text.color : Theme.primaryColor
                     font.pixelSize:         Theme.fontSizeSmall
                 }
                 MouseArea {

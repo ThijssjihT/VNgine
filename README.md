@@ -33,9 +33,6 @@ These commands are accepted in scripts but currently do nothing. The engine logs
 - `alt_scene` on choice options
 
 ### Styling
-- **Choice style:** the choice grid height is not defined in the engine defaults, so `grid.height` may produce a broken layout. The vertical position of the grid also uses the wrong margin, so `grid.margins.top` has no effect.
-- **Choice option text colour:** `option.text.color` is ignored. Option text always uses the Sailfish primary colour.
-- **Textbox position `center`:** ignores the top and bottom margins. `top` and `bottom` follow them.
 - **HUD style:** can be defined, but there is nothing to apply it to yet.
 
 ### Scripting pitfalls

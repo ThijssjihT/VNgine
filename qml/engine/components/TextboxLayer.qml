@@ -13,22 +13,23 @@ Rectangle {
     readonly property bool  atCenter:    style.position === "center"
 
     id:             textboxLayer
-    height:         (parent.height - Theme.pixelRatio * (style.margins.top + style.margins.bottom)) * style.height
+    height:         Math.max((parent.height - Theme.pixelRatio * (style.margins.top + style.margins.bottom)) * style.height, 0)
     radius:         style.radius * Theme.pixelRatio
     color:          Qt.rgba(baseColor.r, baseColor.g, baseColor.b, style.background.opacity)
 
     border.width:   style.border.width * Theme.pixelRatio
     border.color:   Qt.rgba(borderBase.r, borderBase.g, borderBase.b, style.border.opacity)
 
-    anchors.left:           parent.left
-    anchors.leftMargin:     style.margins.left * Theme.pixelRatio
-    anchors.right:          parent.right
-    anchors.rightMargin:    style.margins.right * Theme.pixelRatio
-    anchors.top:            atTop ? parent.top : undefined
-    anchors.topMargin:      style.margins.top * Theme.pixelRatio
-    anchors.bottom:         (atTop || atCenter) ? undefined : parent.bottom
-    anchors.bottomMargin:   style.margins.bottom * Theme.pixelRatio
-    anchors.verticalCenter: atCenter ? parent.verticalCenter : undefined
+    anchors.left:                   parent.left
+    anchors.leftMargin:             style.margins.left * Theme.pixelRatio
+    anchors.right:                  parent.right
+    anchors.rightMargin:            style.margins.right * Theme.pixelRatio
+    anchors.top:                    atTop ? parent.top : undefined
+    anchors.topMargin:              style.margins.top * Theme.pixelRatio
+    anchors.bottom:                 (atTop || atCenter) ? undefined : parent.bottom
+    anchors.bottomMargin:           style.margins.bottom * Theme.pixelRatio
+    anchors.verticalCenter:         atCenter ? parent.verticalCenter : undefined
+    anchors.verticalCenterOffset:   (style.margins.top - style.margins.bottom) * Theme.pixelRatio / 2
 
     Column {
         anchors.fill:           parent
