@@ -36,9 +36,6 @@ Rectangle {
         x:          choiceFrame.gridStyle.padding.left * Theme.pixelRatio
         y:          choiceFrame.gridStyle.padding.top * Theme.pixelRatio
 
-        anchors.verticalCenter:     parent.verticalCenter
-        anchors.horizontalCenter:   parent.horizontalCenter
-
         Repeater {
             model: choiceModel
             delegate: Rectangle {
