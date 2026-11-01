@@ -5,9 +5,9 @@ QtObject {
 
     property string fullText:       ""
     property string visibleText:    ""
-    property int    interval:       15  //hardcoded, will need to use settings later
-
-    readonly property bool animating: _timer.running
+    property int    speed:          1   // 0 slow, 1 fast, 2 instant. Set from the scrollSpeed setting.
+    readonly property int   interval:   speed === 0 ? 40 : 15
+    readonly property bool  animating:  _timer.running
 
     property Timer  _timer:         Timer{
         interval:   typewriter.interval
@@ -22,6 +22,10 @@ QtObject {
     }
 
     function start(text) {
+        if (speed === 2) {
+            setImmediate(text)
+            return
+        }
         fullText        = text
         visibleText     = ""
         _timer.start()
@@ -33,6 +37,7 @@ QtObject {
     }
 
     function setImmediate(text) {
+        _timer.stop()
         fullText    = text
         visibleText = text
     }

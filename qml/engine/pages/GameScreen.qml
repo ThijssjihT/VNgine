@@ -24,6 +24,13 @@ Page {
     RemorsePopup { id: remorsePopup }
     Components.Typewriter { id: typewriter }
 
+    Connections {
+        target: Components.Settings
+        onSettingChanged: {
+            if (key === "scrollSpeed") typewriter.speed = value
+        }
+    }
+
 /////////////////////////
 // --- Branching logic
 
@@ -169,6 +176,7 @@ Page {
         activeStyleIds      = { textbox: null,
                                 choice: null,
                                 hud: null }
+        typewriter.speed    = Components.Settings.get("scrollSpeed")
         Components.AudioController.stopAll(100)
     }
 
