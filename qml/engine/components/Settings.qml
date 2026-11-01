@@ -140,4 +140,19 @@ QtObject {
             }
         })
     }
+
+    function revertAll() {
+        _db.transaction(function(tx) {
+            tx.executeSql("DELETE FROM settings")
+        })
+
+        _settings = ({})
+        _keyIndex = ({})
+        _applyManifest(Engine.manifest)
+
+        var keys = Object.keys(_settings)
+        for (var i = 0; i < keys.length; i++) {
+            settingChanged(keys[i], _settings[keys[i]])
+        }
+    }
 }

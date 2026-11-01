@@ -20,7 +20,10 @@ Page {
             PullDownMenu {
                 MenuItem {
                     text:       qsTr("Revert all settings")
-                    onClicked:  remorsePopup.execute(qsTr("Reverting settings"), Components.Settings.revertAll())
+                    onClicked:  remorsePopup.execute(qsTr("Reverting settings"), function() {
+                        Components.Settings.revertAll()
+                        pageStack.replace(Qt.resolvedUrl("SettingsPage.qml"), {}, PageStackAction.Immediate)
+                    })
                 }
             }
 
