@@ -331,7 +331,7 @@ Page {
         PullDownMenu {
             MenuItem {
                 text: qsTr("Title screen")
-                onClicked: pageStack.push(Qt.resolvedUrl("TitlePage.qml"), { gameScreen: gameScreen })
+                onClicked: pageStack.push(Qt.resolvedUrl("TitlePage.qml"), { gameScreen: gameScreen, hasPreloadedSave: true })
             }
             MenuItem {
                 text: qsTr("Save")
