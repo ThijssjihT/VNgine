@@ -123,7 +123,7 @@ Page {
         currentBg = screenBlob.background
         spriteLayer.restoreFrom(screenBlob.sprites)
         activeStyleIds  = screenBlob.activeStyleIds
-        textboxStyle    = Engine.resolveStyle("textbox", activeStyleIds.text)
+        textboxStyle    = Engine.resolveStyle("textbox", activeStyleIds.textbox)
         choiceStyle     = Engine.resolveStyle("choice", activeStyleIds.choice)
         hudStyle        = Engine.resolveStyle("hud", activeStyleIds.hud)
         if (screenBlob.dialogue) {
@@ -166,6 +166,9 @@ Page {
         textboxStyle        = Engine.resolveStyle("textbox", null)
         choiceStyle         = Engine.resolveStyle("choice", null)
         hudStyle            = Engine.resolveStyle("hud", null)
+        activeStyleIds      = { textbox: null,
+                                choice: null,
+                                hud: null }
         Components.AudioController.stopAll(100)
     }
 
@@ -278,8 +281,8 @@ Page {
                 break
             }
             if (command.category === "textbox") {
-                textboxStyle        = loadedStyle
-                activeStyleIds.text = command.style
+                textboxStyle            = loadedStyle
+                activeStyleIds.textbox  = command.style
             }
             else if (command.category === "choice") {
                 choiceStyle             = loadedStyle
