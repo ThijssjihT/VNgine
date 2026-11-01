@@ -328,7 +328,7 @@ Item {
             var m = blob.music
             doSetMusic(m.tracks, m.loop, "cut", 0, m.volume, m.index)
         }
-        (blob.loops || []).foreach(function (l) {
+        (blob.loops || []).forEach(function (l) {
             playLoopFx(l.id, l.file, l.volume)
         } )
     }
