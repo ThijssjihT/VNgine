@@ -36,13 +36,17 @@ function getSetting(key) {
     return undefined
 }
 
-function loadJson(url) {
+function loadJson(url) {   // The start of this project. This is still original AI work. But I understood it well. Look at my comment below. It is funny looking back on my comments from 8 months ago.
     var xhr = new XMLHttpRequest(); //not commenting on this, look up this and its methods in the mozilla mdn
     xhr.open("GET", url, false);
     xhr.send();
     if (xhr.status !== 200 && xhr.status !== 0)
         throw new Error("Failed to load: " + url);
-    return JSON.parse(xhr.responseText);
+    try {
+        return JSON.parse(xhr.responseText);
+    } catch(e) {
+        throw new Error("Invalid JSON in " + url + ": " + e.message)
+    }
 }
 
 function loadManifest(path) {
