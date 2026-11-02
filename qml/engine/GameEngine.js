@@ -16,6 +16,8 @@ var gameInProgress      = false;    //we need to know if a game is in progress t
 var settingsProvider= null;         //Stores a reference to a function normally out of scope, to make it available
 var activeChoice    = null;         //Stores all options for the choice the player is facing
 
+var defaultStyles   = { textbox: null, choice: null, hud: null }
+
 function setSettingsProvider(fn) {
     settingsProvider = fn
 }
@@ -71,6 +73,13 @@ function loadScene(sceneId) {
             labelIndex[command.label] = index
         }
     })
+}
+
+function loadDefaultStyles() {
+    var ds = (manifest && manifest.default_styles) || {}
+    defaultStyles.textbox   = ds.textbox || null
+    defaultStyles.choice    = ds.choice || null
+    defaultStyles.hud       = ds.hud || null
 }
 
 function getExtension(path) {

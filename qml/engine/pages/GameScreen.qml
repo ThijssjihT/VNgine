@@ -170,12 +170,13 @@ Page {
         awaitingChoice      = false
         Engine.activeChoice = null
         choiceModel.clear()
-        textboxStyle        = Engine.resolveStyle("textbox", null)
-        choiceStyle         = Engine.resolveStyle("choice", null)
-        hudStyle            = Engine.resolveStyle("hud", null)
-        activeStyleIds      = { textbox: null,
-                                choice: null,
-                                hud: null }
+        Engine.loadDefaultStyles()
+        textboxStyle        = Engine.resolveStyle("textbox", Engine.defaultStyles.textbox)
+        choiceStyle         = Engine.resolveStyle("choice", Engine.defaultStyles.choice)
+        hudStyle            = Engine.resolveStyle("hud", Engine.defaultStyles.hud)
+        activeStyleIds      = { textbox: Engine.defaultStyles.textbox,
+                                choice: Engine.defaultStyles.choice,
+                                hud: Engine.defaultStyles.hud }
         typewriter.speed    = Components.Settings.get("scrollSpeed")
         Components.AudioController.stopAll(100)
     }
