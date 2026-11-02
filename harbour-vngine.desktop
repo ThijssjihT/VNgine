@@ -17,4 +17,4 @@ OrganizationName=nl.thijssjiht
 # ApplicationName does not have to be identical to Name
 ApplicationName=harbour-vngine
 # Add the required permissions here
-Permissions=
+Permissions=Audio
