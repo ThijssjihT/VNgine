@@ -84,8 +84,14 @@ These commands are accepted in scripts but currently do nothing. The engine logs
 ### For Game Authors
 Optionally, AI written tools are available to help with app development on https://thijssjiht.github.io/vngine-web/
 
-Create a new qml app in the Sailfish OS IDE
-Copy over the engine folder from this project
+Create a new qml app in the Sailfish OS IDE.
+Set `Permissions=Audio`
+Your template's root QML file should become the two line:
+```
+import "engine/components" as Components
+Components.VNgineApplicationWindow { }
+```
+Copy over the engine folder from this project.
 Create a game folder inside your app bundle:
 
 ```
