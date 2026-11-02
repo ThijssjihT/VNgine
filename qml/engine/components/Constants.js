@@ -18,5 +18,7 @@ var audioChannels = [
 var textSettings = {
     scrollSpeed:        1,
     autoAdvance:        false,
-    audioAdvanceDelay:  3.0
+    autoAdvanceDelay:  3.0
 }
+
+var typewriterIntervals = [40, 15, 0] // ms per character, indexed by scrollSpeed: 0 slow, 1 fast, 2 instant

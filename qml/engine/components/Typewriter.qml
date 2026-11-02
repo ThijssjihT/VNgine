@@ -1,4 +1,5 @@
 import QtQuick 2.6
+import "Constants.js" as Constants
 
 QtObject {
     id: typewriter
@@ -6,7 +7,7 @@ QtObject {
     property string fullText:       ""
     property string visibleText:    ""
     property int    speed:          1   // 0 slow, 1 fast, 2 instant. Set from the scrollSpeed setting.
-    readonly property int   interval:   speed === 0 ? 40 : 15
+    readonly property int   interval:   Constants.typewriterIntervals[speed]
     readonly property bool  animating:  _timer.running
 
     property Timer  _timer:         Timer{
