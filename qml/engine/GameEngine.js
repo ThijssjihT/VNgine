@@ -66,17 +66,18 @@ function initVariables() {
 }
 
 function loadScene(sceneId) {
-    currentScene = sceneId
-    var data = loadJson(gamePath + "/script/" + sceneId + ".json");
-    commands = data.commands;
-    cmdIndex = 0;       //start at the beginning of the new scene
-    labelIndex = {};    //empties the labelIndex to flush labels from previous scene
+    var data = loadJson(gamePath + "/script/" + sceneId + ".json")
+    if (!data || !Array.isArray(data.commands)) throw new Error("Scene " + sceneId + " has no commands array")
 
-    commands.forEach(function(command, index) {
-        if (command.cmd === "label") {
-            labelIndex[command.label] = index
-        }
+    var labels = {}
+    data.commands.forEach(function(command, index) {
+        if (command.cmd === "label") labels[command.label] = index
     })
+
+    currentScene    = sceneId
+    commands        = data.commands
+    labelIndex      = labels
+    cmdIndex        = 0
 }
 
 function loadDefaultStyles() {
