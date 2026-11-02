@@ -72,6 +72,9 @@ Item {
             case "stopAll":
                 stopAllLoopFx(action.fadeTime)
                 break
+            default:
+                console.warn("audio_loop: unknown action \"" + action.action + "\"")
+                break
         }
     }
 
@@ -94,13 +97,17 @@ Item {
             console.warn("audio_loop: missing \"file\"")
             return
         }
+        if (id === undefined) {
+            console.warn("audio_loop: no id set for " + file)
+            return
+        }
         var multiPlier  = (volume !== undefined) ? volume : 1.0
         var slot        = findLoopSlot(id)
 
         if (slot !== null && slot.file === file) { //Loop is already running, adjust the volume
             slot.baseVolume = multiPlier
             fadeVolume(slot.fader, effectiveVolume(loopingfxChannel, multiPlier), fadeTime, false)
-            console.warn("Loop is already running. Adjusting volume if necessary.")
+            console.log("Loop is already running. Adjusting volume if necessary.")
             return
         }
 

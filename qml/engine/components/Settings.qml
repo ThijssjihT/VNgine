@@ -45,19 +45,20 @@ QtObject {
         _settings["autoAdvanceDelay"]   = 3.0
 
         //load audio channels from manifest
-        _settings["numChannels"] = 0
-        if (manifest.audio_channels) {
-            /*Object.keys(manifest.audio_channels).forEach(function(channel) {        //loop through the array of declared audio channels
-                _settings[channel] = manifest.audio_channels[channel]    //
-            })*/
-            var audioChannels = Object.keys(manifest.audio_channels)
-            _settings["numChannels"] = audioChannels.length
-            audioChannels.forEach(function(channel, index) {
-                _settings["audio_channel_" + index + "_key"]    = channel
-                _settings["audio_" + channel + "_label"]        = manifest.audio_channels[channel].label
-                _settings["audio_" + channel + "_value"]        = manifest.audio_channels[channel].default
-            })
-        }
+        var overrideChannels = manifest.audio_channels || {}
+        var visible = 0
+        Constants.audioChannels.forEach(function(ch) {      //for every default channel
+            var override = overrideChannels[ch.key] || {}   //check if there are overrides
+            _settings["audio_" + ch.key + "_label"] = (override.label !== undefined) ? override.label : ch.label
+            _settings["audio_" + ch.key + "_value"] = (override["default"] !== undefined) ? override["default"] : ch.defaultVolume
+            var hidden = (override.hidden !== undefined) ? override.hidden : ch.hidden
+            if (!hidden) _settings["audio_channel_" + (visible++) + "_key"] = ch.key
+        } )
+        Object.keys(overrideChannels).forEach(function(key) {
+            var known = Constants.audioChannels.some(function(ch) { return ch.key === key })
+            if (!known) console.warn("game.json: unknown audio channel \"" + key + "\" ignored")
+        })
+        _settings["numChannels"] = visible
 
         //load language from manifest
         _settings["numLanguageSelectors"] = 0

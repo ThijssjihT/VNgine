@@ -9,22 +9,8 @@
     },
 
     "audio_channels": {
-        "music": {
-            "label": "Music",
-            "default": 80
-        },
-        "text_fx": {
-            "label": "TextFX",
-            "default": 40
-        },
-        "game_fx": {
-            "label": "GameFX",
-            "default": 80
-        },
-        "voice": {
-            "label": "Voice",
-            "default": 100
-        }
+        "music": { "label": "Muziek", "default": 60 },
+        "looping_fx": { "hidden": true }
     },
 
     "languages": {
