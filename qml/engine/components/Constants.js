@@ -14,3 +14,9 @@ var audioChannels = [
     { key: "looping_fx", label: "Ambience",      defaultVolume: 80,  hidden: false },
     { key: "text_fx",    label: "Text sounds",   defaultVolume: 40,  hidden: true  }   // until text_fx is built
 ]
+
+var textSettings = {
+    scrollSpeed:        1,
+    autoAdvance:        false,
+    audioAdvanceDelay:  3.0
+}

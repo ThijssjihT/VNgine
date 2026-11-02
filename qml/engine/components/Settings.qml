@@ -40,9 +40,8 @@ QtObject {
 
     function _applyManifest(manifest) {
         //engine defaults
-        _settings["scrollSpeed"]        = 1
-        _settings["autoAdvance"]        = false
-        _settings["autoAdvanceDelay"]   = 3.0
+        for (var key in Constants.textSettings)
+            _settings[key] = Constants.textSettings[key]
 
         //load audio channels from manifest
         var overrideChannels = manifest.audio_channels || {}
