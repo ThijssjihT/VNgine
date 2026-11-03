@@ -243,13 +243,11 @@ Page {
               Oh, and change the default switch key while your at it.
             */
         case "set":
-            unsavedProgress = true
             Engine.applySet(command.var, command.op, Engine.resolveSetValue(command))
             processNext()
             break
 
         case "bg":
-            unsavedProgress = true
             currentBg = command.image
             processNext()  //immediately process next command
             break
@@ -261,13 +259,11 @@ Page {
             break
 
         case "jump":
-            unsavedProgress = true
             applyJump(command)
             processNext()
             break
 
         case "jump_if":
-            unsavedProgress = true
             if (Engine.evaluateCondition(command.condition)) applyJump(command)
             processNext()
             break
@@ -295,19 +291,16 @@ Page {
             break
 
         case "sprite":
-            unsavedProgress = true
             spriteLayer.show(command.id, command.image, command.position)
             processNext()
             break
 
         case "sprite_remove":
-            unsavedProgress = true
             spriteLayer.remove(command.id)
             processNext()
             break
 
         case "style":
-            unsavedProgress = true
             var loadedStyle
             try {
                 loadedStyle = Engine.resolveStyle(command.category, command.style)
@@ -333,19 +326,16 @@ Page {
             break
 
         case "audio_bg":
-            unsavedProgress = true
             Components.AudioController.handleAudioBgAction(command)
             processNext()
             break
 
         case "audio_fx":
-            unsavedProgress = true
             Components.AudioController.playSfx(command.file, command.volume)
             processNext()
             break
 
         case "audio_loop":
-            unsavedProgress = true
             Components.AudioController.handleAudioLoopAction(command)
             processNext()
             break
@@ -415,6 +405,7 @@ Page {
                     if (typewriter.animating) {
                         typewriter.skip()
                     } else {
+                        unsavedProgress = true
                         processNext()
                     }
                 }

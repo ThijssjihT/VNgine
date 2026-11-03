@@ -53,8 +53,12 @@ Page {
             MenuItem {
                 text:       qsTr("New game")
                 onClicked:  {
-                    gameScreen.beginNew()
-                    pageStack.pop(gameScreen)
+                    if (gameScreen.playable && gameScreen.unsavedProgress) {
+                        pageStack.push(Qt.resolvedUrl("UnsavedProgressDialog.qml"), { gameScreen: gameScreen, action: "new" })
+                    } else {
+                        gameScreen.beginNew()
+                        pageStack.pop(gameScreen)
+                    }
                 }
             }
         }
@@ -79,7 +83,7 @@ Page {
             onClicked: {
                 if (editing) return
                 if (gameScreen.playable && gameScreen.unsavedProgress) {
-                    PageStack.push(Qt.resolvedUrl("UnsavedProgressDialog.qml"), { gameScreen: gameScreen, action: "load", loadSlot: model.slot })
+                    pageStack.push(Qt.resolvedUrl("UnsavedProgressDialog.qml"), { gameScreen: gameScreen, action: "load", loadSlot: model.slot })
                     return
                 }
                 SaveManager.loadSavedGame(model.slot)

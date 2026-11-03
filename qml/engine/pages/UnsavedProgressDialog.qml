@@ -23,7 +23,7 @@ Dialog {
             spacing:    Theme.paddingLarge
 
             DialogHeader {
-                acceptText: action === "load" ? qsTr("Load") : qsTr("StartOver")
+                acceptText: action === "load" ? qsTr("Load") : qsTr("Start over")
             }
 
             Label {
