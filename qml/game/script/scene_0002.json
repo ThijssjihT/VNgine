@@ -1,5 +1,8 @@
 {
-    { "cmd": "say", "speaker": null, "text": "This example is work in progress. It is groundhog day." },
-    { "cmd": "say", "speaker": null, "text": "No way forward: Going back to the beginning." },
-    { "cmd": "jump", "scene": "scene_0001" }
+    "id":       "scene_0002",
+    "commands": [
+        { "cmd": "say", "speaker": null, "text": "This example is work in progress. It is groundhog day." },
+        { "cmd": "say", "speaker": null, "text": "No way forward: Going back to the beginning." },
+        { "cmd": "jump", "scene": "scene_0001" }
+    ]
 }
