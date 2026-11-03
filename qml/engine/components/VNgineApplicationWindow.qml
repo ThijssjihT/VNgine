@@ -30,6 +30,7 @@ ApplicationWindow {
             game.playable = false
         }
 
-        pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: game, hasPreloadedSave: !!preloaded}, PageStackAction.Immediate)
+        if (pageStack.currentPage === game) // if loaded game immediately ends, a double TitlePage is pushed. This prevents this.
+            pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: game, hasPreloadedSave: !!preloaded}, PageStackAction.Immediate)
     }
 }
