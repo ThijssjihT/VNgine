@@ -75,6 +75,10 @@ Item {
     }
 
     function show(sId, src, pos) {
+        if (pos === undefined) {
+            pos = "center"
+            console.warn("Position not set for sprite \"" + sId + "\" \"" + src + "\"")
+            console.warn("Default to center position for sprite \"" + sId + "\"")
         for (var i = 0; i < spriteModel.count; i++) {
             if (spriteModel.get(i).spriteId === sId) {
                 spriteModel.setProperty(i, "spriteSource", src)
