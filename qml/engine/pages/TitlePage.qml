@@ -21,6 +21,7 @@ import QtQuick 2.6
 import Sailfish.Silica 1.0
 import "../GameEngine.js" as Engine
 import "../components"
+import "../components/Constants.js" as Constants
 
 Page {
 
@@ -170,7 +171,7 @@ Page {
 
                     Label {
                         id:             versionLabel
-                        text:           "v0.2.0"
+                        text:           "v" + Constants.appVersion
                         font.pixelSize: Theme.fontSizeExtraSmall
                         color:          Theme.secondaryColor
                     }

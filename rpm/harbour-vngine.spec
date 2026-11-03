@@ -1,8 +1,8 @@
 Name:       harbour-vngine
 
 Summary:    harbour-vngine
-Version:    0.4
-Release:    0.1
+Version:    0.5
+Release:    0.prealpha
 License:    GPLv3
 URL:        https://github.com/ThijssjihT/VNgine
 Source0:    %{name}-%{version}.tar.bz2
