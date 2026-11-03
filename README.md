@@ -66,11 +66,12 @@ These commands are accepted in scripts but currently do nothing. The engine logs
 - Variable system for storing game variables
 - Textbox styling and theming
 - Sprite objects to easily put in animations or composite sprites
+- Audio: music, looping effects and triggered effects
 
 ### In development
 - Adjustable speaker colors
-- Splash screens
-- Audio: sound effects, character voice, background music
+- Title card screens
+- Audio: text effects, character voice
 
 ### Planned
 - HUD for displaying game variables
@@ -78,6 +79,7 @@ These commands are accepted in scripts but currently do nothing. The engine logs
 - Background transitions
 - Multi-language support
 - Text effects
+- Build in sprite animations (sprite transforms)
 
 ## Quick Start
 
@@ -85,7 +87,7 @@ These commands are accepted in scripts but currently do nothing. The engine logs
 Optionally, AI written tools are available to help with app development on https://thijssjiht.github.io/vngine-web/
 
 Create a new qml app in the Sailfish OS IDE.
-Set `Permissions=Audio`
+Set `Permissions=Audio` in the `[X-Sailjail]` section of the .desktop file 
 Your template's root QML file should become the two line:
 ```
 import "engine/components" as Components
@@ -111,6 +113,7 @@ qml/game/
 │   └── ui/
 │       ├── textbox/
 │       ├── choice/
+│       ├── card/
 │       └── hud/
 └── i18n/
     ├── en.json
@@ -143,8 +146,8 @@ qml/game/
             "default": 100
         }
     },
-    "languages": {}
-    "toggles": {}
+    "languages": {},
+    "toggles": {},
     "dropdowns": {
         "difficulty": {
             "label": "Difficulty",
@@ -154,7 +157,7 @@ qml/game/
     },
 
     "variables": {
-        "wealth": { "type": "int", "default": 50 }
+        "wealth": { "type": "int", "default": 50 },
         "affection_alice": { "type": "int", "default": 5 }
     }
 }
@@ -167,7 +170,7 @@ qml/game/
     "id": "scene_0000",
     "commands": [
         { "cmd": "bg", "image": "bg/forest_day.jpg" },
-        { "cmd": "sprite", "id": "alice", "image": "sprites/alice_happy.png", "position": "center" },
+        { "cmd": "sprite", "id": "alice", "image": "alice_happy.png", "position": "center" },
         { "cmd": "say", "speaker": "Alice", "text_key": "s0000_01" },
         { "cmd": "say", "speaker": null, "text": "The leaves whisper." },
         { "cmd": "jump", "scene": "scene_0001" }
