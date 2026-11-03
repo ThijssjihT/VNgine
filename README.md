@@ -23,7 +23,7 @@ VNgine is pre-alpha. The following are known and not yet fixed.
 
 ### Not yet implemented
 These commands are accepted in scripts but currently do nothing. The engine logs "Unknown command, skipping" and carries on.
-
+ 
 - `wait`
 - `show_hud`, and the HUD itself
 - `audio_voice` (voiced lines)
@@ -132,22 +132,8 @@ qml/game/
     "default_language": "en",
     "entry_scene": "scene_0000",
     "audio_channels": {
-        "music": {
-            "label": "Music",
-            "default": 80
-        },
-        "text_fx": {
-            "label": "TextFX",
-            "default": 40
-        },
-        "game_fx": {
-            "label": "GameFX",
-            "default": 80
-        },
-        "voice": {
-            "label": "Voice",
-            "default": 100
-        }
+        "music":      { "label": "Music", "default": 60 },
+        "looping_fx": { "hidden": true }
     },
     "languages": {},
     "toggles": {},
