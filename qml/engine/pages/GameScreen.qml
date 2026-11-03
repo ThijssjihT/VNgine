@@ -143,7 +143,6 @@ Page {
 
     function beginNew() {
         resetSession()
-        Engine.initVariables()
         Engine.loadScene(Engine.manifest.entry_scene)
         Engine.gameInProgress = true
         playable = true
@@ -173,6 +172,7 @@ Page {
         awaitingChoice      = false
         Engine.activeChoice = null
         choiceModel.clear()
+        Engine.initVariables()
         Engine.loadDefaultStyles()
         textboxStyle        = Engine.resolveStyle("textbox", Engine.defaultStyles.textbox)
         choiceStyle         = Engine.resolveStyle("choice", Engine.defaultStyles.choice)

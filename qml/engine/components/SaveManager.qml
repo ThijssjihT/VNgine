@@ -224,7 +224,15 @@ QtObject {
         if (!_pendingLoad) return
         Engine.loadScene(_pendingLoad.sceneId)
         Engine.cmdIndex = _pendingLoad.cmdIndex
-        Engine.variables = _pendingLoad.variables
+
+        // Default variables and values are loaded and will
+        // be overwritten. This prevents errors when variables
+        // have been added after game update.
+        var saved = _pendingLoad.variables
+        for (var name in saved) {
+            if (saved.hasOwnProperty(name))
+                Engine.variables[name] = saved[name]
+        }
     }
 
     function initialize() {
