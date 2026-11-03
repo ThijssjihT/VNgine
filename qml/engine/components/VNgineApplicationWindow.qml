@@ -19,10 +19,15 @@ ApplicationWindow {
         var game = pageStack.currentPage    // GameScreen is already pushed to root
         var preloaded = Components.SaveManager.loadMostRecentSave()
 
-        if (preloaded) {
-            game.resumeLoaded()
-        } else {
-            game.beginNew()
+        try {
+            if (preloaded) {
+                game.resumeLoaded()
+            } else {
+                game.beginNew()
+            }
+        } catch(e) {
+            console.warn("Could not start the game: " + e)
+            game.playable = false
         }
 
         pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: game, hasPreloadedSave: !!preloaded}, PageStackAction.Immediate)

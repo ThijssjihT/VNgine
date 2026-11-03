@@ -15,6 +15,7 @@ Page {
     property string currentBg:          ""      //background image, could have been better named
     property string speakerName:        ""
     property bool   awaitingChoice:     false
+    property bool   playable:           false
 
     property var    activeStyleIds:     ({ textbox: null, choice: null, hud: null })
     property var    textboxStyle:       ({})
@@ -145,6 +146,7 @@ Page {
         Engine.initVariables()
         Engine.loadScene(Engine.manifest.entry_scene)
         Engine.gameInProgress = true
+        playable = true
         processNext()
     }
 
@@ -163,6 +165,7 @@ Page {
     }
 
     function resetSession() {
+        playable = false
         spriteLayer.clear()
         typewriter.setImmediate("")
         currentBg           = ""
@@ -211,7 +214,8 @@ Page {
             // the scene ended without jump or end. This is an authoring error.
             // treat as implicit end
             console.warn("Scene ended without jump or end command")
-            pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: gameScreen, hasPreloadedSave: true}, PageStackAction.Immediate)
+            playable = false
+            if (pageStack.currentPage === game) pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: gameScreen, hasPreloadedSave: true}, PageStackAction.Immediate)
             return
         }
 
@@ -318,6 +322,12 @@ Page {
         case "audio_loop":
             Components.AudioController.handleAudioLoopAction(command)
             processNext()
+            break
+
+        case "end":
+            // Quick and dirty emergency fix. Needs some proper work.
+            playable = false
+            pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: gameScreen, hasPreloadedSave: true}, PageStackAction.Immediate)
             break
 
         default:

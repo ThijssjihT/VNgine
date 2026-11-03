@@ -27,6 +27,8 @@ Page {
 
     property var    gameScreen
     property bool   hasPreloadedSave: false
+    property Page   gameScreen
+    backNavigation: gameScreen !== null && gameScreen.playable
 
     SilicaFlickable {
         id:             body
