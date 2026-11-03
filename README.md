@@ -24,13 +24,16 @@ VNgine is pre-alpha. The following are known and not yet fixed.
 ### Not yet implemented
 These commands are accepted in scripts but currently do nothing. The engine logs "Unknown command, skipping" and carries on.
 
-- `end`: there is no way to finish a story with an end card yet
 - `wait`
 - `show_hud`, and the HUD itself
 - `audio_voice` (voiced lines)
 - `transition` on `bg` and `sprite_remove` (backgrounds and sprites change instantly)
 - `text_key` localisation: lines using a `text_key` show the key in brackets instead of translated text
 - `alt_scene` on choice options
+
+### Stopgaps
+- `end` fades out the audio and returns to the title page. There is no end card yet, and nothing records which ending was reached.
+- Running off the end of a scene (no `jump` or `end` as its last command) logs a warning and also returns to the title page.
 
 ### Styling
 - **HUD style:** can be defined, but there is nothing to apply it to yet.
