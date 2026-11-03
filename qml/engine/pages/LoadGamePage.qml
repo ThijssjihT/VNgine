@@ -78,6 +78,10 @@ Page {
 
             onClicked: {
                 if (editing) return
+                if (gameScreen.playable && gameScreen.unsavedProgress) {
+                    PageStack.push(Qt.resolvedUrl("UnsavedProgressDialog.qml"), { gameScreen: gameScreen, action: "load", loadSlot: model.slot })
+                    return
+                }
                 SaveManager.loadSavedGame(model.slot)
                 gameScreen.resumeLoaded()
                 pageStack.pop(gameScreen)

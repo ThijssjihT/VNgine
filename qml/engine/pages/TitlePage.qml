@@ -53,8 +53,12 @@ Page {
             MenuItem {
                 text:       qsTr("New Game")
                 onClicked:  {
-                    gameScreen.beginNew()
-                    pageStack.pop()
+                    if (gameScreen.playable && gameScreen.unsavedProgress) {
+                        pageStack.push(Qt.resolvedUrl("UnsavedProgressDialog.qml"), { gameScreen: gameScreen, action: "new" })
+                    } else {
+                        gameScreen.beginNew()
+                        pageStack.pop()
+                    }
                 }
             }
         }

@@ -16,6 +16,7 @@ Page {
     property string speakerName:        ""
     property bool   awaitingChoice:     false
     property bool   playable:           false
+    property bool   unsavedProgress:    false
 
     property var    activeStyleIds:     ({ textbox: null, choice: null, hud: null })
     property var    textboxStyle:       ({})
@@ -59,6 +60,7 @@ Page {
     }
 
     function selectChoice(optionIndex) {
+        unsavedProgress = true
         var selectedOption = Engine.activeChoice.options[optionIndex]
         console.log("selected option " + optionIndex + ": " + JSON.stringify(selectedOption))
         // don't delete this console.log. It is important for debugging typos in option branching.
@@ -94,6 +96,7 @@ Page {
                 Components.SaveManager.commitSave(filename)
             }
         }, Qt.size(thumbWidth, thumbHeight))
+        unsavedProgress = false
     }
 
     // Quick save menu item:
@@ -141,6 +144,18 @@ Page {
         Components.AudioController.restoreFrom(screenBlob.sound)
     }
 
+    // Needed by UnsavedProgressDialog
+    function runAction(pending) {
+        if (pending.action === "new") {
+            beginNew()
+        } else if (pending.action === "load") {
+            Components.SaveManager.loadSavedGame(pending.slot)
+            resumeLoaded()
+        } else {
+            console.warn("runAction: unknown action \"" + pending.action + "\"")
+        }
+    }
+
     function beginNew() {
         resetSession()
         Engine.loadScene(Engine.manifest.entry_scene)
@@ -164,7 +179,8 @@ Page {
     }
 
     function resetSession() {
-        playable = false
+        playable            = false
+        unsavedProgress     = false
         spriteLayer.clear()
         typewriter.setImmediate("")
         currentBg           = ""
@@ -227,11 +243,13 @@ Page {
               Oh, and change the default switch key while your at it.
             */
         case "set":
+            unsavedProgress = true
             Engine.applySet(command.var, command.op, Engine.resolveSetValue(command))
             processNext()
             break
 
         case "bg":
+            unsavedProgress = true
             currentBg = command.image
             processNext()  //immediately process next command
             break
@@ -243,11 +261,13 @@ Page {
             break
 
         case "jump":
+            unsavedProgress = true
             applyJump(command)
             processNext()
             break
 
         case "jump_if":
+            unsavedProgress = true
             if (Engine.evaluateCondition(command.condition)) applyJump(command)
             processNext()
             break
@@ -275,16 +295,19 @@ Page {
             break
 
         case "sprite":
+            unsavedProgress = true
             spriteLayer.show(command.id, command.image, command.position)
             processNext()
             break
 
         case "sprite_remove":
+            unsavedProgress = true
             spriteLayer.remove(command.id)
             processNext()
             break
 
         case "style":
+            unsavedProgress = true
             var loadedStyle
             try {
                 loadedStyle = Engine.resolveStyle(command.category, command.style)
@@ -310,16 +333,19 @@ Page {
             break
 
         case "audio_bg":
+            unsavedProgress = true
             Components.AudioController.handleAudioBgAction(command)
             processNext()
             break
 
         case "audio_fx":
+            unsavedProgress = true
             Components.AudioController.playSfx(command.file, command.volume)
             processNext()
             break
 
         case "audio_loop":
+            unsavedProgress = true
             Components.AudioController.handleAudioLoopAction(command)
             processNext()
             break
