@@ -176,6 +176,7 @@ Page {
         } else if (Engine.commands[Engine.cmdIndex].cmd === "choice") {
             processNext()                           // if saved on a choice, we retrigger that code
         }
+        playable = true
     }
 
     function resetSession() {
@@ -230,8 +231,7 @@ Page {
             // the scene ended without jump or end. This is an authoring error.
             // treat as implicit end
             console.warn("Scene ended without jump or end command")
-            playable = false
-            if (pageStack.currentPage === game) pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: gameScreen, hasPreloadedSave: true}, PageStackAction.Immediate)
+            returnToTitle()
             return
         }
 
@@ -342,8 +342,8 @@ Page {
 
         case "end":
             // Quick and dirty emergency fix. Needs some proper work.
-            playable = false
-            pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: gameScreen, hasPreloadedSave: true}, PageStackAction.Immediate)
+            AudioController.stopAll(200)
+            returnToTitle()
             break
 
         default:
@@ -357,6 +357,11 @@ Page {
 
 // --- End Game Logic ---
 /////////////////////////
+
+    function returnToTitle() {
+        playable = false
+        if (pageStack.currentPage === game) pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: gameScreen, hasPreloadedSave: false}, PageStackAction.Immediate)
+    }
 
 
     SilicaFlickable {
@@ -399,7 +404,7 @@ Page {
             anchors.fill:   parent
 
             MouseArea {
-                enabled: !awaitingChoice // When waiting for choice input, we should not continue to the next script line.
+                enabled: !awaitingChoice && playable // When waiting for choice input, we should not continue to the next script line.
                 anchors.fill: parent
                 onClicked: {
                     if (typewriter.animating) {

@@ -25,7 +25,6 @@ import "../components/Constants.js" as Constants
 
 Page {
 
-    property var    gameScreen
     property bool   hasPreloadedSave: false
     property Page   gameScreen
     backNavigation: gameScreen !== null && gameScreen.playable
