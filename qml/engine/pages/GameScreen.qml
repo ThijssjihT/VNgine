@@ -170,13 +170,13 @@ Page {
         Components.SaveManager.finishLoading()
         buildScreenFromScreenBlob(Components.SaveManager.pendingScreen())
         Components.SaveManager.clearPendingLoad()
+        playable = true
         if (!Engine.commands[Engine.cmdIndex]) {    // if we save on a script authoring error, and load that game
             Engine.cmdIndex--                       // we go back one line
             processNext()                           // and trigger the existing fail code
         } else if (Engine.commands[Engine.cmdIndex].cmd === "choice") {
             processNext()                           // if saved on a choice, we retrigger that code
         }
-        playable = true
     }
 
     function resetSession() {
@@ -342,7 +342,6 @@ Page {
 
         case "end":
             // Quick and dirty emergency fix. Needs some proper work.
-            AudioController.stopAll(200)
             returnToTitle()
             break
 
@@ -360,7 +359,8 @@ Page {
 
     function returnToTitle() {
         playable = false
-        if (pageStack.currentPage === game) pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: gameScreen, hasPreloadedSave: false}, PageStackAction.Immediate)
+        Components.AudioController.stopAll(200)
+        if (pageStack.currentPage === gameScreen) pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: gameScreen, hasPreloadedSave: false}, PageStackAction.Immediate)
     }
 
 
