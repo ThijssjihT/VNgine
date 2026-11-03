@@ -211,7 +211,7 @@ Page {
             // the scene ended without jump or end. This is an authoring error.
             // treat as implicit end
             console.warn("Scene ended without jump or end command")
-            pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: game, hasPreloadedSave: true}, PageStackAction.Immediate)
+            pageStack.push(Qt.resolvedUrl("../pages/TitlePage.qml"), {gameScreen: gameScreen, hasPreloadedSave: true}, PageStackAction.Immediate)
             return
         }
 
