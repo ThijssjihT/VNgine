@@ -171,7 +171,7 @@ Page {
 
                     Label {
                         id:             versionLabel
-                        text:           "v" + Constants.appVersion
+                        text:           "v" + Constants.appVersion + Constants.appRelease
                         font.pixelSize: Theme.fontSizeExtraSmall
                         color:          Theme.secondaryColor
                     }

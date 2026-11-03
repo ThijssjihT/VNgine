@@ -1,7 +1,7 @@
 .pragma library
 
 var appVersion = "0.5"
-var appRelease    = "0.prealpha"
+var appRelease    = "0-prealpha"
 
 var dbName        = Qt.application.name
 var dbVersion     = "1.0"
