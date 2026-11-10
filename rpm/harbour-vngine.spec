@@ -1,6 +1,6 @@
 Name:       harbour-vngine
 
-Summary:    harbour-vngine
+Summary:    VNgine, an Visual Novel engine for SFOS
 Version:    0.5
 Release:    0.prealpha
 License:    GPLv3
